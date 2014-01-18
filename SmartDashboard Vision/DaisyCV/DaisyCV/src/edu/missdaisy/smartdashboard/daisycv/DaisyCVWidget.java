@@ -42,8 +42,8 @@ import javax.imageio.ImageIO;
  */
 public class DaisyCVWidget extends WPICameraExtension {
 
-    public static final String NAME = "DaisyCV Target Tracker";
-    private WPIColor targetColor = new WPIColor(0, 0, 255);
+    public static final String NAME = "FRC399 2014 Target Tracker"; //Plugin name
+    private WPIColor displayColor = new WPIColor(0, 0, 255);        //Heads up display color
     // Constants that need to be tuned
     private static final double kNearlyHorizontalSlope = Math.tan(Math.toRadians(45));
     private static final double kNearlyVerticalSlope = Math.tan(Math.toRadians(90 - 45));
@@ -52,10 +52,6 @@ public class DaisyCVWidget extends WPICameraExtension {
     private static int kHoleClosingIterations = 9;
     private static final double kShooterOffsetDeg = -1.55;
     private static final double kHorizontalFOVDeg = 47.0;
-    private static final double kVerticalFOVDeg = 480.0 / 640.0 * kHorizontalFOVDeg;
-    private static final double kCameraHeightIn = 54.0;
-    private static final double kCameraPitchDeg = 21.0;
-    private static final double kTopTargetHeightIn = 104.125 + 4.0 + 6.0; // 98 to rim, +2 to bottom of target, +9 to center of target
     private boolean m_debugMode = false;
     // Store JavaCV temporaries as members to reduce memory management during processing
     private CvSize size = null;
@@ -84,8 +80,7 @@ public class DaisyCVWidget extends WPICameraExtension {
 
     @Override
     public WPIImage processImage(WPIColorImage rawImage) {
-        
-        
+
         //Values from robot:
         double yaw = 0.0;   //Yaw for azimuth calculations
         double h_low = 0.0;
@@ -94,84 +89,58 @@ public class DaisyCVWidget extends WPICameraExtension {
         double s_high = 0.0;
         double v_low = 0.0;
         double v_high = 0.0;
-        
+
         int howManyTargets = 0;
-        
-        if( !m_debugMode )
-        {
-            try
-            {
+
+        if (!m_debugMode) {
+            try {
                 yaw = Robot.getTable().getNumber("yaw");
+            } catch (NoSuchElementException e) {
+            } catch (IllegalArgumentException e) {
             }
-            catch( NoSuchElementException e)
-            { }
-            catch( IllegalArgumentException e )
-            { }
-            
-            try
-            {
+
+            try {
                 h_low = Robot.getTable().getNumber("h_low");
+            } catch (NoSuchElementException e) {
+            } catch (IllegalArgumentException e) {
             }
-            catch( NoSuchElementException e)
-            { }
-            catch( IllegalArgumentException e )
-            { }
-            
-            try
-            {
+
+            try {
                 h_high = Robot.getTable().getNumber("h_high");
+            } catch (NoSuchElementException e) {
+            } catch (IllegalArgumentException e) {
             }
-            catch( NoSuchElementException e)
-            { }
-            catch( IllegalArgumentException e )
-                { }
-            
-            try
-            {
+
+            try {
                 s_low = Robot.getTable().getNumber("s_low");
+            } catch (NoSuchElementException e) {
+            } catch (IllegalArgumentException e) {
             }
-            catch( NoSuchElementException e)
-            { }
-            catch( IllegalArgumentException e )
-            { }
-            
-            try
-            {
+
+            try {
                 s_high = Robot.getTable().getNumber("s_high");
+            } catch (NoSuchElementException e) {
+            } catch (IllegalArgumentException e) {
             }
-            catch( NoSuchElementException e)
-            { }
-            catch( IllegalArgumentException e )
-            { }
-            
-            try
-            {
+
+            try {
                 v_low = Robot.getTable().getNumber("v_low");
+            } catch (NoSuchElementException e) {
+            } catch (IllegalArgumentException e) {
             }
-            catch( NoSuchElementException e)
-            { }
-            catch( IllegalArgumentException e )
-            { }
-            
-            try
-            {
+
+            try {
                 v_high = Robot.getTable().getNumber("v_high");
+            } catch (NoSuchElementException e) {
+            } catch (IllegalArgumentException e) {
             }
-            catch( NoSuchElementException e)
-            { }
-            catch( IllegalArgumentException e )
-                { }
-            
-             try
-            {
-                kHoleClosingIterations = (int)Robot.getTable().getNumber("kHoleClosingIterations", 0);
+
+            try {
+                kHoleClosingIterations = (int) Robot.getTable().getNumber("kHoleClosingIterations", 0);
+            } catch (NoSuchElementException e) {
+            } catch (IllegalArgumentException e) {
             }
-            catch( NoSuchElementException e)
-            { }
-            catch( IllegalArgumentException e )
-                { }
         }
-           
 
         if (size == null || size.width() != rawImage.getWidth() || size.height() != rawImage.getHeight()) {
             size = opencv_core.cvSize(rawImage.getWidth(), rawImage.getHeight());
@@ -213,20 +182,18 @@ public class DaisyCVWidget extends WPICameraExtension {
         // Uncomment the next two lines to see the raw binary image
         //CanvasFrame result = new CanvasFrame("binary");
         //result.showImage(bin.getBufferedImage());
-
         // Fill in any gaps using binary morphology
         opencv_imgproc.cvMorphologyEx(bin, bin, null, morphKernel, opencv_imgproc.CV_MOP_CLOSE, kHoleClosingIterations);
 
         // Uncomment the next two lines to see the image post-morphology
         //CanvasFrame result2 = new CanvasFrame("morph");
         //result2.showImage(bin.getBufferedImage());
-
         // Find contours
         WPIBinaryImage binWpi = DaisyExtensions.makeWPIBinaryImage(bin);
         contours = DaisyExtensions.findConvexContours(binWpi);
 
         howManyTargets = contours.length;
-        
+
         polygons = new ArrayList<WPIPolygon>();
         for (WPIContour c : contours) {
 
@@ -268,7 +235,7 @@ public class DaisyCVWidget extends WPICameraExtension {
                     int pCenterX = (p.getX() + (p.getWidth() / 2));
                     int pCenterY = (p.getY() + (p.getHeight() / 2));
 
-                    rawImage.drawPoint(new WPIPoint(pCenterX, pCenterY), targetColor, 5);
+                    rawImage.drawPoint(new WPIPoint(pCenterX, pCenterY), displayColor, 5);
                     if (pCenterY < highest) // Because coord system is funny
                     {
                         square = p;
@@ -287,16 +254,15 @@ public class DaisyCVWidget extends WPICameraExtension {
             y = -((2 * (y / size.height())) - 1);
 
             /*double range = (kTopTargetHeightIn - kCameraHeightIn) / Math.tan((y * kVerticalFOVDeg / 2.0 + kCameraPitchDeg) * Math.PI / 180.0);
-            double azimuth = this.boundAngle0to360Degrees(x*kHorizontalFOVDeg/2.0 + yaw - kShooterOffsetDeg);
-            double altitude = this.boundAngle0to360Degrees(y*kVerticalFOVDeg/2.0 + pitch);*/
-
+             double azimuth = this.boundAngle0to360Degrees(x*kHorizontalFOVDeg/2.0 + yaw - kShooterOffsetDeg);
+             double altitude = this.boundAngle0to360Degrees(y*kVerticalFOVDeg/2.0 + pitch);*/
             if (!m_debugMode) {
                 //Robot.getTable().beginTransaction();
                 Robot.getTable().putBoolean("found", true);
                 Robot.getTable().putNumber("TargetX", x);
                 Robot.getTable().putNumber("TargetY", y);
                 Robot.getTable().putNumber("targetWidth", square.getWidth());
-                Robot.getTable().putNumber("targetHeight",square.getHeight());
+                Robot.getTable().putNumber("targetHeight", square.getHeight());
                 //Robot.getTable().putNumber("TargetRange", range);
                 Robot.getTable().putNumber("TargetArea", square.getArea());
                 //Robot.getTable().putNumber("azimuth", azimuth);
@@ -306,7 +272,7 @@ public class DaisyCVWidget extends WPICameraExtension {
             } else {
                 System.out.println("DebugMode, target found");
             }
-            rawImage.drawPolygon(square, targetColor, 7);
+            rawImage.drawPolygon(square, displayColor, 7);
         } else {
 
             if (!m_debugMode) {
@@ -317,25 +283,20 @@ public class DaisyCVWidget extends WPICameraExtension {
         }
 
         // Draw a crosshair
-        rawImage.drawLine(linePt1, linePt2, targetColor, 2);
-        
+        rawImage.drawLine(linePt1, linePt2, displayColor, 2);
 
         DaisyExtensions.releaseMemory();
 
         //System.gc();
-
         return rawImage;
     }
-    
-    private double boundAngle0to360Degrees(double angle)
-    {
+
+    private double boundAngle0to360Degrees(double angle) {
         // Naive algorithm
-        while(angle >= 360.0)
-        {
+        while (angle >= 360.0) {
             angle -= 360.0;
         }
-        while(angle < 0.0)
-        {
+        while (angle < 0.0) {
             angle += 360.0;
         }
         return angle;
