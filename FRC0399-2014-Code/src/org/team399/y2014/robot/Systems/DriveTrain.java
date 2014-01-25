@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.Gyro;
 import edu.wpi.first.wpilibj.Jaguar;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.team399.y2014.Utilities.EagleMath;
-import org.team399.y2014.robot.Constants;
+import org.team399.y2014.robot.Config.Constants;
 
 /**
  *
