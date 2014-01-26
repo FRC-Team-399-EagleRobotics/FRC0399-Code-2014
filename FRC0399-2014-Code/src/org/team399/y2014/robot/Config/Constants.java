@@ -11,11 +11,6 @@ package org.team399.y2014.robot.Config;
  */
 public class Constants {
 
-    //JOYSTICK USB CONTROLLER PORTS
-    public final static int DRIVER_LEFT_JOYSTICK_USB = 1;
-    public final static int DRIVER_RIGHT_JOYSTICK_USB = 2;
-    public final static int OPERATOR_GAMEPAD_USB = 3;
-
     //TURN PID VALUES
     public static double TURN_P = -10.0;
     public static double TURN_I = 0.0;
