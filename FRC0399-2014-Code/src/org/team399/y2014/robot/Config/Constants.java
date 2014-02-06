@@ -22,4 +22,21 @@ public class Constants {
 
     public static final double TICKS_TO_INCHES = 16.5694;
     public static final double WIDTH = 26.0;
+
+    public static class Shooter {
+
+        public static final double STOW_POS = 0.0;  // Stow position value
+        public static final double STOW_P = 0.8;    // Stow PID gains
+        public static final double STOW_I = 0.0;
+        public static final double STOW_D = 0.0;
+        public static final double STOW_F = 0.0;    // Stow Feed Forward Gain
+        public static final double STOW_S = 0.5;    // Stow Speed limit
+
+        public static final double PASS_POS = 0.0;  // Pass position
+        public static final double PASS_P = 0.8;    // Pass PID gains
+        public static final double PASS_I = 0.0;
+        public static final double PASS_D = 0.0;
+        public static final double PASS_F = 0.0;    // Pass Feed Forward Gain
+        public static final double PASS_S = 0.4;    // Pass Speed limit
+    }
 }
