@@ -60,13 +60,9 @@ public class DriveTrain {
      * @param rA right motor A PWM port.
      * @param rB right motor B PWM port
      */
-    public DriveTrain(int lA, int lB, int rA, int rB) {
-        leftA = new Talon(lA);
-        leftB = new Talon(lB);
-        leftC = null;
-        rightA = new Talon(rA);
-        rightB = new Talon(rB);
-        rightC = null;
+    public DriveTrain(int left, int right) {
+        leftA = new Talon(left);
+        rightB = new Talon(right);
 
     }
 
