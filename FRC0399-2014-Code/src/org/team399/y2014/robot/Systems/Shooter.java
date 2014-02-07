@@ -13,7 +13,7 @@ import org.team399.y2014.robot.Config.Constants;
 /**
  * Shooter class. Base functions for shooter mechanism
  *
- * @author
+ * @author ()
  */
 public class Shooter {
 
@@ -74,6 +74,17 @@ public class Shooter {
         this.m_limitsEnabled = en;
     }
 
+    double manualInput = 0;
+
+    /**
+     * Sets manual input value for manual mode.
+     *
+     * @param input
+     */
+    public void setManual(double input) {
+        this.manualInput = input;
+    }
+
     /**
      * Contains state values for shooter system finite state machine.
      */
@@ -105,17 +116,6 @@ public class Shooter {
      */
     public int getState() {
         return curr_state;
-    }
-
-    double manualInput = 0;
-
-    /**
-     * Sets manual input value for manual mode.
-     *
-     * @param input
-     */
-    public void setManual(double input) {
-        this.manualInput = input;
     }
 
     /**
