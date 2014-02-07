@@ -15,4 +15,12 @@ public class Ports {
     public final static int DRIVER_LEFT_JOYSTICK_USB = 1;
     public final static int DRIVER_RIGHT_JOYSTICK_USB = 2;
     public final static int OPERATOR_GAMEPAD_USB = 3;
+    
+    // Shooter ports
+    public final static int LEFT_SHOOTER = 1;
+    public final static int RIGHT_SHOOTER = 2;
+    public final static int ARM_POT = 1;
+    
+    // Intake ports
+    public final static int INTAKE = 5 ;
 }
