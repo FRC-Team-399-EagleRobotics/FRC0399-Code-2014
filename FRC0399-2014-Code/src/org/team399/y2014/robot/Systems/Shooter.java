@@ -13,7 +13,7 @@ import org.team399.y2014.robot.Config.Constants;
 /**
  * Shooter class. Base functions for shooter mechanism
  *
- * @author
+ * @author ()
  */
 public class Shooter {
 
@@ -23,6 +23,10 @@ public class Shooter {
     private AnalogChannel m_pot = null; // Position sensor
 
     private double goal = 0;
+
+    private double m_upperLim = 0.0;
+    private double m_lowerLim = 5.0;
+    private boolean m_limitsEnabled = false;
 
     /**
      * Constructor
@@ -55,6 +59,30 @@ public class Shooter {
     private void setOutput(double value) {
         m_shooterA.set(value);
         //m_shooterB.set(value);    // Might want to negate this before enable.
+    }
+
+    /**
+     * Sets software position limits and sets an enable flag
+     *
+     * @param upper upper positional limit
+     * @param lower lower positional limit
+     * @param en enable/disable flag.
+     */
+    public void setSoftLimits(double upper, double lower, boolean en) {
+        this.m_lowerLim = lower;
+        this.m_upperLim = upper;
+        this.m_limitsEnabled = en;
+    }
+
+    double manualInput = 0;
+
+    /**
+     * Sets manual input value for manual mode.
+     *
+     * @param input
+     */
+    public void setManual(double input) {
+        this.manualInput = input;
     }
 
     /**
@@ -107,6 +135,19 @@ public class Shooter {
                     Constants.Shooter.STOW_S);
         } else if (curr_state == States.SHOOT) {
             // Else if shoot, do this
+            output = 0;
+            if (this.getPosition() < Constants.Shooter.SHOT_POS) {
+                if (this.getPosition() < Constants.Shooter.SHOT_START) {
+                    output = Constants.Shooter.SHOT_INIT_SPEED;
+                } else {
+                    output = Constants.Shooter.SHOT_FINAL_SPEED;
+                    if (this.getPosition() < Constants.Shooter.SHOT_POS - .05) {
+                        this.setState(States.STOW);
+                    }
+                }
+            } else {
+                output = 0;
+            }
         } else if (curr_state == States.PASS) {
             // Pass do this
             goal = Constants.Shooter.PASS_POS;
@@ -117,7 +158,17 @@ public class Shooter {
                     Constants.Shooter.PASS_F,
                     Constants.Shooter.PASS_S);
         } else if (curr_state == States.MANUAL) {
-
+            // Else if manual control, do this
+            output = manualInput;
+            if (this.getPosition() > this.m_upperLim
+                    && output > 0
+                    && m_limitsEnabled) {
+                output = 0;
+            } else if (this.getPosition() < this.m_lowerLim
+                    && output < 0
+                    && m_limitsEnabled) {
+                output = 0;
+            }
         } else {
             System.out.println("[SHOOTER] Invalid State!!");
         }
@@ -137,7 +188,11 @@ public class Shooter {
      * @param s Speed Limit
      * @return a calculated closed loop control output
      */
-    private double pidControl(double p, double i, double d, double f, double s) {
+    private double pidControl(double p,
+            double i,
+            double d,
+            double f,
+            double s) {
         prevError = error;
         error = this.getPosition() - goal;
 
