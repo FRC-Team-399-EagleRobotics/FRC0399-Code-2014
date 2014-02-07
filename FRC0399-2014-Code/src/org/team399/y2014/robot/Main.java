@@ -6,7 +6,15 @@
 /*----------------------------------------------------------------------------*/
 package org.team399.y2014.robot;
 
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.Joystick;
+import org.team399.y2014.Utilities.GamePad;
+import org.team399.y2014.robot.Config.Ports;
+import org.team399.y2014.robot.Systems.DriveTrain;
+import org.team399.y2014.robot.Systems.Intake;
+import org.team399.y2014.robot.Systems.Shooter;
+
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -16,13 +24,29 @@ import edu.wpi.first.wpilibj.IterativeRobot;
  * directory.
  */
 public class Main extends IterativeRobot {
+    
+    public Shooter shooter;
+    public Intake intake;
+    public DriveTrain drivetrain;
+    
+    Compressor comp = new Compressor(5, 1);
+    
+    Joystick driverLeft = new Joystick(Ports.DRIVER_LEFT_JOYSTICK_USB);
+    Joystick driverRight = new Joystick(Ports.DRIVER_RIGHT_JOYSTICK_USB);
+    GamePad gamePad = new GamePad(Ports.OPERATOR_GAMEPAD_USB);
+    
+    
+    
 
     /**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
      */
     public void robotInit() {
-
+        shooter = new Shooter(Ports.LEFT_SHOOTER, Ports.RIGHT_SHOOTER, Ports.ARM_POT);
+        intake = new Intake(Ports.INTAKE_PWM, Ports.INTAKE_SOLA, Ports.INTAKE_SOLB);
+        drivetrain = new DriveTrain(Ports.LEFT_DRIVE, Ports.RIGHT_DRIVE);
+        comp.start();
     }
 
     /**
@@ -31,11 +55,32 @@ public class Main extends IterativeRobot {
     public void autonomousPeriodic() {
 
     }
+    
+    public void teleopInit() {
+        shooter.setState(Shooter.States.MANUAL);
+        shooter.setSoftLimits(0, 0, false);
+    }
 
     /**
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
+        System.out.println("ARM_POT" + shooter.getPosition());
+        drivetrain.tankDrive(driverLeft.getRawAxis(2), 
+                               driverRight.getRawAxis(2));
+        
+        shooter.setManual(gamePad.getLeftY());
+        
+        if(gamePad.getDPad(GamePad.DPadStates.UP)) {
+            intake.setMotors(1.0);
+        } else if(gamePad.getDPad(GamePad.DPadStates.DOWN)) {
+            intake.setMotors(-1.0);
+        } else {
+            intake.setMotors(0);
+        }
+        
+        intake.setActuators(gamePad.getButton(5));
+        
 
     }
 }

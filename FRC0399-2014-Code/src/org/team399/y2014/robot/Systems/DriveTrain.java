@@ -26,7 +26,6 @@ public class DriveTrain {
     private Gyro yaw = null;
     private Encoder leftEnc = null;
     private Encoder rightEnc = null;
-
     private int fsmState = 0;
     //Drive FSM
     //0 = tank drive
@@ -41,7 +40,6 @@ public class DriveTrain {
     private double arcade_turning = 0;
     private double dist_distance = 0;
     private double turn_angle = 0;
-
     private double turnP = Constants.TURN_P;
     private double turnI = Constants.TURN_I;
     private double turnD = Constants.TURN_D;
@@ -62,7 +60,7 @@ public class DriveTrain {
      */
     public DriveTrain(int left, int right) {
         leftA = new Talon(left);
-        rightB = new Talon(right);
+        rightA = new Talon(right);
 
     }
 
@@ -102,18 +100,30 @@ public class DriveTrain {
 
     public void tankDrive(double leftPower, double rightPower) //DONT KNOW FUNCTION???
     {
+        leftPower = -leftPower;
+        rightPower = -rightPower;
+        
+        if(Math.abs(leftPower) < .1) {
+            leftPower = 0;
+        }
+        if(Math.abs(rightPower) < .1) {
+            rightPower = 0;
+        }
         leftA.set(leftPower);
-        leftB.set(leftPower);
+        if (leftB != null) {
+      //      leftB.set(leftPower);
+        }
 
         if (leftC != null) {
-            leftC.set(leftPower);
+    //        leftC.set(leftPower);
         }
 
         rightA.set(-rightPower);
-        rightB.set(-rightPower);
-
+        if (rightB != null) {
+  //          rightB.set(-rightPower);
+        }
         if (rightC != null) {
-            rightC.set(rightPower);
+//            rightC.set(rightPower);
         }
     }
 
@@ -131,7 +141,6 @@ public class DriveTrain {
         } else if (fsmState == 3) {
             PIDDrive(dist_distance);
         } else if (fsmState == 4) {
-
         }
     }
 
@@ -243,5 +252,109 @@ public class DriveTrain {
         turnP = SmartDashboard.getNumber("turnP", turnP);
         turnI = SmartDashboard.getNumber("turnI", turnI);
 
+    }
+    
+    
+    public double twoStickToTurning(double left, double right) {
+        return (left - right) / 2;
+    }
+
+    public double twoStickToThrottle(double left, double right) {
+        return (left + right) / 2;
+    }
+    
+    private double old_wheel = 0.0;
+    private double neg_inertia_accumulator = 0.0;
+    private static final double CD_SENS_HIGH = 0.875;
+    private static final double CD_SENS_LOW = 1.111;
+    private static final double CD_WHEEL_NONLIN_HIGH = 1.0;
+    private static final double CD_WHEEL_NONLIN_LOW = 0.8;
+    private static final double CD_NEG_INERTIA = 3.0;
+
+    public void cheesyDrive(double leftP, double rightP) {
+        double wheel = twoStickToTurning(leftP, rightP);
+        double throttle = twoStickToTurning(leftP, rightP);
+        
+        double left_pwm, right_pwm, overPower;
+        double sensitivity = 1.2;
+        double angular_power;
+        double linear_power;
+        double wheelNonLinearity;
+        boolean quickTurn = Math.abs(throttle) < .05;//Math.abs(wheel) > .375 &&
+
+        double neg_inertia = wheel - old_wheel;
+        old_wheel = wheel;
+
+        wheelNonLinearity = CD_WHEEL_NONLIN_HIGH;        //Used to be .9 higher is less sensitive
+        // Apply a sin function that's scaled to make it feel bette
+//            wheel = Math.sin(Math.PI / 2.0 * wheelNonLinearity * wheel) / Math.sin(Math.PI / 2.0 * wheelNonLinearity);
+        wheel = Math.sin(Math.PI / 2.0 * wheelNonLinearity * wheel) / Math.sin(Math.PI / 2.0 * wheelNonLinearity);
+
+        double neg_inertia_scalar;
+        if (wheel * neg_inertia > 0) {
+            neg_inertia_scalar = CD_NEG_INERTIA * 1.66;
+        } else {
+            if (Math.abs(wheel) > 0.65) {
+                neg_inertia_scalar = CD_NEG_INERTIA * 3.33;
+            } else {
+                neg_inertia_scalar = CD_NEG_INERTIA;
+            }
+        }
+        sensitivity = CD_SENS_HIGH; //lower is less sensitive
+
+        if (Math.abs(throttle) > 0.1) {
+            sensitivity = .9 - (.9 - sensitivity) / Math.abs(throttle);
+        }
+        //neg_inertia_scalar *= .4;
+        double neg_inertia_power = neg_inertia * neg_inertia_scalar;
+        if (Math.abs(throttle) >= 0.05 || quickTurn) {
+            neg_inertia_accumulator += neg_inertia_power;
+        }
+        wheel = wheel + neg_inertia_accumulator;
+        if (neg_inertia_accumulator > 1) {
+            neg_inertia_accumulator -= 1;
+        } else if (neg_inertia_accumulator < -1) {
+            neg_inertia_accumulator += 1;
+        } else {
+            neg_inertia_accumulator = 0;
+        }
+
+        linear_power = throttle;
+
+        if ((!EagleMath.isInBand(throttle, -0.2, 0.2) || !(EagleMath.isInBand(wheel, -0.65, 0.65))) && quickTurn) {
+            overPower = 1.0;
+            sensitivity = 1.0;
+            sensitivity = 1.0;
+            angular_power = wheel;
+        } else {
+            overPower = 0.0;
+            angular_power = Math.abs(throttle) * wheel * sensitivity;
+        }
+
+        if (quickTurn) {
+            angular_power = EagleMath.signedSquare(angular_power, 1);   //make turning less sensitive under quickturn
+            if (Math.abs(angular_power) >= .745) {
+                //    angular_power = 1.0*EagleMath.signum(angular_power);
+            }
+        }
+
+        right_pwm = left_pwm = linear_power;
+        left_pwm += angular_power;
+        right_pwm -= angular_power;
+
+        if (left_pwm > 1.0) {
+            right_pwm -= overPower * (left_pwm - 1.0);
+            left_pwm = 1.0;
+        } else if (right_pwm > 1.0) {
+            left_pwm -= overPower * (right_pwm - 1.0);
+            right_pwm = 1.0;
+        } else if (left_pwm < -1.0) {
+            right_pwm += overPower * (-1.0 - left_pwm);
+            left_pwm = -1.0;
+        } else if (right_pwm < -1.0) {
+            left_pwm += overPower * (-1.0 - right_pwm);
+            right_pwm = -1.0;
+        }
+        tankDrive((left_pwm), (right_pwm));
     }
 }

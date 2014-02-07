@@ -19,7 +19,7 @@ public class Robot {
 
     private Robot() {
         shooter = new Shooter(Ports.LEFT_SHOOTER, Ports.RIGHT_SHOOTER, Ports.ARM_POT);
-        intake = new Intake(Ports.INTAKE_PWM, Ports.INTAKE_PWM);
+        //intake = new Intake(Ports.INTAKE_PWM, Ports.INTAKE_PWM);
         drivetrain = new DriveTrain(Ports.LEFT_DRIVE, Ports.RIGHT_DRIVE);
     }
 

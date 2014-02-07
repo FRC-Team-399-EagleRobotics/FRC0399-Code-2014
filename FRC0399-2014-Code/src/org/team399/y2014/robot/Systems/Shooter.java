@@ -56,9 +56,9 @@ public class Shooter {
      *
      * @param value
      */
-    private void setOutput(double value) {
+    public void setOutput(double value) {
         m_shooterA.set(value);
-        //m_shooterB.set(value);    // Might want to negate this before enable.
+        m_shooterB.set(-value);    // Might want to negate this before enable.
     }
 
     /**
@@ -90,10 +90,10 @@ public class Shooter {
      */
     public static class States {
 
-        final static int STOW = 0;
-        final static int SHOOT = 1;
-        final static int PASS = 2;
-        final static int MANUAL = 99;
+        public final static int STOW = 0;
+        public final static int SHOOT = 1;
+        public final static int PASS = 2;
+        public final static int MANUAL = 99;
 
     }
 
@@ -160,7 +160,7 @@ public class Shooter {
         } else if (curr_state == States.MANUAL) {
             // Else if manual control, do this
             output = manualInput;
-            if (this.getPosition() > this.m_upperLim
+    /**        if (this.getPosition() > this.m_upperLim
                     && output > 0
                     && m_limitsEnabled) {
                 output = 0;
@@ -168,7 +168,7 @@ public class Shooter {
                     && output < 0
                     && m_limitsEnabled) {
                 output = 0;
-            }
+            }*/
         } else {
             System.out.println("[SHOOTER] Invalid State!!");
         }

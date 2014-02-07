@@ -5,6 +5,7 @@
  */
 package org.team399.y2014.robot.Systems;
 
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Talon;
 
 /**
@@ -13,12 +14,23 @@ import edu.wpi.first.wpilibj.Talon;
  */
 public class Intake {
     private Talon m_intakeA = null;
-    private Talon m_intakeB = null;
+    private Solenoid m_solA = null;
+    private Solenoid m_solB = null;
    
-    public void Intake(int a, int b){
-        m_intakeA = new Talon(a);
-        m_intakeB = new Talon(b);
+    public Intake(int motor, int sA, int sB){
+        m_intakeA = new Talon(motor);
+        m_solA = new Solenoid(sA);
+        m_solB = new Solenoid(sB);
+        
+    }
     
-}
+    public void setMotors(double input) {
+        m_intakeA.set(input);
+    }
+    
+    public void setActuators(boolean state) {
+        m_solA.set(state);
+        m_solB.set(state);
+    }
 
 }
