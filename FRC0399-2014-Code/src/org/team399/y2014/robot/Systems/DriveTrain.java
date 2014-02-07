@@ -6,7 +6,7 @@ package org.team399.y2014.robot.Systems;
 
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Gyro;
-import edu.wpi.first.wpilibj.Jaguar;
+import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.team399.y2014.Utilities.EagleMath;
 import org.team399.y2014.robot.Config.Constants;
@@ -17,12 +17,12 @@ import org.team399.y2014.robot.Config.Constants;
  */
 public class DriveTrain {
 
-    private Jaguar leftA = null;// = new Jaguar(1);
-    private Jaguar leftB = null;// = new Jaguar(2);
-    private Jaguar leftC = null;
-    private Jaguar rightA = null;// = new Jaguar(3);
-    private Jaguar rightB = null;// = new Jaguar(4);
-    private Jaguar rightC = null;
+    private Talon leftA = null;// = new Jaguar(1);
+    private Talon leftB = null;// = new Jaguar(2);
+    private Talon leftC = null;
+    private Talon rightA = null;// = new Jaguar(3);
+    private Talon rightB = null;// = new Jaguar(4);
+    private Talon rightC = null;
     private Gyro yaw = null;
     private Encoder leftEnc = null;
     private Encoder rightEnc = null;
@@ -61,11 +61,11 @@ public class DriveTrain {
      * @param rB right motor B PWM port
      */
     public DriveTrain(int lA, int lB, int rA, int rB) {
-        leftA = new Jaguar(lA);
-        leftB = new Jaguar(lB);
+        leftA = new Talon(lA);
+        leftB = new Talon(lB);
         leftC = null;
-        rightA = new Jaguar(rA);
-        rightB = new Jaguar(rB);
+        rightA = new Talon(rA);
+        rightB = new Talon(rB);
         rightC = null;
 
     }
@@ -81,13 +81,13 @@ public class DriveTrain {
      * @param rC right motor C PWM port
      */
     public DriveTrain(int lA, int lB, int lC, int rA, int rB, int rC) {
-        leftA = new Jaguar(lA);
-        leftB = new Jaguar(lB);
-        leftC = new Jaguar(lC);
+        leftA = new Talon(lA);
+        leftB = new Talon(lB);
+        leftC = new Talon(lC);
 
-        rightA = new Jaguar(rA);
-        rightB = new Jaguar(rB);
-        rightC = new Jaguar(rC);
+        rightA = new Talon(rA);
+        rightB = new Talon(rB);
+        rightC = new Talon(rC);
     }
 
     public void setSensors(int gyro, int leftEncA, int leftEncB, int rightEncA, int rightEncB) //gets angle and constrains it between 0 and 359 then returns it
