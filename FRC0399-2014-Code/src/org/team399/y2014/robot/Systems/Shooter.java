@@ -8,6 +8,7 @@ package org.team399.y2014.robot.Systems;
 import edu.wpi.first.wpilibj.AnalogChannel;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.team399.y2014.Utilities.EagleMath;
 import org.team399.y2014.robot.Config.Constants;
 
@@ -41,7 +42,7 @@ public class Shooter {
         m_shooterB = new Talon(b);
         m_pot = new AnalogChannel(1);
         
-        this.setSoftLimits(Constants.Shooter.LOWER_LIMIT,Constants.Shooter.UPPER_LIMIT, true);
+        this.setSoftLimits(Constants.Shooter.LOWER_LIMIT,Constants.Shooter.UPPER_LIMIT, false);
     }
 
     /**
@@ -98,6 +99,7 @@ public class Shooter {
         public final static int PASS = 2;
         public final static int TEST = -1;
         public final static int MANUAL = 99;
+        public final static int TRUSS = 3;
         
         public static String toString(int state) {
             if(state == STOW) {
@@ -144,11 +146,11 @@ public class Shooter {
     public void run() {
         double output = 0;
         
-        if(curr_state != prev_state) {
-            System.out.println("[SHOOTER] State change from " + 
+        //if(curr_state != prev_state) {
+            /*System.out.println("[SHOOTER] State change from " + 
                                 States.toString(prev_state) + " to " + 
                                 States.toString(curr_state));
-        }
+        }*/
 
         if (curr_state == States.STOW) {
             // If stow, do this
@@ -162,17 +164,24 @@ public class Shooter {
         } else if (curr_state == States.SHOOT) {
             // Else if shoot, do this
             output = 0;
+            double s = 0.0;
             if (this.getPosition() < Constants.Shooter.SHOT_POS) {
                 if (this.getPosition() < Constants.Shooter.SHOT_START) {
-                    output = Constants.Shooter.SHOT_INIT_SPEED;
+                    s = Constants.Shooter.SHOT_INIT_SPEED;
                 } else {
-                    output = Constants.Shooter.SHOT_FINAL_SPEED;
+                    s = Constants.Shooter.SHOT_FINAL_SPEED;
                     if (this.getPosition() < Constants.Shooter.SHOT_POS - .05) {
                         this.setState(States.STOW);
                     }
                 }
-            } else {
-                output = 0;
+            goal = Constants.Shooter.SHOT_POS;
+            output = pidControl(
+                    Constants.Shooter.SHOT_P,
+                    Constants.Shooter.SHOT_I,
+                    Constants.Shooter.SHOT_D,
+                    Constants.Shooter.SHOT_F,
+                    s);
+                
             }
         } else if (curr_state == States.PASS) {
             // Pass do this
@@ -183,6 +192,15 @@ public class Shooter {
                     Constants.Shooter.PASS_D,
                     Constants.Shooter.PASS_F,
                     Constants.Shooter.PASS_S);
+        } else if (curr_state == States.TRUSS) {
+            // Pass do this
+            goal = Constants.Shooter.TRUSS_POS;
+            output = pidControl(
+                    Constants.Shooter.TRUSS_P,
+                    Constants.Shooter.TRUSS_I,
+                    Constants.Shooter.TRUSS_D,
+                    Constants.Shooter.TRUSS_F,
+                    Constants.Shooter.TRUSS_S);
         } else if (curr_state == States.MANUAL) {
             // Else if manual control, do this
             output = manualInput;
@@ -196,29 +214,35 @@ public class Shooter {
                 output = 0;
             }*/
         } else if(curr_state == States.TEST) {  //Auto Calibrate Mode
+            SmartDashboard.putBoolean("AUTOCALIBRATE", false);
             Double newUpper = null;
             Double newLower = null;
             
-            for(int i = 0; i < 4; i++) {
+            for(int i = 0; i < 2; i++) {
                 System.out.println("[SHOOTER] Auto-Calibrate: Moving Down...");
-                this.setOutput(-.1);
+                this.setOutput(.1);
                 Timer.delay(.5);
             }
             newLower = Double.valueOf(this.getPosition());
             System.out.println("[SHOOTER] Auto-Calibrate: New Lower Limit: " + newLower.doubleValue());
-            for(int i = 0; i < 20; i++) {
+            for(int i = 0; i < 8; i++) {
                 System.out.println("[SHOOTER] Auto-Calibrate: Moving Up...");
-                this.setOutput(.15);
+                this.setOutput(-.15);
                 Timer.delay(.5);
             }
-            newUpper = Double.valueOf(this.getPosition());
+            newUpper = Double.valueOf(this.getPosition()-.025);
             System.out.println("[SHOOTER] Auto-Calibrate: New Upper Limit: " + newUpper.doubleValue());
             this.setSoftLimits(newUpper.doubleValue(), newLower.doubleValue(), m_limitsEnabled);
             System.out.println("[SHOOTER] Auto-Calibrate Complete!");
             this.setState(States.MANUAL);
+            this.setManual(0);
+            SmartDashboard.putBoolean("AUTOCALIBRATE", true);
         } else {
             System.out.println("[SHOOTER] Invalid State!!");
         }
+        
+        SmartDashboard.putNumber("ShooterOut", output);
+        
         this.setOutput(output);
     }
 

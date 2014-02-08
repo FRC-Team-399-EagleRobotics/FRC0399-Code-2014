@@ -9,12 +9,13 @@ package org.team399.y2014.robot;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.team399.y2014.Utilities.GamePad;
+import org.team399.y2014.robot.Config.Constants;
 import org.team399.y2014.robot.Config.Ports;
 import org.team399.y2014.robot.Systems.DriveTrain;
 import org.team399.y2014.robot.Systems.Intake;
 import org.team399.y2014.robot.Systems.Shooter;
-
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -24,19 +25,14 @@ import org.team399.y2014.robot.Systems.Shooter;
  * directory.
  */
 public class Main extends IterativeRobot {
-    
+
     public Shooter shooter;
     public Intake intake;
     public DriveTrain drivetrain;
-    
     Compressor comp = new Compressor(5, 1);
-    
     Joystick driverLeft = new Joystick(Ports.DRIVER_LEFT_JOYSTICK_USB);
     Joystick driverRight = new Joystick(Ports.DRIVER_RIGHT_JOYSTICK_USB);
     GamePad gamePad = new GamePad(Ports.OPERATOR_GAMEPAD_USB);
-    
-    
-    
 
     /**
      * This function is run when the robot is first started up and should be
@@ -48,11 +44,11 @@ public class Main extends IterativeRobot {
         drivetrain = new DriveTrain(Ports.LEFT_DRIVE, Ports.RIGHT_DRIVE);
         comp.start();
     }
-    
+
     public void testInit() {
         shooter.setState(Shooter.States.TEST);  //shooter autocalibrate mode
     }
-    
+
     public void testPeriodic() {
         shooter.run();
     }
@@ -61,12 +57,12 @@ public class Main extends IterativeRobot {
      * This function is called periodically during autonomous
      */
     public void autonomousPeriodic() {
+    }
 
+    public void disabledPeriodic() {
+        SmartDashboard.putNumber("ArmPosition", shooter.getPosition());
     }
-    public void disabledPeriodic(){
-         System.out.println("ARM_POT" + shooter.getPosition());
-    }
-    
+
     public void teleopInit() {
         shooter.setState(Shooter.States.MANUAL);
     }
@@ -76,25 +72,40 @@ public class Main extends IterativeRobot {
      */
     public void teleopPeriodic() {
         System.out.println("ARM_POT" + shooter.getPosition());
-        drivetrain.tankDrive(driverLeft.getRawAxis(2), 
-                               driverRight.getRawAxis(2));
-        
-        //shooter.setManual(gamePad.getLeftY());
-        if(gamePad.getButton(1)){
-            shooter.setState(0);
+        drivetrain.tankDrive(driverLeft.getRawAxis(2),
+                driverRight.getRawAxis(2));
+
+        int state = Shooter.States.MANUAL;
+        if (gamePad.getButton(1)) {
+            state = Shooter.States.STOW;
+        } else if (gamePad.getButton(2)) {
+            state = Shooter.States.TRUSS;
+        } else if (gamePad.getButton(3)) {
+            state = Shooter.States.PASS;
+        } else if (gamePad.getButton(4)) {
+            state = Shooter.States.SHOOT;
+        } else {
+            state = Shooter.States.MANUAL;
+            shooter.setManual(gamePad.getLeftY() / 2);
         }
-        
+
+        shooter.setState(state);
+
         shooter.run();
-        
-        if(gamePad.getDPad(GamePad.DPadStates.UP)) {
+
+        if (gamePad.getDPad(GamePad.DPadStates.UP)) {
             intake.setMotors(1.0);
-        } else if(gamePad.getDPad(GamePad.DPadStates.DOWN)) {
+        } else if (gamePad.getDPad(GamePad.DPadStates.DOWN)) {
             intake.setMotors(-1.0);
         } else {
             intake.setMotors(0);
         }
-        
-        intake.setActuators(gamePad.getButton(5));
+
+        if(gamePad.getButton(5)) {
+            intake.setActuators(Constants.Intake.RETRACTED);
+        } else if(gamePad.getButton(7)) {
+            intake.setActuators(Constants.Intake.EXTENDED);
+        }
         
 
     }

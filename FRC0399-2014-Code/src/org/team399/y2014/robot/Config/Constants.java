@@ -25,34 +25,48 @@ public class Constants {
 
     public static class Shooter {
 
-        public static final double STOW_POS = 3.50;  // Stow position value
-        public static final double STOW_P = 0.8;    // Stow PID gains
+        public static final double LOWER_LIMIT = 3.15726; // the lower limits of the pot
+        public static final double UPPER_LIMIT = 4.56724; // the upper limits of the pot
+        
+        public static final double STOW_POS = LOWER_LIMIT + 0.133601;  // Stow position value
+        public static final double STOW_P = 1.0;    // Stow PID gains
         public static final double STOW_I = 0.0;
         public static final double STOW_D = 0.0;
         public static final double STOW_F = 0.0;    // Stow Feed Forward Gain
-        public static final double STOW_S = 0.5;    // Stow Speed limit
+        public static final double STOW_S = 0.65;    // Stow Speed limit
 
-        public static final double PASS_POS = 0.0;  // Pass position
+        public static final double PASS_POS = LOWER_LIMIT + .21274;  // Pass position
         public static final double PASS_P = 0.8;    // Pass PID gains
         public static final double PASS_I = 0.0;
         public static final double PASS_D = 0.0;
         public static final double PASS_F = 0.0;    // Pass Feed Forward Gain
-        public static final double PASS_S = 0.4;    // Pass Speed limit
-
-        public static final double SHOT_POS = 4.10;  // Shot final position
-        public static final double SHOT_START = 0.0;// Shot start threshold position
-        public static final double SHOT_INIT_SPEED = 0.4;// Shot start speed
-        public static final double SHOT_FINAL_SPEED = 1.0; // Shot Final speed.
+        public static final double PASS_S = 0.6;    // Pass Speed limit
         
-        public static final double LOWER_LIMIT = 0.0; // the lower limits of the pot
-        public static final double UPPER_LIMIT = 0.0; // the upper limits of the pot
+        public static final double TRUSS_POS = LOWER_LIMIT + 0.4611;  // Pass position
+        public static final double TRUSS_P = 3.0;    // Pass PID gains
+        public static final double TRUSS_I = 0.0;
+        public static final double TRUSS_D = 0.0;
+        public static final double TRUSS_F = 0.0;    // Pass Feed Forward Gain
+        public static final double TRUSS_S = 1.0;    // Pass Speed limit
+
+        public static final double SHOT_POS = LOWER_LIMIT + 1.16803;  // Shot final position
+        public static final double SHOT_START = LOWER_LIMIT+ 0.41;// Shot start threshold position
+        public static final double SHOT_INIT_SPEED = -1.0;// Shot start speed
+        public static final double SHOT_FINAL_SPEED = -1.0; // Shot Final speed.        
+        public static final double SHOT_P = 5;    // Pass PID gains
+        public static final double SHOT_I = 0.0;
+        public static final double SHOT_D = 0.0;
+        public static final double SHOT_F = 0.0;    // Pass Feed Forward Gain
+        public static final double SHOT_S = 1.0;    // Pass Speed limit
+
+        
 
     }
 
     public static class Intake {
 
-        public static final boolean EXTENDED = true;
-        public static final boolean RETRACTED = false;
+        public static final boolean EXTENDED = false;
+        public static final boolean RETRACTED = true;
         public static final double INTAKE_SPEED = 1.0;
         public static final double EXHAUST_SPEED = -1.0;
     }
