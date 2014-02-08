@@ -7,6 +7,7 @@ package org.team399.y2014.robot.Systems;
 
 import edu.wpi.first.wpilibj.AnalogChannel;
 import edu.wpi.first.wpilibj.Talon;
+import edu.wpi.first.wpilibj.Timer;
 import org.team399.y2014.Utilities.EagleMath;
 import org.team399.y2014.robot.Config.Constants;
 
@@ -38,7 +39,9 @@ public class Shooter {
     public Shooter(int a, int b, int p) {
         m_shooterA = new Talon(a);
         m_shooterB = new Talon(b);
-        m_pot = new AnalogChannel(p);
+        m_pot = new AnalogChannel(1);
+        
+        this.setSoftLimits(Constants.Shooter.LOWER_LIMIT,Constants.Shooter.UPPER_LIMIT, true);
     }
 
     /**
@@ -93,7 +96,24 @@ public class Shooter {
         public final static int STOW = 0;
         public final static int SHOOT = 1;
         public final static int PASS = 2;
+        public final static int TEST = -1;
         public final static int MANUAL = 99;
+        
+        public static String toString(int state) {
+            if(state == STOW) {
+                return "STOW";
+            } else if(state == SHOOT) {
+                return "SHOOT";
+            } else if(state == PASS) {
+                return "PASS";
+            } else if(state == TEST) {
+                return "TEST";
+            } else if(state == MANUAL) {
+                return "MANUAL";
+            } else {
+                return "ERROR";
+            }
+        }
 
     }
 
@@ -123,6 +143,12 @@ public class Shooter {
      */
     public void run() {
         double output = 0;
+        
+        if(curr_state != prev_state) {
+            System.out.println("[SHOOTER] State change from " + 
+                                States.toString(prev_state) + " to " + 
+                                States.toString(curr_state));
+        }
 
         if (curr_state == States.STOW) {
             // If stow, do this
@@ -169,6 +195,27 @@ public class Shooter {
                     && m_limitsEnabled) {
                 output = 0;
             }*/
+        } else if(curr_state == States.TEST) {  //Auto Calibrate Mode
+            Double newUpper = null;
+            Double newLower = null;
+            
+            for(int i = 0; i < 4; i++) {
+                System.out.println("[SHOOTER] Auto-Calibrate: Moving Down...");
+                this.setOutput(-.1);
+                Timer.delay(.5);
+            }
+            newLower = Double.valueOf(this.getPosition());
+            System.out.println("[SHOOTER] Auto-Calibrate: New Lower Limit: " + newLower.doubleValue());
+            for(int i = 0; i < 20; i++) {
+                System.out.println("[SHOOTER] Auto-Calibrate: Moving Up...");
+                this.setOutput(.15);
+                Timer.delay(.5);
+            }
+            newUpper = Double.valueOf(this.getPosition());
+            System.out.println("[SHOOTER] Auto-Calibrate: New Upper Limit: " + newUpper.doubleValue());
+            this.setSoftLimits(newUpper.doubleValue(), newLower.doubleValue(), m_limitsEnabled);
+            System.out.println("[SHOOTER] Auto-Calibrate Complete!");
+            this.setState(States.MANUAL);
         } else {
             System.out.println("[SHOOTER] Invalid State!!");
         }

@@ -48,6 +48,14 @@ public class Main extends IterativeRobot {
         drivetrain = new DriveTrain(Ports.LEFT_DRIVE, Ports.RIGHT_DRIVE);
         comp.start();
     }
+    
+    public void testInit() {
+        shooter.setState(Shooter.States.TEST);  //shooter autocalibrate mode
+    }
+    
+    public void testPeriodic() {
+        shooter.run();
+    }
 
     /**
      * This function is called periodically during autonomous
@@ -55,10 +63,12 @@ public class Main extends IterativeRobot {
     public void autonomousPeriodic() {
 
     }
+    public void disabledPeriodic(){
+         System.out.println("ARM_POT" + shooter.getPosition());
+    }
     
     public void teleopInit() {
         shooter.setState(Shooter.States.MANUAL);
-        shooter.setSoftLimits(0, 0, false);
     }
 
     /**
@@ -69,7 +79,12 @@ public class Main extends IterativeRobot {
         drivetrain.tankDrive(driverLeft.getRawAxis(2), 
                                driverRight.getRawAxis(2));
         
-        shooter.setManual(gamePad.getLeftY());
+        //shooter.setManual(gamePad.getLeftY());
+        if(gamePad.getButton(1)){
+            shooter.setState(0);
+        }
+        
+        shooter.run();
         
         if(gamePad.getDPad(GamePad.DPadStates.UP)) {
             intake.setMotors(1.0);

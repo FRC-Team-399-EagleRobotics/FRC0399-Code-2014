@@ -25,7 +25,7 @@ public class Constants {
 
     public static class Shooter {
 
-        public static final double STOW_POS = 0.0;  // Stow position value
+        public static final double STOW_POS = 3.50;  // Stow position value
         public static final double STOW_P = 0.8;    // Stow PID gains
         public static final double STOW_I = 0.0;
         public static final double STOW_D = 0.0;
@@ -39,7 +39,7 @@ public class Constants {
         public static final double PASS_F = 0.0;    // Pass Feed Forward Gain
         public static final double PASS_S = 0.4;    // Pass Speed limit
 
-        public static final double SHOT_POS = 0.0;  // Shot final position
+        public static final double SHOT_POS = 4.10;  // Shot final position
         public static final double SHOT_START = 0.0;// Shot start threshold position
         public static final double SHOT_INIT_SPEED = 0.4;// Shot start speed
         public static final double SHOT_FINAL_SPEED = 1.0; // Shot Final speed.
