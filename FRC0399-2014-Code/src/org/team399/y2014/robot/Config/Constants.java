@@ -43,6 +43,9 @@ public class Constants {
         public static final double SHOT_START = 0.0;// Shot start threshold position
         public static final double SHOT_INIT_SPEED = 0.4;// Shot start speed
         public static final double SHOT_FINAL_SPEED = 1.0; // Shot Final speed.
+        
+        public static final double LOWER_LIMIT = 0.0; // the lower limits of the pot
+        public static final double UPPER_LIMIT = 0.0; // the upper limits of the pot
 
     }
 
