@@ -41,8 +41,8 @@ public class Shooter {
         m_shooterA = new Talon(a);
         m_shooterB = new Talon(b);
         m_pot = new AnalogChannel(1);
-        
-        this.setSoftLimits(Constants.Shooter.LOWER_LIMIT,Constants.Shooter.UPPER_LIMIT, false);
+
+        this.setSoftLimits(Constants.Shooter.LOWER_LIMIT, Constants.Shooter.UPPER_LIMIT, false);
     }
 
     /**
@@ -100,17 +100,18 @@ public class Shooter {
         public final static int TEST = -1;
         public final static int MANUAL = 99;
         public final static int TRUSS = 3;
-        
+        public final static int HOLD = 4;
+
         public static String toString(int state) {
-            if(state == STOW) {
+            if (state == STOW) {
                 return "STOW";
-            } else if(state == SHOOT) {
+            } else if (state == SHOOT) {
                 return "SHOOT";
-            } else if(state == PASS) {
+            } else if (state == PASS) {
                 return "PASS";
-            } else if(state == TEST) {
+            } else if (state == TEST) {
                 return "TEST";
-            } else if(state == MANUAL) {
+            } else if (state == MANUAL) {
                 return "MANUAL";
             } else {
                 return "ERROR";
@@ -145,13 +146,12 @@ public class Shooter {
      */
     public void run() {
         double output = 0;
-        
-        //if(curr_state != prev_state) {
-            /*System.out.println("[SHOOTER] State change from " + 
-                                States.toString(prev_state) + " to " + 
-                                States.toString(curr_state));
-        }*/
 
+        //if(curr_state != prev_state) {
+            /*System.out.println("[SHOOTER] State change from " +
+         States.toString(prev_state) + " to " +
+         States.toString(curr_state));
+         }*/
         if (curr_state == States.STOW) {
             // If stow, do this
             goal = Constants.Shooter.STOW_POS;
@@ -170,28 +170,25 @@ public class Shooter {
                     s = Constants.Shooter.SHOT_INIT_SPEED;
                 } else {
                     s = Constants.Shooter.SHOT_FINAL_SPEED;
-                    if (this.getPosition() < Constants.Shooter.SHOT_POS - .05) {
-                        this.setState(States.STOW);
-                    }
                 }
-            goal = Constants.Shooter.SHOT_POS;
-            output = pidControl(
-                    Constants.Shooter.SHOT_P,
-                    Constants.Shooter.SHOT_I,
-                    Constants.Shooter.SHOT_D,
-                    Constants.Shooter.SHOT_F,
-                    s);
-                
+                goal = Constants.Shooter.SHOT_POS;
+                output = pidControl(
+                        Constants.Shooter.SHOT_P,
+                        Constants.Shooter.SHOT_I,
+                        Constants.Shooter.SHOT_D,
+                        Constants.Shooter.SHOT_F,
+                        s);
+
             }
         } else if (curr_state == States.PASS) {
             // Pass do this
-            goal = Constants.Shooter.PASS_POS;
+            goal = Constants.Shooter.STAGE_POS;
             output = pidControl(
-                    Constants.Shooter.PASS_P,
-                    Constants.Shooter.PASS_I,
-                    Constants.Shooter.PASS_D,
-                    Constants.Shooter.PASS_F,
-                    Constants.Shooter.PASS_S);
+                    Constants.Shooter.STAGE_P,
+                    Constants.Shooter.STAGE_I,
+                    Constants.Shooter.STAGE_D,
+                    Constants.Shooter.STAGE_F,
+                    Constants.Shooter.STAGE_S);
         } else if (curr_state == States.TRUSS) {
             // Pass do this
             goal = Constants.Shooter.TRUSS_POS;
@@ -201,36 +198,41 @@ public class Shooter {
                     Constants.Shooter.TRUSS_D,
                     Constants.Shooter.TRUSS_F,
                     Constants.Shooter.TRUSS_S);
+        } else if (curr_state == States.HOLD) {
+            // Pass do this
+            goal = Constants.Shooter.HOLD_POS;
+            output = pidControl(
+                    Constants.Shooter.HOLD_P,
+                    Constants.Shooter.HOLD_I,
+                    Constants.Shooter.HOLD_D,
+                    Constants.Shooter.HOLD_F,
+                    Constants.Shooter.HOLD_S);
         } else if (curr_state == States.MANUAL) {
             // Else if manual control, do this
             output = manualInput;
-    /**        if (this.getPosition() > this.m_upperLim
-                    && output > 0
-                    && m_limitsEnabled) {
-                output = 0;
-            } else if (this.getPosition() < this.m_lowerLim
-                    && output < 0
-                    && m_limitsEnabled) {
-                output = 0;
-            }*/
-        } else if(curr_state == States.TEST) {  //Auto Calibrate Mode
+            /*
+             * if (this.getPosition() > this.m_upperLim && output > 0 &&
+             * m_limitsEnabled) { output = 0; } else if (this.getPosition() <
+             * this.m_lowerLim && output < 0 && m_limitsEnabled) { output = 0; }
+             */
+        } else if (curr_state == States.TEST) {  //Auto Calibrate Mode
             SmartDashboard.putBoolean("AUTOCALIBRATE", false);
             Double newUpper = null;
             Double newLower = null;
-            
-            for(int i = 0; i < 2; i++) {
+
+            for (int i = 0; i < 2; i++) {
                 System.out.println("[SHOOTER] Auto-Calibrate: Moving Down...");
                 this.setOutput(.1);
                 Timer.delay(.5);
             }
             newLower = Double.valueOf(this.getPosition());
             System.out.println("[SHOOTER] Auto-Calibrate: New Lower Limit: " + newLower.doubleValue());
-            for(int i = 0; i < 8; i++) {
+            for (int i = 0; i < 8; i++) {
                 System.out.println("[SHOOTER] Auto-Calibrate: Moving Up...");
                 this.setOutput(-.15);
                 Timer.delay(.5);
             }
-            newUpper = Double.valueOf(this.getPosition()-.025);
+            newUpper = Double.valueOf(this.getPosition() - .025);
             System.out.println("[SHOOTER] Auto-Calibrate: New Upper Limit: " + newUpper.doubleValue());
             this.setSoftLimits(newUpper.doubleValue(), newLower.doubleValue(), m_limitsEnabled);
             System.out.println("[SHOOTER] Auto-Calibrate Complete!");
@@ -240,9 +242,9 @@ public class Shooter {
         } else {
             System.out.println("[SHOOTER] Invalid State!!");
         }
-        
+
         SmartDashboard.putNumber("ShooterOut", output);
-        
+
         this.setOutput(output);
     }
 

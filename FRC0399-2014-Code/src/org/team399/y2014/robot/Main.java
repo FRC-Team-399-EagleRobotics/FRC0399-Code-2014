@@ -84,6 +84,8 @@ public class Main extends IterativeRobot {
             state = Shooter.States.PASS;
         } else if (gamePad.getButton(4)) {
             state = Shooter.States.SHOOT;
+        } else if (intake.state == Constants.Intake.RETRACTED) {
+            state = Shooter.States.HOLD;
         } else {
             state = Shooter.States.MANUAL;
             shooter.setManual(gamePad.getLeftY() / 2);
@@ -101,12 +103,11 @@ public class Main extends IterativeRobot {
             intake.setMotors(0);
         }
 
-        if(gamePad.getButton(5)) {
+        if (gamePad.getButton(5)) {
             intake.setActuators(Constants.Intake.RETRACTED);
-        } else if(gamePad.getButton(7)) {
+        } else if (gamePad.getButton(7)) {
             intake.setActuators(Constants.Intake.EXTENDED);
         }
-        
 
     }
 }
