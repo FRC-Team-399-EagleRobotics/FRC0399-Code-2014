@@ -23,6 +23,9 @@ public class Constants {
     public static final double TICKS_TO_INCHES = 16.5694;
     public static final double WIDTH = 26.0;
 
+    public static final int COMP_SWITCH = 5;
+    public static final int COMP_RELAY = 1;
+
     public static class Shooter {
 
         public static final double LOWER_LIMIT = 3.15726; // the lower limits of the pot

@@ -6,15 +6,13 @@
 /*----------------------------------------------------------------------------*/
 package org.team399.y2014.robot;
 
-import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.team399.y2014.Utilities.GamePad;
 import org.team399.y2014.robot.Config.Constants;
 import org.team399.y2014.robot.Config.Ports;
-import org.team399.y2014.robot.Systems.DriveTrain;
-import org.team399.y2014.robot.Systems.Intake;
+import org.team399.y2014.robot.Systems.Robot;
 import org.team399.y2014.robot.Systems.Shooter;
 
 /**
@@ -26,10 +24,8 @@ import org.team399.y2014.robot.Systems.Shooter;
  */
 public class Main extends IterativeRobot {
 
-    public Shooter shooter;
-    public Intake intake;
-    public DriveTrain drivetrain;
-    Compressor comp = new Compressor(5, 1);
+    Robot robot;
+
     Joystick driverLeft = new Joystick(Ports.DRIVER_LEFT_JOYSTICK_USB);
     Joystick driverRight = new Joystick(Ports.DRIVER_RIGHT_JOYSTICK_USB);
     GamePad gamePad = new GamePad(Ports.OPERATOR_GAMEPAD_USB);
@@ -39,18 +35,15 @@ public class Main extends IterativeRobot {
      * used for any initialization code.
      */
     public void robotInit() {
-        shooter = new Shooter(Ports.LEFT_SHOOTER, Ports.RIGHT_SHOOTER, Ports.ARM_POT);
-        intake = new Intake(Ports.INTAKE_PWM, Ports.INTAKE_SOLA, Ports.INTAKE_SOLB);
-        drivetrain = new DriveTrain(Ports.LEFT_DRIVE, Ports.RIGHT_DRIVE);
-        comp.start();
+        robot = Robot.getInstance();
     }
 
     public void testInit() {
-        shooter.setState(Shooter.States.TEST);  //shooter autocalibrate mode
+        robot.shooter.setState(Shooter.States.TEST);  //shooter autocalibrate mode
     }
 
     public void testPeriodic() {
-        shooter.run();
+        robot.shooter.run();
     }
 
     /**
@@ -60,19 +53,19 @@ public class Main extends IterativeRobot {
     }
 
     public void disabledPeriodic() {
-        SmartDashboard.putNumber("ArmPosition", shooter.getPosition());
+        SmartDashboard.putNumber("ArmPosition", robot.shooter.getPosition());
     }
 
     public void teleopInit() {
-        shooter.setState(Shooter.States.MANUAL);
+        robot.shooter.setState(Shooter.States.MANUAL);
     }
 
     /**
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
-        System.out.println("ARM_POT" + shooter.getPosition());
-        drivetrain.tankDrive(driverLeft.getRawAxis(2),
+        System.out.println("ARM_POT" + robot.shooter.getPosition());
+        robot.drivetrain.tankDrive(driverLeft.getRawAxis(2),
                 driverRight.getRawAxis(2));
 
         int state = Shooter.States.MANUAL;
@@ -84,29 +77,29 @@ public class Main extends IterativeRobot {
             state = Shooter.States.PASS;
         } else if (gamePad.getButton(4)) {
             state = Shooter.States.SHOOT;
-        } else if (intake.state == Constants.Intake.RETRACTED) {
+        } else if (robot.intake.state == Constants.Intake.RETRACTED) {
             state = Shooter.States.HOLD;
         } else {
             state = Shooter.States.MANUAL;
-            shooter.setManual(gamePad.getLeftY() / 2);
+            robot.shooter.setManual(gamePad.getLeftY() / 2);
         }
 
-        shooter.setState(state);
+        robot.shooter.setState(state);
 
-        shooter.run();
+        robot.shooter.run();
 
         if (gamePad.getDPad(GamePad.DPadStates.UP)) {
-            intake.setMotors(1.0);
+            robot.intake.setMotors(1.0);
         } else if (gamePad.getDPad(GamePad.DPadStates.DOWN)) {
-            intake.setMotors(-1.0);
+            robot.intake.setMotors(-1.0);
         } else {
-            intake.setMotors(0);
+            robot.intake.setMotors(0);
         }
 
         if (gamePad.getButton(5)) {
-            intake.setActuators(Constants.Intake.RETRACTED);
+            robot.intake.setActuators(Constants.Intake.RETRACTED);
         } else if (gamePad.getButton(7)) {
-            intake.setActuators(Constants.Intake.EXTENDED);
+            robot.intake.setActuators(Constants.Intake.EXTENDED);
         }
 
     }
