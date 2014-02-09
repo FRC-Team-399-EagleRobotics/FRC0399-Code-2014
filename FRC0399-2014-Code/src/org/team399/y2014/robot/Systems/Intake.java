@@ -70,9 +70,10 @@ public class Intake {
     public void setActuators(boolean state) {
         this.prevState = this.state;
         this.state = state;
-
-        m_solA.set(this.state);
-        m_solB.set(this.state);
+        if (safety) {
+            m_solA.set(this.state);
+            m_solB.set(this.state);
+        }
     }
     private long startTime = 0;
 
@@ -82,34 +83,4 @@ public class Intake {
         this.safety = safety;
     }
 
-    /*public boolean getArmSafety() {
-     boolean allowArm = false;
-     boolean stateChange = prevState != state;
-     long elapsed = System.currentTimeMillis() - startTime;
-
-     if (stateChange) {
-     startTime = System.currentTimeMillis();
-     }
-
-     if (state == Constants.Intake.EXTENDED) {
-     System.out.println("[INTAKE] Deploying...");
-     if (elapsed > 500) {
-     allowArm = true;
-     } else {
-     allowArm = false;
-     }
-     }
-
-     if (state == Constants.Intake.RETRACTED) {
-     System.out.println("[INTAKE] Retracting...");
-     if (elapsed < 300) {
-     allowArm = true;
-     } else {
-     allowArm = false;
-     }
-     }
-
-     //System.out.println("[INTAKE] Timer running...  " + (System.currentTimeMillis() - startTime));
-     return allowArm;
-     }*/
 }

@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.team399.y2014.Utilities.Debouncer;
 import org.team399.y2014.Utilities.EagleMath;
+import org.team399.y2014.Utilities.ThrottledPrinter;
 import org.team399.y2014.robot.Config.Constants;
 
 /**
@@ -31,6 +32,8 @@ public class Shooter {
     private double m_upperLim = 0.0;
     private double m_lowerLim = 5.0;
     private boolean m_limitsEnabled = false;
+
+    private ThrottledPrinter fsmStatus = new ThrottledPrinter(0.5);
 
     /**
      * Constructor
@@ -136,6 +139,8 @@ public class Shooter {
                 return "TEST";
             } else if (state == MANUAL) {
                 return "MANUAL";
+            } else if (state == TRUSS) {
+                return "TRUSS";
             } else {
                 return "ERROR";
             }
@@ -172,11 +177,15 @@ public class Shooter {
     public void run() {
         double output = 0;
 
-        //if(curr_state != prev_state) {
-            /*System.out.println("[SHOOTER] State change from " +
-         States.toString(prev_state) + " to " +
-         States.toString(curr_state));
-         }*/
+        this.fsmStatus.println("[SHOOTER] State is: "
+                + States.toString(curr_state));
+
+        if (curr_state != prev_state) {
+            System.out.println("[SHOOTER] State change from "
+                    + States.toString(prev_state) + " to "
+                    + States.toString(curr_state));
+        }
+
         if (curr_state == States.STOW) {
             // If stow, do this
             goal = Constants.Shooter.STOW_POS;

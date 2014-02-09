@@ -8,21 +8,23 @@ package org.team399.y2014.robot.Commands;
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
+ * Command for a simple do nothing and wait
  *
  * @author jeremy.germita@gmail.com (Jeremy Germita)
  */
-public abstract class DriveSpeedCommand extends Command {
+public abstract class WaitCommand extends Command {
 
-    private double speed = 0.0;
     private double timeout = 0.0;
 
-    public DriveSpeedCommand(double speed, double timeout) {
-        this.speed = speed;
+    public WaitCommand(double timeout) {
         this.timeout = timeout;
     }
 
-    public void initialize() {
-
+    protected void intialize() {
+        this.setTimeout(timeout);
     }
 
+    protected boolean isFinished() {
+        return this.isTimedOut();
+    }
 }
