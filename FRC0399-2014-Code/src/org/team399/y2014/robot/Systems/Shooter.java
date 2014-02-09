@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.AnalogChannel;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import org.team399.y2014.Utilities.Debouncer;
 import org.team399.y2014.Utilities.EagleMath;
 import org.team399.y2014.robot.Config.Constants;
 
@@ -140,6 +141,8 @@ public class Shooter {
     public int getState() {
         return curr_state;
     }
+    
+    private Debouncer shotSettle = new Debouncer(250);
 
     /**
      * Runs the shooter finite state machine with control loops
@@ -171,7 +174,19 @@ public class Shooter {
                 } else {
                     s = Constants.Shooter.SHOT_FINAL_SPEED;
                 }
+                
+                
+                
+                if((Constants.Shooter.SHOT_POS - this.getPosition()) < .0675) {
+                    //this.setState(States.PASS);
+                    //goal = Constants.Shooter.STAGE_POS;
+                } else {
+                    
+                }
                 goal = Constants.Shooter.SHOT_POS;
+                System.out.println("[SHOOTER] Shot error: " + 
+                        (Constants.Shooter.SHOT_POS - this.getPosition()));
+                
                 output = pidControl(
                         Constants.Shooter.SHOT_P,
                         Constants.Shooter.SHOT_I,
@@ -220,9 +235,9 @@ public class Shooter {
             Double newUpper = null;
             Double newLower = null;
 
-            for (int i = 0; i < 2; i++) {
+            for (int i = 0; i < 5; i++) {
                 System.out.println("[SHOOTER] Auto-Calibrate: Moving Down...");
-                this.setOutput(.1);
+                this.setOutput(.4);
                 Timer.delay(.5);
             }
             newLower = Double.valueOf(this.getPosition());

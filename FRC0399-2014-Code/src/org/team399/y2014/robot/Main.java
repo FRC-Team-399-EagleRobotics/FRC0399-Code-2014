@@ -59,30 +59,32 @@ public class Main extends IterativeRobot {
     public void teleopInit() {
         robot.shooter.setState(Shooter.States.MANUAL);
     }
-
+int state = Shooter.States.MANUAL;
     /**
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
-        System.out.println("ARM_POT" + robot.shooter.getPosition());
+        //System.out.println("ARM_POT" + robot.shooter.getPosition());
+        SmartDashboard.putNumber("ArmPosition", robot.shooter.getPosition());
         robot.drivetrain.tankDrive(driverLeft.getRawAxis(2),
                 driverRight.getRawAxis(2));
 
-        int state = Shooter.States.MANUAL;
-        if (gamePad.getButton(1)) {
+        
+        if (gamePad.getButton(10)) {
             state = Shooter.States.STOW;
         } else if (gamePad.getButton(2)) {
             state = Shooter.States.TRUSS;
-        } else if (gamePad.getButton(3)) {
-            state = Shooter.States.PASS;
-        } else if (gamePad.getButton(4)) {
+        } else if (gamePad.getButton(8)) {
             state = Shooter.States.SHOOT;
+        } else if (gamePad.getButton(6)) {
+            state = Shooter.States.PASS;
         } else if (robot.intake.state == Constants.Intake.RETRACTED) {
             state = Shooter.States.HOLD;
-        } else {
+        } else if (gamePad.getButton(9)){
             state = Shooter.States.MANUAL;
-            robot.shooter.setManual(gamePad.getLeftY() / 2);
+            
         }
+        robot.shooter.setManual(gamePad.getRightY() / 2);
 
         robot.shooter.setState(state);
 
@@ -96,11 +98,7 @@ public class Main extends IterativeRobot {
             robot.intake.setMotors(0);
         }
 
-        if (gamePad.getButton(5)) {
-            robot.intake.setActuators(Constants.Intake.RETRACTED);
-        } else if (gamePad.getButton(7)) {
-            robot.intake.setActuators(Constants.Intake.EXTENDED);
-        }
+        robot.intake.setToggle(gamePad.getButton(5));
 
     }
 }

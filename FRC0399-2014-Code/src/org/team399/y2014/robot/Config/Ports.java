@@ -35,4 +35,6 @@ public class Ports {
     public final static int RIGHT_ENC_B = 4;
     public final static int GYRO = 2;
     
+    public final static int COMP_SWITCH = 5;
+    public final static int COMP_RELAY = 1;
 }

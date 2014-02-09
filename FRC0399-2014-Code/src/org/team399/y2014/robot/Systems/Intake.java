@@ -7,6 +7,7 @@ package org.team399.y2014.robot.Systems;
 
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Talon;
+import org.team399.y2014.Utilities.PulseTriggerBoolean;
 import org.team399.y2014.robot.Config.Constants;
 
 /**
@@ -33,6 +34,15 @@ public class Intake {
     }
     private boolean prevState = false;
 
+    PulseTriggerBoolean toggle = new PulseTriggerBoolean();
+    public void setToggle(boolean input) {
+        toggle.set(input);
+        if(toggle.get()) {
+            setActuators(!this.state);
+        }
+        
+    } 
+    
     public void setActuators(boolean state) {
         this.prevState = this.state;
         this.state = state;
