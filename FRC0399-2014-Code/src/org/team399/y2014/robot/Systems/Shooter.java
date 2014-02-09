@@ -97,7 +97,7 @@ public class Shooter {
 
         public final static int STOW = 0;
         public final static int SHOOT = 1;
-        public final static int PASS = 2;
+        public final static int STAGE = 2;
         public final static int TEST = -1;
         public final static int MANUAL = 99;
         public final static int TRUSS = 3;
@@ -108,7 +108,7 @@ public class Shooter {
                 return "STOW";
             } else if (state == SHOOT) {
                 return "SHOOT";
-            } else if (state == PASS) {
+            } else if (state == STAGE) {
                 return "PASS";
             } else if (state == TEST) {
                 return "TEST";
@@ -141,7 +141,7 @@ public class Shooter {
     public int getState() {
         return curr_state;
     }
-    
+
     private Debouncer shotSettle = new Debouncer(250);
 
     /**
@@ -174,28 +174,25 @@ public class Shooter {
                 } else {
                     s = Constants.Shooter.SHOT_FINAL_SPEED;
                 }
-                
-                
-                
-                if((Constants.Shooter.SHOT_POS - this.getPosition()) < .0675) {
+
+                if ((Constants.Shooter.SHOT_POS - this.getPosition()) < .0675) {
                     //this.setState(States.PASS);
                     //goal = Constants.Shooter.STAGE_POS;
                 } else {
-                    
+
                 }
                 goal = Constants.Shooter.SHOT_POS;
-                System.out.println("[SHOOTER] Shot error: " + 
-                        (Constants.Shooter.SHOT_POS - this.getPosition()));
-                
+                //System.out.println("[SHOOTER] Shot error: " +
+                //        (Constants.Shooter.SHOT_POS - this.getPosition()));
+
                 output = pidControl(
                         Constants.Shooter.SHOT_P,
                         Constants.Shooter.SHOT_I,
                         Constants.Shooter.SHOT_D,
                         Constants.Shooter.SHOT_F,
                         s);
-
             }
-        } else if (curr_state == States.PASS) {
+        } else if (curr_state == States.STAGE) {
             // Pass do this
             goal = Constants.Shooter.STAGE_POS;
             output = pidControl(
@@ -246,7 +243,7 @@ public class Shooter {
                 System.out.println("[SHOOTER] Auto-Calibrate: Moving Up...");
                 this.setOutput(-.15);
                 Timer.delay(.5);
-            }
+            }//might not need up cal
             newUpper = Double.valueOf(this.getPosition() - .025);
             System.out.println("[SHOOTER] Auto-Calibrate: New Upper Limit: " + newUpper.doubleValue());
             this.setSoftLimits(newUpper.doubleValue(), newLower.doubleValue(), m_limitsEnabled);

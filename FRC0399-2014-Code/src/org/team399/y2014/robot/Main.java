@@ -77,7 +77,7 @@ int state = Shooter.States.MANUAL;
         } else if (gamePad.getButton(8)) {
             state = Shooter.States.SHOOT;
         } else if (gamePad.getButton(6)) {
-            state = Shooter.States.PASS;
+            state = Shooter.States.STAGE;
         } else if (robot.intake.state == Constants.Intake.RETRACTED) {
             state = Shooter.States.HOLD;
         } else if (gamePad.getButton(9)){
