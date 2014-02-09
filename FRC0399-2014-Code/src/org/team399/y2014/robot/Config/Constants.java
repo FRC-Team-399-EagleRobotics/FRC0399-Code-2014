@@ -30,6 +30,7 @@ public class Constants {
 
         public static final double LOWER_LIMIT = 3.0698; // the lower limits of the pot
         public static final double UPPER_LIMIT = 4.5621; // the upper limits of the pot
+        public static final double INTAKE_LIMIT = LOWER_LIMIT + .375;
 
         public static final double STOW_POS = LOWER_LIMIT + 0.09;  // Stow position value
         public static final double STOW_P = 1.0;    // Stow PID gains
@@ -39,11 +40,11 @@ public class Constants {
         public static final double STOW_S = 0.65;    // Stow Speed limit
 
         public static final double STAGE_POS = LOWER_LIMIT + .21274;  // Pass position
-        public static final double STAGE_P = 1.0;    // Pass PID gains
+        public static final double STAGE_P = 1.2;    // Pass PID gains
         public static final double STAGE_I = 0.0;
         public static final double STAGE_D = 0.0;
         public static final double STAGE_F = 0.0;    // Pass Feed Forward Gain
-        public static final double STAGE_S = 0.5;    // Pass Speed limit
+        public static final double STAGE_S = 0.45;    // Pass Speed limit
 
         public static final double TRUSS_POS = LOWER_LIMIT + 0.4611;  // Pass position
         public static final double TRUSS_P = 3.0;    // Pass PID gains
@@ -73,8 +74,8 @@ public class Constants {
 
     public static class Intake {
 
-        public static final boolean EXTENDED = false;
-        public static final boolean RETRACTED = true;
+        public static final boolean EXTENDED = true;
+        public static final boolean RETRACTED = false;
         public static final double INTAKE_SPEED = 1.0;
         public static final double EXHAUST_SPEED = -1.0;
     }

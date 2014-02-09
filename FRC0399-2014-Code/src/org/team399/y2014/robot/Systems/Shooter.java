@@ -16,7 +16,8 @@ import org.team399.y2014.robot.Config.Constants;
 /**
  * Shooter class. Base functions for shooter mechanism
  *
- * @author ()
+ * @author (jeremy.germita@gmail.com) Jeremy Germita
+ * @author (ivansalazar003@gmail.com) Ivan Salazar
  */
 public class Shooter {
 
@@ -95,12 +96,33 @@ public class Shooter {
      */
     public static class States {
 
+        /**
+         * Stow state is downward position inside the frame.
+         */
         public final static int STOW = 0;
+        /**
+         * Shoot state is a 18ft shot distance
+         */
         public final static int SHOOT = 1;
+        /**
+         * Stage state is position for staging ball pre-shot and intake
+         */
         public final static int STAGE = 2;
+        /**
+         * Test state is auto-calibrate mode
+         */
         public final static int TEST = -1;
+        /**
+         * Manual state is joystick input open loop control
+         */
         public final static int MANUAL = 99;
+        /**
+         * Truss state is for truss toss and catch
+         */
         public final static int TRUSS = 3;
+        /**
+         * Hold state is for intake stowed ball holding
+         */
         public final static int HOLD = 4;
 
         public static String toString(int state) {

@@ -27,7 +27,7 @@ import javax.imageio.ImageIO;
  *      1a. Verify that the OpenCV libraries are in your PATH (on Windows)
  *  2. Add the following libraries to the project:
  *     SmartDashboard.jar
- * 
+ *
  *     extensions/WPICameraExtension.jar
  *     lib/NetworkTable_Client.jar
  *     extensions/lib/javacpp.jar
@@ -83,12 +83,12 @@ public class DaisyCVWidget extends WPICameraExtension {
 
         //Values from robot:
         double yaw = 0.0;   //Yaw for azimuth calculations
-        double h_low = 0.0;
-        double h_high = 0.0;
-        double s_low = 0.0;
-        double s_high = 0.0;
-        double v_low = 0.0;
-        double v_high = 0.0;
+        double h_low = 60.0;
+        double h_high = 100.0;
+        double s_low = 20.0;
+        double s_high = 100.0;
+        double v_low = 50.0;
+        double v_high = 100.0;
 
         int howManyTargets = 0;
 
@@ -309,7 +309,13 @@ public class DaisyCVWidget extends WPICameraExtension {
         }
 
         // Create the widget
-        DaisyCVWidget widget = new DaisyCVWidget(true);
+        DaisyCVWidget widget = null;
+
+        try {
+            widget = new DaisyCVWidget(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         long totalTime = 0;
         for (int i = 0; i < args.length; i++) {

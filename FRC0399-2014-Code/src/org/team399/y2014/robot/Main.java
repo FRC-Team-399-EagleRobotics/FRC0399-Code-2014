@@ -59,7 +59,8 @@ public class Main extends IterativeRobot {
     public void teleopInit() {
         robot.shooter.setState(Shooter.States.MANUAL);
     }
-int state = Shooter.States.MANUAL;
+    int state = Shooter.States.MANUAL;
+
     /**
      * This function is called periodically during operator control
      */
@@ -69,7 +70,6 @@ int state = Shooter.States.MANUAL;
         robot.drivetrain.tankDrive(driverLeft.getRawAxis(2),
                 driverRight.getRawAxis(2));
 
-        
         if (gamePad.getButton(10)) {
             state = Shooter.States.STOW;
         } else if (gamePad.getButton(2)) {
@@ -80,15 +80,17 @@ int state = Shooter.States.MANUAL;
             state = Shooter.States.STAGE;
         } else if (robot.intake.state == Constants.Intake.RETRACTED) {
             state = Shooter.States.HOLD;
-        } else if (gamePad.getButton(9)){
+        } else if (gamePad.getButton(9)) {
             state = Shooter.States.MANUAL;
-            
+
         }
         robot.shooter.setManual(gamePad.getRightY() / 2);
-
         robot.shooter.setState(state);
-
         robot.shooter.run();
+
+        robot.intake.setIntakeSafety(
+                robot.shooter.getPosition() < Constants.Shooter.INTAKE_LIMIT
+                || robot.intake.state == Constants.Intake.EXTENDED);
 
         if (gamePad.getDPad(GamePad.DPadStates.UP)) {
             robot.intake.setMotors(1.0);
