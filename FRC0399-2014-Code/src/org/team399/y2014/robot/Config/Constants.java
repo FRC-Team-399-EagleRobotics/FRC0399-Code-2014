@@ -11,20 +11,24 @@ package org.team399.y2014.robot.Config;
  */
 public class Constants {
 
-    //TURN PID VALUES
-    public static double TURN_P = -10.0;
-    public static double TURN_I = 0.0;
-    public static double TURN_D = 1.0;
-    //DRIVE PID VALUES
-    public static double DRIVE_P = -.01;
-    public static double DRIVE_I = 0;
-    public static double DRIVE_D = 0;
-
-    public static final double TICKS_TO_INCHES = 16.5694;
-    public static final double WIDTH = 26.0;
-
     public static final int COMP_SWITCH = 5;
     public static final int COMP_RELAY = 1;
+
+    public static class DriveTrain {
+
+        public static double TURN_I = 0.0;
+        //TURN PID VALUES
+        public static double TURN_P = -10.0;
+        public static double DRIVE_D = 0;
+        public static double TURN_D = 1.0;
+        public static final double WIDTH = 26.0;
+        public static double DRIVE_I = 0;
+        //DRIVE PID VALUES
+        public static double DRIVE_P = -.01;
+        public static double STRAIGHT_P = -.01;
+        public static final double TICKS_TO_INCHES = 16.5694;
+
+    }
 
     public static class Shooter {
 

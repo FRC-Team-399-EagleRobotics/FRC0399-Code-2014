@@ -6,9 +6,9 @@
 package org.team399.y2014.robot.Commands;
 
 /**
+ * Command to shoot a ball
  *
  * @author jeremy.germita@gmail.com (Jeremy Germita)
  */
 public class ShootCommand {
-
 }
