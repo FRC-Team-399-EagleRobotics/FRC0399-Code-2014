@@ -108,7 +108,7 @@ public class DriveTrain {
     }
 
     public double inchesToTicks(double inches) {
-        return inches * Constants.TICKS_TO_INCHES;
+        return inches * Constants.DriveTrain.TICKS_TO_INCHES;
     }
 
     public double getHeading() {
@@ -130,7 +130,7 @@ public class DriveTrain {
             rightEnc.reset();
         }
 
-        return (left - right) / Constants.WIDTH;
+        return (left - right);
     }
 
     public double getEncoderDisplacement() {

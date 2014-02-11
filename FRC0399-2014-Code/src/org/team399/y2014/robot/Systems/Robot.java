@@ -7,6 +7,7 @@ package org.team399.y2014.robot.Systems;
 
 import edu.wpi.first.wpilibj.Compressor;
 import org.team399.y2014.robot.Config.Ports;
+import org.team399.y2014.robot.Systems.Vision.Vision;
 
 /**
  *
@@ -19,6 +20,7 @@ public class Robot {
     public Intake intake;
     public DriveTrain drivetrain;
     public Compressor comp;
+    public Vision camera = Vision.getInstance();
 
     private Robot() {
         shooter = new Shooter(Ports.LEFT_SHOOTER, Ports.RIGHT_SHOOTER, Ports.ARM_POT);

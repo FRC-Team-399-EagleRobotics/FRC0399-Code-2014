@@ -10,6 +10,7 @@ import org.team399.y2014.robot.Config.Constants;
 import org.team399.y2014.robot.Systems.Robot;
 
 /**
+ * Command to drive the intake motors and actuate the intake position
  *
  * @author jeremy.germita@gmail.com (Jeremy Germita)
  */
