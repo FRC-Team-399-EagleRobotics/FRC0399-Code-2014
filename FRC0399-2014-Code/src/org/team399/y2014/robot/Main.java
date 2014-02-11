@@ -54,6 +54,7 @@ public class Main extends IterativeRobot {
 
     public void disabledPeriodic() {
         SmartDashboard.putNumber("ArmPosition", robot.shooter.getPosition());
+        SmartDashboard.putNumber("ArmOffset", robot.shooter.getOffsetFromBottom());
     }
 
     public void teleopInit() {
@@ -67,30 +68,37 @@ public class Main extends IterativeRobot {
     public void teleopPeriodic() {
         //System.out.println("ARM_POT" + robot.shooter.getPosition());
         SmartDashboard.putNumber("ArmPosition", robot.shooter.getPosition());
+        SmartDashboard.putNumber("ArmOffset", robot.shooter.getOffsetFromBottom());
         robot.drivetrain.tankDrive(driverLeft.getRawAxis(2),
                 driverRight.getRawAxis(2));
 
         if (gamePad.getButton(10)) {
-            state = Shooter.States.STOW;
+            state = Shooter.States.SHORT_STAGE;
         } else if (gamePad.getButton(2)) {
             state = Shooter.States.TRUSS;
         } else if (gamePad.getButton(8)) {
             state = Shooter.States.SHOOT;
         } else if (gamePad.getButton(6)) {
             state = Shooter.States.STAGE;
+        } else if (gamePad.getButton(7)) {
+            state = Shooter.States.SHORT_SHOT;
         } else if (robot.intake.state == Constants.Intake.RETRACTED) {
-            state = Shooter.States.HOLD;
+            //state = Shooter.States.HOLD;
         } else if (gamePad.getButton(9)) {
             state = Shooter.States.MANUAL;
 
         }
+        
+        /*if(System.currentTimeMillis() - robot.shooter.timeStateChange > 750 && state == Shooter.States.SHOOT) {
+            state = Shooter.States.STAGE;
+        }*/
         robot.shooter.setManual(gamePad.getRightY() / 2);
         robot.shooter.setState(state);
         robot.shooter.run();
 
-        robot.intake.setIntakeSafety(
-                robot.shooter.getPosition() < Constants.Shooter.INTAKE_LIMIT
-                || robot.intake.state == Constants.Intake.EXTENDED);
+        //robot.intake.setIntakeSafety(
+        //        robot.shooter.getPosition() < Constants.Shooter.INTAKE_LIMIT
+        //        || robot.intake.state == Constants.Intake.EXTENDED);
 
         if (gamePad.getDPad(GamePad.DPadStates.UP)) {
             robot.intake.setMotors(1.0);

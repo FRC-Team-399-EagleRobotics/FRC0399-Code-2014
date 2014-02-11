@@ -24,15 +24,11 @@ public class Shooter {
 
     private Talon m_shooterA = null;    // Motor Controllers
     private Talon m_shooterB = null;
-
     private AnalogChannel m_pot = null; // Position sensor
-
     private double goal = 0;
-
     private double m_upperLim = 0.0;
     private double m_lowerLim = 5.0;
     private boolean m_limitsEnabled = false;
-
     private ThrottledPrinter fsmStatus = new ThrottledPrinter(0.5);
 
     /**
@@ -61,6 +57,16 @@ public class Shooter {
     }
 
     /**
+     * Gets position sensor value.
+     *
+     * @return Potentiometer value
+     */
+    public double getOffsetFromBottom() {
+        double answer = this.getPosition() - Constants.Shooter.LOWER_LIMIT;
+        return answer;
+    }
+
+    /**
      * Sets motor controller outputs.
      *
      * @param value
@@ -82,7 +88,6 @@ public class Shooter {
         this.m_upperLim = upper;
         this.m_limitsEnabled = en;
     }
-
     double manualInput = 0;
 
     /**
@@ -127,6 +132,8 @@ public class Shooter {
          * Hold state is for intake stowed ball holding
          */
         public final static int HOLD = 4;
+        public final static int SHORT_SHOT = 5;
+        public final static int SHORT_STAGE = 6;
 
         public static String toString(int state) {
             if (state == STOW) {
@@ -134,20 +141,22 @@ public class Shooter {
             } else if (state == SHOOT) {
                 return "SHOOT";
             } else if (state == STAGE) {
-                return "PASS";
+                return "STAGE";
             } else if (state == TEST) {
                 return "TEST";
             } else if (state == MANUAL) {
                 return "MANUAL";
             } else if (state == TRUSS) {
                 return "TRUSS";
+            } else if (state == SHORT_SHOT) {
+                return "SHORT_SHOT";
+            } else if (state == SHORT_STAGE) {
+                return "SHORT_STAGE";
             } else {
                 return "ERROR";
             }
         }
-
     }
-
     private int curr_state = 0, prev_state = 0;
 
     /**
@@ -156,8 +165,11 @@ public class Shooter {
      * @param newState new state to use
      */
     public void setState(int newState) {
+        //if(newState != curr_state) {
         prev_state = curr_state;
         curr_state = newState;
+        //}
+
     }
 
     /**
@@ -168,8 +180,8 @@ public class Shooter {
     public int getState() {
         return curr_state;
     }
-
     private Debouncer shotSettle = new Debouncer(250);
+    public long timeStateChange = 0;
 
     /**
      * Runs the shooter finite state machine with control loops
@@ -178,12 +190,13 @@ public class Shooter {
         double output = 0;
 
         this.fsmStatus.println("[SHOOTER] State is: "
-                + States.toString(curr_state));
+                + States.toString(curr_state) + " (" + curr_state + ")");
 
         if (curr_state != prev_state) {
             System.out.println("[SHOOTER] State change from "
                     + States.toString(prev_state) + " to "
                     + States.toString(curr_state));
+            timeStateChange = System.currentTimeMillis();
         }
 
         if (curr_state == States.STOW) {
@@ -195,26 +208,43 @@ public class Shooter {
                     Constants.Shooter.STOW_D,
                     Constants.Shooter.STOW_F,
                     Constants.Shooter.STOW_S);
+        } else if (curr_state == States.SHORT_SHOT) {
+            // Else if shoot, do this
+            output = 0;
+            double s = 0.0;
+            if (this.getPosition() < Constants.Shooter.SHORT_POS) {
+                s = Constants.Shooter.SHOT_FINAL_SPEED;
+                goal = Constants.Shooter.SHORT_POS;
+
+                /*if(prev_state == States.STAGE) {
+                 goal = Constants.Shooter.SHOT_POS;
+                 } else if(prev_state == States.SHORT_STAGE) {
+                 goal = Constants.Shooter.SHORT_POS; 
+                 } else {
+                 goal = Constants.Shooter.SHOT_POS;
+                 }*/
+
+                output = pidControl(
+                        Constants.Shooter.SHOT_P,
+                        Constants.Shooter.SHOT_I,
+                        Constants.Shooter.SHOT_D,
+                        Constants.Shooter.SHOT_F,
+                        s);
+            }
         } else if (curr_state == States.SHOOT) {
             // Else if shoot, do this
             output = 0;
             double s = 0.0;
             if (this.getPosition() < Constants.Shooter.SHOT_POS) {
-                if (this.getPosition() < Constants.Shooter.SHOT_START) {
-                    s = Constants.Shooter.SHOT_INIT_SPEED;
-                } else {
-                    s = Constants.Shooter.SHOT_FINAL_SPEED;
-                }
-
-                if ((Constants.Shooter.SHOT_POS - this.getPosition()) < .0675) {
-                    //this.setState(States.PASS);
-                    //goal = Constants.Shooter.STAGE_POS;
-                } else {
-
-                }
+                s = Constants.Shooter.SHOT_FINAL_SPEED;
                 goal = Constants.Shooter.SHOT_POS;
-                //System.out.println("[SHOOTER] Shot error: " +
-                //        (Constants.Shooter.SHOT_POS - this.getPosition()));
+                /*if(prev_state == States.STAGE) {
+                 
+                 } else if(prev_state == States.SHORT_STAGE) {
+                 goal = Constants.Shooter.SHORT_POS; 
+                 } else {
+                 goal = Constants.Shooter.SHOT_POS;
+                 }*/
 
                 output = pidControl(
                         Constants.Shooter.SHOT_P,
@@ -226,6 +256,15 @@ public class Shooter {
         } else if (curr_state == States.STAGE) {
             // Pass do this
             goal = Constants.Shooter.STAGE_POS;
+            output = pidControl(
+                    Constants.Shooter.STAGE_P,
+                    Constants.Shooter.STAGE_I,
+                    Constants.Shooter.STAGE_D,
+                    Constants.Shooter.STAGE_F,
+                    Constants.Shooter.STAGE_S);
+        } else if (curr_state == States.SHORT_STAGE) {
+            // Pass do this
+            goal = Constants.Shooter.SHORT_STAGE_POS;
             output = pidControl(
                     Constants.Shooter.STAGE_P,
                     Constants.Shooter.STAGE_I,
@@ -263,9 +302,9 @@ public class Shooter {
             Double newUpper = null;
             Double newLower = null;
 
-            for (int i = 0; i < 5; i++) {
+            for (int i = 0; i < 4; i++) {
                 System.out.println("[SHOOTER] Auto-Calibrate: Moving Down...");
-                this.setOutput(.4);
+                this.setOutput(.15);
                 Timer.delay(.5);
             }
             newLower = Double.valueOf(this.getPosition());
@@ -290,7 +329,6 @@ public class Shooter {
 
         this.setOutput(output);
     }
-
     private double error = 0, prevError = 0;
     private double intError = 0;
 
@@ -329,5 +367,4 @@ public class Shooter {
 
         return output;
     }
-
 }
