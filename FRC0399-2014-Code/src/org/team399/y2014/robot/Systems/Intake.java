@@ -23,7 +23,7 @@ public class Intake {
     private Solenoid m_solB = null;
 
     public boolean state = false;
-
+    public double output = 0.0;
     /**
      * Constructor.
      *
@@ -44,6 +44,7 @@ public class Intake {
      * @param input
      */
     public void setMotors(double input) {
+        output  = input;
         m_intakeA.set(input);
     }
     private boolean prevState = false;

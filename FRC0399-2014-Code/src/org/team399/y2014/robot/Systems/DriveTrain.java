@@ -67,6 +67,8 @@ public class DriveTrain {
         yaw = new Gyro(gyro);
         leftEnc = new Encoder(leftEncA, leftEncB);
         rightEnc = new Encoder(rightEncA, rightEncB);
+        leftEnc.start();
+        rightEnc.start();
     }
 
     public void resetSensors() {
@@ -122,8 +124,10 @@ public class DriveTrain {
     }
 
     public double getEncoderTurn(boolean clear) {
-        double left = leftEnc.getDistance();
-        double right = rightEnc.getDistance();
+        double left = -leftEnc.get();
+        double right = rightEnc.get();
+        System.out.println("L: " + left);
+        System.out.println("R: " + right);
 
         if (clear) {
             leftEnc.reset();
@@ -138,8 +142,8 @@ public class DriveTrain {
     }
 
     public double getEncoderDisplacement(boolean clear) {
-        double left = leftEnc.getDistance();
-        double right = rightEnc.getDistance();
+        double left = leftEnc.get();
+        double right = rightEnc.get();
 
         if (clear) {
             leftEnc.reset();

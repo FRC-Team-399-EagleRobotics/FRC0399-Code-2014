@@ -134,6 +134,7 @@ public class Shooter {
         public final static int HOLD = 4;
         public final static int SHORT_SHOT = 5;
         public final static int SHORT_STAGE = 6;
+        
 
         public static String toString(int state) {
             if (state == STOW) {
@@ -223,6 +224,8 @@ public class Shooter {
                  } else {
                  goal = Constants.Shooter.SHOT_POS;
                  }*/
+                
+                
 
                 output = pidControl(
                         Constants.Shooter.SHOT_P,
@@ -245,6 +248,8 @@ public class Shooter {
                  } else {
                  goal = Constants.Shooter.SHOT_POS;
                  }*/
+                
+                
 
                 output = pidControl(
                         Constants.Shooter.SHOT_P,
@@ -289,6 +294,7 @@ public class Shooter {
                     Constants.Shooter.HOLD_D,
                     Constants.Shooter.HOLD_F,
                     Constants.Shooter.HOLD_S);
+            
         } else if (curr_state == States.MANUAL) {
             // Else if manual control, do this
             output = manualInput;
@@ -329,6 +335,13 @@ public class Shooter {
 
         this.setOutput(output);
     }
+    
+    
+    public boolean getShootDone() {
+        return (curr_state == States.SHOOT || curr_state == States.SHORT_SHOT)
+                && (System.currentTimeMillis() - timeStateChange > 500);
+    }
+    
     private double error = 0, prevError = 0;
     private double intError = 0;
 
