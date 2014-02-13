@@ -72,6 +72,9 @@ public class Shooter {
      * @param value
      */
     public void setOutput(double value) {
+        if(Math.abs(value) > .4) {
+            value = .4;
+        }
         m_shooterA.set(value);
         m_shooterB.set(-value);    // Might want to negate this before enable.
     }
@@ -86,6 +89,8 @@ public class Shooter {
     public void setSoftLimits(double upper, double lower, boolean en) {
         this.m_lowerLim = lower;
         this.m_upperLim = upper;
+        Constants.Shooter.UPPER_LIMIT = this.m_upperLim;
+        Constants.Shooter.LOWER_LIMIT = this.m_lowerLim;
         this.m_limitsEnabled = en;
     }
     double manualInput = 0;
@@ -134,6 +139,7 @@ public class Shooter {
         public final static int HOLD = 4;
         public final static int SHORT_SHOT = 5;
         public final static int SHORT_STAGE = 6;
+        
 
         public static String toString(int state) {
             if (state == STOW) {
@@ -223,6 +229,8 @@ public class Shooter {
                  } else {
                  goal = Constants.Shooter.SHOT_POS;
                  }*/
+                
+                
 
                 output = pidControl(
                         Constants.Shooter.SHOT_P,
@@ -245,6 +253,8 @@ public class Shooter {
                  } else {
                  goal = Constants.Shooter.SHOT_POS;
                  }*/
+                
+                
 
                 output = pidControl(
                         Constants.Shooter.SHOT_P,
@@ -289,6 +299,7 @@ public class Shooter {
                     Constants.Shooter.HOLD_D,
                     Constants.Shooter.HOLD_F,
                     Constants.Shooter.HOLD_S);
+            
         } else if (curr_state == States.MANUAL) {
             // Else if manual control, do this
             output = manualInput;
@@ -329,6 +340,13 @@ public class Shooter {
 
         this.setOutput(output);
     }
+    
+    
+    public boolean getShootDone() {
+        return (curr_state == States.SHOOT || curr_state == States.SHORT_SHOT)
+                && (System.currentTimeMillis() - timeStateChange > 800);
+    }
+    
     private double error = 0, prevError = 0;
     private double intError = 0;
 

@@ -6,6 +6,7 @@
 /*----------------------------------------------------------------------------*/
 package org.team399.y2014.robot;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -55,10 +56,23 @@ public class Main extends IterativeRobot {
     public void disabledPeriodic() {
         SmartDashboard.putNumber("ArmPosition", robot.shooter.getPosition());
         SmartDashboard.putNumber("ArmOffset", robot.shooter.getOffsetFromBottom());
+        //System.out.println("D: " + robot.drivetrain.getEncoderDisplacement(false));
+        //System.out.println("T: " + robot.drivetrain.getEncoderTurn(false));
     }
-
+    double armPotInit = 0.0;
     public void teleopInit() {
-        robot.shooter.setState(Shooter.States.MANUAL);
+        
+        robot.shooter.setManual(0);
+        
+        if(robot.shooter.getPosition() < Constants.Shooter.INTAKE_LIMIT) {
+            state = Shooter.States.HOLD;
+            System.out.println("ARM TOO LOW, STOWING ARM");
+        } else {
+            state = Shooter.States.MANUAL;
+            System.out.println("ARM TOO HIGH, MANUAL!");
+        }
+        
+        robot.shooter.setState(state);
     }
     int state = Shooter.States.MANUAL;
 
@@ -69,24 +83,32 @@ public class Main extends IterativeRobot {
         //System.out.println("ARM_POT" + robot.shooter.getPosition());
         SmartDashboard.putNumber("ArmPosition", robot.shooter.getPosition());
         SmartDashboard.putNumber("ArmOffset", robot.shooter.getOffsetFromBottom());
+        SmartDashboard.putNumber("ArmState", robot.shooter.getState());
+        SmartDashboard.putString("ArmStateString", Shooter.States.toString(robot.shooter.getState()));
+        
+        SmartDashboard.putNumber("BatteryV", DriverStation.getInstance().getBatteryVoltage()-10)
+                ;
         robot.drivetrain.tankDrive(driverLeft.getRawAxis(2),
                 driverRight.getRawAxis(2));
 
         if (gamePad.getButton(10)) {
-            state = Shooter.States.SHORT_STAGE;
+            state = Shooter.States.STAGE;
         } else if (gamePad.getButton(2)) {
             state = Shooter.States.TRUSS;
-        } else if (gamePad.getButton(8)) {
+        } else if (gamePad.getButton(8) && robot.intake.state == Constants.Intake.EXTENDED) {
             state = Shooter.States.SHOOT;
         } else if (gamePad.getButton(6)) {
-            state = Shooter.States.STAGE;
-        } else if (gamePad.getButton(7)) {
+            state = Shooter.States.SHORT_STAGE;
+        } else if (gamePad.getButton(7) && robot.intake.state == Constants.Intake.EXTENDED) {
             state = Shooter.States.SHORT_SHOT;
         } else if (robot.intake.state == Constants.Intake.RETRACTED) {
             //state = Shooter.States.HOLD;
         } else if (gamePad.getButton(9)) {
             state = Shooter.States.MANUAL;
-
+        } else if(robot.shooter.getShootDone()){
+            state = Shooter.States.SHORT_STAGE;
+        } else if(robot.intake.output == -1.0) {
+            state = Shooter.States.HOLD;
         }
         
         /*if(System.currentTimeMillis() - robot.shooter.timeStateChange > 750 && state == Shooter.States.SHOOT) {
@@ -94,11 +116,8 @@ public class Main extends IterativeRobot {
         }*/
         robot.shooter.setManual(gamePad.getRightY() / 2);
         robot.shooter.setState(state);
-        robot.shooter.run();
+        //robot.shooter.run();
 
-        //robot.intake.setIntakeSafety(
-        //        robot.shooter.getPosition() < Constants.Shooter.INTAKE_LIMIT
-        //        || robot.intake.state == Constants.Intake.EXTENDED);
 
         if (gamePad.getDPad(GamePad.DPadStates.UP)) {
             robot.intake.setMotors(1.0);

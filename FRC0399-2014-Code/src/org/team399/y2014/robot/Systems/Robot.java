@@ -21,11 +21,14 @@ public class Robot {
     public DriveTrain drivetrain;
     public Compressor comp;
     public Vision camera = Vision.getInstance();
+    
 
     private Robot() {
         shooter = new Shooter(Ports.LEFT_SHOOTER, Ports.RIGHT_SHOOTER, Ports.ARM_POT);
         intake = new Intake(Ports.INTAKE_PWM, Ports.INTAKE_SOLA, Ports.INTAKE_SOLB);
         drivetrain = new DriveTrain(Ports.LEFT_DRIVE, Ports.RIGHT_DRIVE);
+        drivetrain.setSensors(Ports.GYRO, Ports.LEFT_ENC_A, Ports.LEFT_ENC_B, 
+                Ports.RIGHT_ENC_A, Ports.RIGHT_ENC_B);
         comp = new Compressor(Ports.COMP_SWITCH, Ports.COMP_RELAY);
         comp.start();
     }
