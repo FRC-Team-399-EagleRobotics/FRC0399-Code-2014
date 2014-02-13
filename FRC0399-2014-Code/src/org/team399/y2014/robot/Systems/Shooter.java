@@ -344,7 +344,11 @@ public class Shooter {
     
     public boolean getShootDone() {
         return (curr_state == States.SHOOT || curr_state == States.SHORT_SHOT)
+<<<<<<< HEAD
                 && (System.currentTimeMillis() - timeStateChange > 800);
+=======
+                && (System.currentTimeMillis() - timeStateChange > 500);
+>>>>>>> f3bbaeeb7df0bf9d3bcf784ad3256052452790fc
     }
     
     private double error = 0, prevError = 0;

@@ -56,8 +56,13 @@ public class Main extends IterativeRobot {
     public void disabledPeriodic() {
         SmartDashboard.putNumber("ArmPosition", robot.shooter.getPosition());
         SmartDashboard.putNumber("ArmOffset", robot.shooter.getOffsetFromBottom());
+<<<<<<< HEAD
         //System.out.println("D: " + robot.drivetrain.getEncoderDisplacement(false));
         //System.out.println("T: " + robot.drivetrain.getEncoderTurn(false));
+=======
+        System.out.println("D: " + robot.drivetrain.getEncoderDisplacement(false));
+        System.out.println("T: " + robot.drivetrain.getEncoderTurn(false));
+>>>>>>> f3bbaeeb7df0bf9d3bcf784ad3256052452790fc
     }
     double armPotInit = 0.0;
     public void teleopInit() {

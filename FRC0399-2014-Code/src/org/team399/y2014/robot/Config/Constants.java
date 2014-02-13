@@ -32,9 +32,15 @@ public class Constants {
 
     public static class Shooter {
 
+<<<<<<< HEAD
         public static double LOWER_LIMIT = 3.326992617; // the lower limits of the pot
         public static double UPPER_LIMIT = 4.587822367; // the upper limits of the pot
         public static double INTAKE_LIMIT = LOWER_LIMIT + .6720;
+=======
+        public static final double LOWER_LIMIT = 3.0235; // the lower limits of the pot
+        public static final double UPPER_LIMIT = 4.2895; // the upper limits of the pot
+        public static final double INTAKE_LIMIT = LOWER_LIMIT + .6720;
+>>>>>>> f3bbaeeb7df0bf9d3bcf784ad3256052452790fc
 
         public static final double STOW_POS = LOWER_LIMIT + 0.007;  // Stow position value
         public static final double STOW_P = 1.0;    // Stow PID gains
