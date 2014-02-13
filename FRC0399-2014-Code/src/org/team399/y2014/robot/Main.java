@@ -56,27 +56,23 @@ public class Main extends IterativeRobot {
     public void disabledPeriodic() {
         SmartDashboard.putNumber("ArmPosition", robot.shooter.getPosition());
         SmartDashboard.putNumber("ArmOffset", robot.shooter.getOffsetFromBottom());
-<<<<<<< HEAD
         //System.out.println("D: " + robot.drivetrain.getEncoderDisplacement(false));
         //System.out.println("T: " + robot.drivetrain.getEncoderTurn(false));
-=======
-        System.out.println("D: " + robot.drivetrain.getEncoderDisplacement(false));
-        System.out.println("T: " + robot.drivetrain.getEncoderTurn(false));
->>>>>>> f3bbaeeb7df0bf9d3bcf784ad3256052452790fc
     }
     double armPotInit = 0.0;
+
     public void teleopInit() {
-        
+
         robot.shooter.setManual(0);
-        
-        if(robot.shooter.getPosition() < Constants.Shooter.INTAKE_LIMIT) {
+
+        if (robot.shooter.getPosition() < Constants.Shooter.INTAKE_LIMIT) {
             state = Shooter.States.HOLD;
             System.out.println("ARM TOO LOW, STOWING ARM");
         } else {
             state = Shooter.States.MANUAL;
             System.out.println("ARM TOO HIGH, MANUAL!");
         }
-        
+
         robot.shooter.setState(state);
     }
     int state = Shooter.States.MANUAL;
@@ -90,9 +86,8 @@ public class Main extends IterativeRobot {
         SmartDashboard.putNumber("ArmOffset", robot.shooter.getOffsetFromBottom());
         SmartDashboard.putNumber("ArmState", robot.shooter.getState());
         SmartDashboard.putString("ArmStateString", Shooter.States.toString(robot.shooter.getState()));
-        
-        SmartDashboard.putNumber("BatteryV", DriverStation.getInstance().getBatteryVoltage()-10)
-                ;
+
+        SmartDashboard.putNumber("BatteryV", DriverStation.getInstance().getBatteryVoltage() - 10);
         robot.drivetrain.tankDrive(driverLeft.getRawAxis(2),
                 driverRight.getRawAxis(2));
 
@@ -110,19 +105,15 @@ public class Main extends IterativeRobot {
             //state = Shooter.States.HOLD;
         } else if (gamePad.getButton(9)) {
             state = Shooter.States.MANUAL;
-        } else if(robot.shooter.getShootDone()){
+        } else if (robot.shooter.getShootDone()) {
             state = Shooter.States.SHORT_STAGE;
-        } else if(robot.intake.output == -1.0) {
+        } else if (robot.intake.output == -1.0) {
             state = Shooter.States.HOLD;
         }
-        
-        /*if(System.currentTimeMillis() - robot.shooter.timeStateChange > 750 && state == Shooter.States.SHOOT) {
-            state = Shooter.States.STAGE;
-        }*/
+
         robot.shooter.setManual(gamePad.getRightY() / 2);
         robot.shooter.setState(state);
         //robot.shooter.run();
-
 
         if (gamePad.getDPad(GamePad.DPadStates.UP)) {
             robot.intake.setMotors(1.0);

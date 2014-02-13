@@ -37,7 +37,7 @@ public abstract class DriveTurnCommand extends Command {
         Robot.getInstance().drivetrain.resetSensors();
     }
 
-    protected void run() {
+    protected void execute() {
         double heading
                 = Robot.getInstance().drivetrain.getHeading();
         double encTurn = Robot.getInstance().drivetrain.getEncoderTurn(false);

@@ -20,7 +20,7 @@ public abstract class WaitCommand extends Command {
         this.timeout = timeout;
     }
 
-    protected void intialize() {
+    protected void initialize() {
         this.setTimeout(timeout);
     }
 

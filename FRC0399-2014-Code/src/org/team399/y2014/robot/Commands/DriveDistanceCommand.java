@@ -36,7 +36,7 @@ public abstract class DriveDistanceCommand extends Command {
         Robot.getInstance().drivetrain.getEncoderDisplacement(true);
     }
 
-    protected void run() {
+    protected void execute() {
         double displacement
                 = Robot.getInstance().drivetrain.getEncoderDisplacement(false);
         double encTurn = Robot.getInstance().drivetrain.getEncoderTurn(false);

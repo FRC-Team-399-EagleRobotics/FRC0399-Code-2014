@@ -72,9 +72,6 @@ public class Shooter {
      * @param value
      */
     public void setOutput(double value) {
-        if(Math.abs(value) > .4) {
-            value = .4;
-        }
         m_shooterA.set(value);
         m_shooterB.set(-value);    // Might want to negate this before enable.
     }
@@ -139,7 +136,6 @@ public class Shooter {
         public final static int HOLD = 4;
         public final static int SHORT_SHOT = 5;
         public final static int SHORT_STAGE = 6;
-        
 
         public static String toString(int state) {
             if (state == STOW) {
@@ -158,6 +154,8 @@ public class Shooter {
                 return "SHORT_SHOT";
             } else if (state == SHORT_STAGE) {
                 return "SHORT_STAGE";
+            } else if (state == HOLD) {
+                return "HOLD";
             } else {
                 return "ERROR";
             }
@@ -225,13 +223,10 @@ public class Shooter {
                 /*if(prev_state == States.STAGE) {
                  goal = Constants.Shooter.SHOT_POS;
                  } else if(prev_state == States.SHORT_STAGE) {
-                 goal = Constants.Shooter.SHORT_POS; 
+                 goal = Constants.Shooter.SHORT_POS;
                  } else {
                  goal = Constants.Shooter.SHOT_POS;
                  }*/
-                
-                
-
                 output = pidControl(
                         Constants.Shooter.SHOT_P,
                         Constants.Shooter.SHOT_I,
@@ -247,14 +242,12 @@ public class Shooter {
                 s = Constants.Shooter.SHOT_FINAL_SPEED;
                 goal = Constants.Shooter.SHOT_POS;
                 /*if(prev_state == States.STAGE) {
-                 
+
                  } else if(prev_state == States.SHORT_STAGE) {
-                 goal = Constants.Shooter.SHORT_POS; 
+                 goal = Constants.Shooter.SHORT_POS;
                  } else {
                  goal = Constants.Shooter.SHOT_POS;
                  }*/
-                
-                
 
                 output = pidControl(
                         Constants.Shooter.SHOT_P,
@@ -299,7 +292,7 @@ public class Shooter {
                     Constants.Shooter.HOLD_D,
                     Constants.Shooter.HOLD_F,
                     Constants.Shooter.HOLD_S);
-            
+
         } else if (curr_state == States.MANUAL) {
             // Else if manual control, do this
             output = manualInput;
@@ -340,17 +333,12 @@ public class Shooter {
 
         this.setOutput(output);
     }
-    
-    
+
     public boolean getShootDone() {
         return (curr_state == States.SHOOT || curr_state == States.SHORT_SHOT)
-<<<<<<< HEAD
                 && (System.currentTimeMillis() - timeStateChange > 800);
-=======
-                && (System.currentTimeMillis() - timeStateChange > 500);
->>>>>>> f3bbaeeb7df0bf9d3bcf784ad3256052452790fc
     }
-    
+
     private double error = 0, prevError = 0;
     private double intError = 0;
 
@@ -369,8 +357,9 @@ public class Shooter {
             double d,
             double f,
             double s) {
+
         prevError = error;
-        error = this.getPosition() - goal;
+        error = this.getPosition() - (goal + this.m_lowerLim);
 
         intError += error;
         if (Math.abs(intError) > 0.5) {
