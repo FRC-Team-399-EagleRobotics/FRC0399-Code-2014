@@ -72,6 +72,10 @@ public class Shooter {
      * @param value
      */
     public void setOutput(double value) {
+        if(Math.abs(value) > Constants.Shooter.SPEED_LIMIT) {
+            value = Constants.Shooter.SPEED_LIMIT * EagleMath.signum(value);
+        }
+        
         m_shooterA.set(value);
         m_shooterB.set(-value);    // Might want to negate this before enable.
     }
@@ -216,7 +220,7 @@ public class Shooter {
             // Else if shoot, do this
             output = 0;
             double s = 0.0;
-            if (this.getPosition() < Constants.Shooter.SHORT_POS) {
+            //if (this.getPosition() < Constants.Shooter.SHORT_POS) {
                 s = Constants.Shooter.SHOT_FINAL_SPEED;
                 goal = Constants.Shooter.SHORT_POS;
 
@@ -233,12 +237,13 @@ public class Shooter {
                         Constants.Shooter.SHOT_D,
                         Constants.Shooter.SHOT_F,
                         s);
-            }
+                System.out.println("Shot! Output: " + output);
+           // }
         } else if (curr_state == States.SHOOT) {
             // Else if shoot, do this
             output = 0;
             double s = 0.0;
-            if (this.getPosition() < Constants.Shooter.SHOT_POS) {
+            //if (this.getPosition() < Constants.Shooter.SHOT_POS) {
                 s = Constants.Shooter.SHOT_FINAL_SPEED;
                 goal = Constants.Shooter.SHOT_POS;
                 /*if(prev_state == States.STAGE) {
@@ -255,7 +260,8 @@ public class Shooter {
                         Constants.Shooter.SHOT_D,
                         Constants.Shooter.SHOT_F,
                         s);
-            }
+                System.out.println("Shot! Output: " + output);
+            //}
         } else if (curr_state == States.STAGE) {
             // Pass do this
             goal = Constants.Shooter.STAGE_POS;
@@ -321,7 +327,8 @@ public class Shooter {
             newUpper = Double.valueOf(this.getPosition() - .025);
             System.out.println("[SHOOTER] Auto-Calibrate: New Upper Limit: " + newUpper.doubleValue());
             this.setSoftLimits(newUpper.doubleValue(), newLower.doubleValue(), m_limitsEnabled);
-            System.out.println("[SHOOTER] Auto-Calibrate Complete!");
+            System.out.println("[SHOOTER] Auto-Calibrate Complete! New Limits: L: " + newLower.doubleValue() + " U: " + newUpper.doubleValue());
+            
             this.setState(States.MANUAL);
             this.setManual(0);
             SmartDashboard.putBoolean("AUTOCALIBRATE", true);
@@ -336,7 +343,7 @@ public class Shooter {
 
     public boolean getShootDone() {
         return (curr_state == States.SHOOT || curr_state == States.SHORT_SHOT)
-                && (System.currentTimeMillis() - timeStateChange > 800);
+                && (System.currentTimeMillis() - timeStateChange > 1000);
     }
 
     private double error = 0, prevError = 0;

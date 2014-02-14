@@ -31,9 +31,10 @@ public class Constants {
     }
 
     public static class Shooter {
+        public static double SPEED_LIMIT = 1.0;
 
-        public static double LOWER_LIMIT = 3.326992617; // the lower limits of the pot
-        public static double UPPER_LIMIT = 4.587822367; // the upper limits of the pot
+        public static double LOWER_LIMIT = 1.973; // the lower limits of the pot
+        public static double UPPER_LIMIT = 3.15; // the upper limits of the pot
         public static double INTAKE_LIMIT = .6720;
 
         public static final double STOW_POS = 0.007;  // Stow position value
@@ -64,7 +65,7 @@ public class Constants {
         public static final double HOLD_F = 0.0;    // Pass Feed Forward Gain
         public static final double HOLD_S = 0.8;    // Pass Speed limit
 
-        public static final double SHOT_POS = 1.300;//1.3186;  // Shot final position
+        public static final double SHOT_POS = 1.00;//1.3186;  // Shot final position
         public static final double SHOT_START = 0.0;// Shot start threshold position
         public static final double SHOT_INIT_SPEED = -1.0;// Shot start speed
         public static final double SHOT_FINAL_SPEED = -1.0; // Shot Final speed.
@@ -72,7 +73,7 @@ public class Constants {
         public static final double SHOT_I = 0.0;
         public static final double SHOT_D = 0.0;
         public static final double SHOT_F = 0.0;    // Pass Feed Forward Gain
-        public static final double SHOT_S = 1.0;    // Pass Speed limit
+        public static final double SHOT_S = 01.0;    // Pass Speed limit
 
         public static final double SHORT_POS = 0.53;  // Shot final position
         public static final double SHORT_START = 0.0;// Shot start threshold position
@@ -80,9 +81,9 @@ public class Constants {
         public static final double SHORT_I = 0.0;
         public static final double SHORT_D = 0.0;
         public static final double SHORT_F = 0.0;    // Pass Feed Forward Gain
-        public static final double SHORT_S = -1.0;    // Pass Speed limit
+        public static final double SHORT_S = .30;    // Pass Speed limit
 
-        public static final double SHORT_STAGE_POS = .252;  // Pass position
+        public static final double SHORT_STAGE_POS = .159;  // Pass position
         public static final double SHORT_STAGE_P = 1.8;    // Pass PID gains
         public static final double SHORT_STAGE_I = 0.0;
         public static final double SHORT_STAGE_D = 0.0;
