@@ -113,7 +113,7 @@ public class Main extends IterativeRobot {
 
         robot.shooter.setManual(gamePad.getRightY() / 2);
         robot.shooter.setState(state);
-        //robot.shooter.run();
+        robot.shooter.run();
 
         if (gamePad.getDPad(GamePad.DPadStates.UP)) {
             robot.intake.setMotors(1.0);
@@ -125,5 +125,14 @@ public class Main extends IterativeRobot {
 
         robot.intake.setToggle(gamePad.getButton(5));
 
+    }
+
+    /**
+     * Updates driver station LCD with important diagnostic information.
+     */
+    public void updateLcd() {
+        String driveIo = "D: ";
+        String shooterIo = "S:";
+        String intakeIo;
     }
 }
