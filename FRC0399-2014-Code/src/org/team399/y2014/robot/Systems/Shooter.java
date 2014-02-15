@@ -60,8 +60,7 @@ public class Shooter {
         double answer = m_pot.getVoltage();
         return answer;
     }
-
-    private Debouncer zeroSwitchDebouncer = new Debouncer(125);
+    private Debouncer zeroSwitchDebouncer = new Debouncer(.125);
 
     /**
      * Gets debounced state of bottom limit zero switch.
@@ -70,7 +69,9 @@ public class Shooter {
      */
     public boolean getZeroSwitch() {
         boolean answer = !m_switch.get();
-        return zeroSwitchDebouncer.update(answer);
+        answer = zeroSwitchDebouncer.update(answer);
+        //System.out.println(answer);
+        return answer;
     }
 
     /**
@@ -157,6 +158,7 @@ public class Shooter {
         public final static int HOLD = 4;
         public final static int SHORT_SHOT = 5;
         public final static int SHORT_STAGE = 6;
+        public final static int LIVE_CAL = -2;
 
         public static String toString(int state) {
             if (state == STOW) {
@@ -202,7 +204,6 @@ public class Shooter {
     public int getState() {
         return curr_state;
     }
-
     public long timeStateChange = 0;
 
     /**
@@ -220,6 +221,8 @@ public class Shooter {
                     + States.toString(curr_state));
             timeStateChange = System.currentTimeMillis();
         }
+
+        boolean zero = this.getZeroSwitch();
 
         //FSM logic
         if (curr_state == States.STOW) {
@@ -301,12 +304,25 @@ public class Shooter {
              * m_limitsEnabled) { output = 0; } else if (this.getPosition() <
              * this.m_lowerLim && output < 0 && m_limitsEnabled) { output = 0; }
              */
+        } else if (curr_state == States.LIVE_CAL) {
+            // Teleop phase autocal
+            
+            if(!zero) {
+                output = .4;
+            } else {
+                output = 0;
+            }
+            
         } else if (curr_state == States.TEST) {  //Auto Calibrate Mode
             SmartDashboard.putBoolean("AUTOCALIBRATE", false);
             Double newUpper = null;
             Double newLower = null;
 
             for (int i = 0; i < 4; i++) {
+                if (this.getZeroSwitch()) {
+                    System.out.println("[SHOOTER] Auto-Calibrate: Limit Hit!");
+                    break;
+                }
                 System.out.println("[SHOOTER] Auto-Calibrate: Moving Down...");
                 this.setOutput(.15);
                 Timer.delay(.5);
@@ -326,16 +342,23 @@ public class Shooter {
 
         SmartDashboard.putNumber("ShooterOut", output);
 
-        if (this.getZeroSwitch()) {
+
+
+        SmartDashboard.putBoolean("ZERO", zero);
+        if (zero) {
+
+
             if (output > 0) {
                 output = 0;
             }
+            
             this.setSoftLimits(this.getPosition(), this.m_upperLim, true);
+            System.out.println("[SHOOTER] Zero!");
+        }
+        if (output > Constants.Shooter.DOWN_SPEED) {
+            output = Constants.Shooter.DOWN_SPEED;
         }
 
-        if (output > .4) {
-            output = .4;
-        }
 
         this.setOutput(output);
     }
@@ -350,7 +373,6 @@ public class Shooter {
         return (curr_state == States.SHOOT || curr_state == States.SHORT_SHOT)
                 && (System.currentTimeMillis() - timeStateChange > 800);
     }
-
     private double error = 0, prevError = 0;
     private double intError = 0;
 

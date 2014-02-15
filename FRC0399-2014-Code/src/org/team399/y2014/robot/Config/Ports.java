@@ -22,6 +22,7 @@ public class Ports {
     public final static int ARM_POT = 1;
     public final static int ZERO_SWITCH = 14;
 
+    
     // Intake ports
     public final static int INTAKE_PWM = 5;
     public final static int INTAKE_SOLA = 2;

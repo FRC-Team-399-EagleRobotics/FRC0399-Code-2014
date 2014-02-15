@@ -88,13 +88,20 @@ public class Main extends IterativeRobot {
         SmartDashboard.putString("ArmStateString", Shooter.States.toString(robot.shooter.getState()));
 
         SmartDashboard.putNumber("BatteryV", DriverStation.getInstance().getBatteryVoltage() - 10);
-        robot.drivetrain.tankDrive(driverLeft.getRawAxis(2),
-                driverRight.getRawAxis(2));
+        
+        double leftIn = driverLeft.getRawAxis(2);
+        double rightIn = driverRight.getRawAxis(2);
+        double scalar = .65;
+        
+        if(driverLeft.getRawButton(12) || driverRight.getRawButton(12)) {
+            scalar = 1.0;
+        }
+            robot.drivetrain.tankDrive(leftIn*scalar, rightIn*scalar);
 
         if (gamePad.getButton(10)) {
             state = Shooter.States.STAGE;
-        } else if (gamePad.getButton(2)) {
-            state = Shooter.States.TRUSS;
+        } else if (gamePad.getButton(9)) {
+            state = Shooter.States.MANUAL;
         } else if (gamePad.getButton(8) && robot.intake.state == Constants.Intake.EXTENDED) {
             state = Shooter.States.SHOOT;
         } else if (gamePad.getButton(6)) {
@@ -103,22 +110,19 @@ public class Main extends IterativeRobot {
             state = Shooter.States.SHORT_SHOT;
         } else if (robot.intake.state == Constants.Intake.RETRACTED) {
             //state = Shooter.States.HOLD;
-        } else if (gamePad.getButton(9)) {
-            state = Shooter.States.MANUAL;
         } else if (robot.shooter.getShootDone()) {
             state = Shooter.States.SHORT_STAGE;
-        } else if (robot.intake.output == -1.0) {
+        } else if (robot.intake.output < 0) {
             state = Shooter.States.HOLD;
         }
 
         robot.shooter.setManual(gamePad.getRightY() / 2);
         robot.shooter.setState(state);
         robot.shooter.run();
-
         if (gamePad.getDPad(GamePad.DPadStates.UP)) {
-            robot.intake.setMotors(1.0);
+            robot.intake.setMotors(.75);
         } else if (gamePad.getDPad(GamePad.DPadStates.DOWN)) {
-            robot.intake.setMotors(-1.0);
+            robot.intake.setMotors(-.75);
         } else {
             robot.intake.setMotors(0);
         }
