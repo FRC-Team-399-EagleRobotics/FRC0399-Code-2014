@@ -128,6 +128,8 @@ public class Shooter {
     public void setGoalOffset(double goalOffset) {
         this.goalOffset = goalOffset;
     }
+    
+    
 
     /**
      * Contains state values for shooter system finite state machine.
@@ -244,7 +246,7 @@ public class Shooter {
             // Else if shoot, do this
             output = 0;
             double s = 0.0;
-            s = Constants.Shooter.SHOT_FINAL_SPEED;
+            s = Constants.Shooter.SHORT_S;
             goal = Constants.Shooter.SHORT_POS;
             output = pidControl(
                     Constants.Shooter.SHOT_P,
@@ -294,7 +296,7 @@ public class Shooter {
                     Constants.Shooter.TRUSS_S);
         } else if (curr_state == States.HOLD) {
             // Pass do this
-            goal = Constants.Shooter.HOLD_POS;
+            goal = Constants.Shooter.HOLD_POS + goalOffset;
             output = pidControl(
                     Constants.Shooter.HOLD_P,
                     Constants.Shooter.HOLD_I,
