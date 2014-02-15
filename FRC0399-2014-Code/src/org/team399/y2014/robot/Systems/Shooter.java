@@ -122,6 +122,12 @@ public class Shooter {
     public void setManual(double input) {
         this.manualInput = input;
     }
+    
+    double goalOffset = 0.0;
+    
+    public void setGoalOffset(double goalOffset) {
+        this.goalOffset = goalOffset;
+    }
 
     /**
      * Contains state values for shooter system finite state machine.
@@ -252,7 +258,7 @@ public class Shooter {
             output = 0;
             double s = 0.0;
             s = Constants.Shooter.SHOT_FINAL_SPEED;
-            goal = Constants.Shooter.SHOT_POS;
+            goal = Constants.Shooter.SHOT_POS + goalOffset;
             output = pidControl(
                     Constants.Shooter.SHOT_P,
                     Constants.Shooter.SHOT_I,

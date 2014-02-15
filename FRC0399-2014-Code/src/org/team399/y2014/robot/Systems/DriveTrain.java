@@ -142,9 +142,14 @@ public class DriveTrain {
         return getEncoderDisplacement(true);
     }
 
+    public double leftE = 0;
+    public double rightE = 0;
+    
     public double getEncoderDisplacement(boolean clear) {
         double left = leftEnc.get();
         double right = rightEnc.get();
+        leftE = left;
+        rightE = right;
 
         if (clear) {
             leftEnc.reset();

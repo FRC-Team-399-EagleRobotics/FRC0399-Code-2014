@@ -7,6 +7,7 @@
 package org.team399.y2014.robot;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStationLCD;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -26,7 +27,6 @@ import org.team399.y2014.robot.Systems.Shooter;
 public class Main extends IterativeRobot {
 
     Robot robot;
-
     Joystick driverLeft = new Joystick(Ports.DRIVER_LEFT_JOYSTICK_USB);
     Joystick driverRight = new Joystick(Ports.DRIVER_RIGHT_JOYSTICK_USB);
     GamePad gamePad = new GamePad(Ports.OPERATOR_GAMEPAD_USB);
@@ -57,6 +57,8 @@ public class Main extends IterativeRobot {
         SmartDashboard.putNumber("ArmPosition", robot.shooter.getPosition());
         SmartDashboard.putNumber("ArmOffset", robot.shooter.getOffsetFromBottom());
         //System.out.println("D: " + robot.drivetrain.getEncoderDisplacement(false));
+        
+        robot.drivetrain.getEncoderDisplacement(false);
         //System.out.println("T: " + robot.drivetrain.getEncoderTurn(false));
     }
     double armPotInit = 0.0;
@@ -88,21 +90,41 @@ public class Main extends IterativeRobot {
         SmartDashboard.putString("ArmStateString", Shooter.States.toString(robot.shooter.getState()));
 
         SmartDashboard.putNumber("BatteryV", DriverStation.getInstance().getBatteryVoltage() - 10);
-        
+
         double leftIn = driverLeft.getRawAxis(2);
         double rightIn = driverRight.getRawAxis(2);
         double scalar = .65;
-        
-        if(driverLeft.getRawButton(12) || driverRight.getRawButton(12)) {
+
+        if (driverLeft.getRawButton(12) || driverRight.getRawButton(12)) {
             scalar = 1.0;
         }
-            robot.drivetrain.tankDrive(leftIn*scalar, rightIn*scalar);
+        robot.drivetrain.tankDrive(leftIn * scalar, rightIn * scalar);
 
-        if (gamePad.getButton(10)) {
-            state = Shooter.States.STAGE;
-        } else if (gamePad.getButton(9)) {
+        double offset = 0.0;
+        if (gamePad.getButton(9)) {
             state = Shooter.States.MANUAL;
+        } else if (gamePad.getButton(10)) {
+            state = Shooter.States.STAGE;
         } else if (gamePad.getButton(8) && robot.intake.state == Constants.Intake.EXTENDED) {
+
+            if (gamePad.getButton(1) && gamePad.getButton(2)) {
+                offset = .05;
+            } else if (gamePad.getButton(2) && gamePad.getButton(3)) {
+                offset = .1;
+            } else if (gamePad.getButton(3) && gamePad.getButton(4)) {
+                offset = -.25;
+            } else if (gamePad.getButton(1) && gamePad.getButton(4)) {
+                offset = -.3;
+            } else if (gamePad.getButton(1)) {
+                offset = -.05;
+            } else if (gamePad.getButton(2)) {
+                offset = -.1;
+            } else if (gamePad.getButton(3)) {
+                offset = -.15;
+            } else if (gamePad.getButton(4)) {
+                offset = -.2;
+            }            
+
             state = Shooter.States.SHOOT;
         } else if (gamePad.getButton(6)) {
             state = Shooter.States.SHORT_STAGE;
@@ -118,6 +140,7 @@ public class Main extends IterativeRobot {
 
         robot.shooter.setManual(gamePad.getRightY() / 2);
         robot.shooter.setState(state);
+        robot.shooter.setGoalOffset(offset);
         robot.shooter.run();
         if (gamePad.getDPad(GamePad.DPadStates.UP)) {
             robot.intake.setMotors(.75);
@@ -135,8 +158,11 @@ public class Main extends IterativeRobot {
      * Updates driver station LCD with important diagnostic information.
      */
     public void updateLcd() {
-        String driveIo = "D: ";
+        String driveIo = "D: [Le: " + robot.drivetrain.leftE + " Re: " + 
+                robot.drivetrain.rightE + "]";
         String shooterIo = "S:";
         String intakeIo;
+        
+        DriverStationLCD.getInstance().println(DriverStationLCD.Line.kUser1, 0, driveIo);
     }
 }
