@@ -15,17 +15,18 @@ public class Ports {
     public final static int DRIVER_LEFT_JOYSTICK_USB = 1;
     public final static int DRIVER_RIGHT_JOYSTICK_USB = 2;
     public final static int OPERATOR_GAMEPAD_USB = 3;
-    
+
     // Shooter ports
     public final static int LEFT_SHOOTER = 1;
     public final static int RIGHT_SHOOTER = 2;
     public final static int ARM_POT = 1;
-    
+    public final static int ZERO_SWITCH = 14;
+
     // Intake ports
     public final static int INTAKE_PWM = 5;
     public final static int INTAKE_SOLA = 2;
     public final static int INTAKE_SOLB = 3;
-    
+
     // Drive Train ports
     public final static int LEFT_DRIVE = 3;
     public final static int RIGHT_DRIVE = 4;
@@ -34,7 +35,7 @@ public class Ports {
     public final static int RIGHT_ENC_A = 3;
     public final static int RIGHT_ENC_B = 4;
     public final static int GYRO = 2;
-    
+
     public final static int COMP_SWITCH = 5;
     public final static int COMP_RELAY = 1;
 }

@@ -6,6 +6,7 @@
 package org.team399.y2014.robot.Systems;
 
 import edu.wpi.first.wpilibj.AnalogChannel;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -25,6 +26,7 @@ public class Shooter {
     private Talon m_shooterA = null;    // Motor Controllers
     private Talon m_shooterB = null;
     private AnalogChannel m_pot = null; // Position sensor
+    private DigitalInput m_switch = null; //auto-zero switch
     private double goal = 0;
     private double m_upperLim = 0.0;
     private double m_lowerLim = 5.0;
@@ -37,13 +39,16 @@ public class Shooter {
      * @param a motor controller A port
      * @param b motor controller B port
      * @param p potentiometer/position sensor port.
+     * @param z zero switch port
      */
-    public Shooter(int a, int b, int p) {
+    public Shooter(int a, int b, int p, int z) {
         m_shooterA = new Talon(a);
         m_shooterB = new Talon(b);
-        m_pot = new AnalogChannel(1);
-
-        this.setSoftLimits(Constants.Shooter.LOWER_LIMIT, Constants.Shooter.UPPER_LIMIT, false);
+        m_pot = new AnalogChannel(p);
+        m_switch = new DigitalInput(z);
+        this.setSoftLimits(Constants.Shooter.LOWER_LIMIT,
+                Constants.Shooter.UPPER_LIMIT + Constants.Shooter.LOWER_LIMIT,
+                false);
     }
 
     /**
@@ -54,6 +59,18 @@ public class Shooter {
     public double getPosition() {
         double answer = m_pot.getVoltage();
         return answer;
+    }
+
+    private Debouncer zeroSwitchDebouncer = new Debouncer(125);
+
+    /**
+     * Gets debounced state of bottom limit zero switch.
+     *
+     * @return 125 msec debounced limit switch input
+     */
+    public boolean getZeroSwitch() {
+        boolean answer = !m_switch.get();
+        return zeroSwitchDebouncer.update(answer);
     }
 
     /**
@@ -72,10 +89,10 @@ public class Shooter {
      * @param value
      */
     public void setOutput(double value) {
-        if(Math.abs(value) > Constants.Shooter.SPEED_LIMIT) {
+        if (Math.abs(value) > Constants.Shooter.SPEED_LIMIT) {
             value = Constants.Shooter.SPEED_LIMIT * EagleMath.signum(value);
         }
-        
+
         m_shooterA.set(value);
         m_shooterB.set(-value);    // Might want to negate this before enable.
     }
@@ -173,11 +190,8 @@ public class Shooter {
      * @param newState new state to use
      */
     public void setState(int newState) {
-        //if(newState != curr_state) {
         prev_state = curr_state;
         curr_state = newState;
-        //}
-
     }
 
     /**
@@ -188,7 +202,7 @@ public class Shooter {
     public int getState() {
         return curr_state;
     }
-    private Debouncer shotSettle = new Debouncer(250);
+
     public long timeStateChange = 0;
 
     /**
@@ -197,9 +211,9 @@ public class Shooter {
     public void run() {
         double output = 0;
 
+        //FSM status printouts for debugging
         this.fsmStatus.println("[SHOOTER] State is: "
                 + States.toString(curr_state) + " (" + curr_state + ")");
-
         if (curr_state != prev_state) {
             System.out.println("[SHOOTER] State change from "
                     + States.toString(prev_state) + " to "
@@ -207,6 +221,7 @@ public class Shooter {
             timeStateChange = System.currentTimeMillis();
         }
 
+        //FSM logic
         if (curr_state == States.STOW) {
             // If stow, do this
             goal = Constants.Shooter.STOW_POS;
@@ -220,48 +235,27 @@ public class Shooter {
             // Else if shoot, do this
             output = 0;
             double s = 0.0;
-            //if (this.getPosition() < Constants.Shooter.SHORT_POS) {
-                s = Constants.Shooter.SHOT_FINAL_SPEED;
-                goal = Constants.Shooter.SHORT_POS;
-
-                /*if(prev_state == States.STAGE) {
-                 goal = Constants.Shooter.SHOT_POS;
-                 } else if(prev_state == States.SHORT_STAGE) {
-                 goal = Constants.Shooter.SHORT_POS;
-                 } else {
-                 goal = Constants.Shooter.SHOT_POS;
-                 }*/
-                output = pidControl(
-                        Constants.Shooter.SHOT_P,
-                        Constants.Shooter.SHOT_I,
-                        Constants.Shooter.SHOT_D,
-                        Constants.Shooter.SHOT_F,
-                        s);
-                System.out.println("Shot! Output: " + output);
-           // }
+            s = Constants.Shooter.SHOT_FINAL_SPEED;
+            goal = Constants.Shooter.SHORT_POS;
+            output = pidControl(
+                    Constants.Shooter.SHOT_P,
+                    Constants.Shooter.SHOT_I,
+                    Constants.Shooter.SHOT_D,
+                    Constants.Shooter.SHOT_F,
+                    s);
+            System.out.println("Shot! Output: " + output);
         } else if (curr_state == States.SHOOT) {
             // Else if shoot, do this
             output = 0;
             double s = 0.0;
-            //if (this.getPosition() < Constants.Shooter.SHOT_POS) {
-                s = Constants.Shooter.SHOT_FINAL_SPEED;
-                goal = Constants.Shooter.SHOT_POS;
-                /*if(prev_state == States.STAGE) {
-
-                 } else if(prev_state == States.SHORT_STAGE) {
-                 goal = Constants.Shooter.SHORT_POS;
-                 } else {
-                 goal = Constants.Shooter.SHOT_POS;
-                 }*/
-
-                output = pidControl(
-                        Constants.Shooter.SHOT_P,
-                        Constants.Shooter.SHOT_I,
-                        Constants.Shooter.SHOT_D,
-                        Constants.Shooter.SHOT_F,
-                        s);
-                System.out.println("Shot! Output: " + output);
-            //}
+            s = Constants.Shooter.SHOT_FINAL_SPEED;
+            goal = Constants.Shooter.SHOT_POS;
+            output = pidControl(
+                    Constants.Shooter.SHOT_P,
+                    Constants.Shooter.SHOT_I,
+                    Constants.Shooter.SHOT_D,
+                    Constants.Shooter.SHOT_F,
+                    s);
         } else if (curr_state == States.STAGE) {
             // Pass do this
             goal = Constants.Shooter.STAGE_POS;
@@ -319,16 +313,10 @@ public class Shooter {
             }
             newLower = Double.valueOf(this.getPosition());
             System.out.println("[SHOOTER] Auto-Calibrate: New Lower Limit: " + newLower.doubleValue());
-            for (int i = 0; i < 8; i++) {
-                System.out.println("[SHOOTER] Auto-Calibrate: Moving Up...");
-                this.setOutput(-.15);
-                Timer.delay(.5);
-            }//might not need up cal
-            newUpper = Double.valueOf(this.getPosition() - .025);
+            newUpper = Double.valueOf(newLower.doubleValue() + Constants.Shooter.UPPER_LIMIT);
             System.out.println("[SHOOTER] Auto-Calibrate: New Upper Limit: " + newUpper.doubleValue());
             this.setSoftLimits(newUpper.doubleValue(), newLower.doubleValue(), m_limitsEnabled);
             System.out.println("[SHOOTER] Auto-Calibrate Complete! New Limits: L: " + newLower.doubleValue() + " U: " + newUpper.doubleValue());
-            
             this.setState(States.MANUAL);
             this.setManual(0);
             SmartDashboard.putBoolean("AUTOCALIBRATE", true);
@@ -338,12 +326,29 @@ public class Shooter {
 
         SmartDashboard.putNumber("ShooterOut", output);
 
+        if (this.getZeroSwitch()) {
+            if (output > 0) {
+                output = 0;
+            }
+            this.setSoftLimits(this.getPosition(), this.m_upperLim, true);
+        }
+
+        if (output > .4) {
+            output = .4;
+        }
+
         this.setOutput(output);
     }
 
+    /**
+     * Gets the state of a timer indicating whether or not a shot has been
+     * assumed as complete
+     *
+     * @return true if the fsm has been in the shooter state for 800ms
+     */
     public boolean getShootDone() {
         return (curr_state == States.SHOOT || curr_state == States.SHORT_SHOT)
-                && (System.currentTimeMillis() - timeStateChange > 1000);
+                && (System.currentTimeMillis() - timeStateChange > 800);
     }
 
     private double error = 0, prevError = 0;
