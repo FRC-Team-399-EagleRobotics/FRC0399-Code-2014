@@ -25,22 +25,25 @@ public class IntakeCommand extends Command {
         this.state = state;
         this.timeout = timeout;
     }
-    
+
     protected void execute() {
-        
+        if (this.state == Constants.Intake.EXTENDED) {
+            //If extended, run intake in to stage ball properly.
+            Robot.getInstance().intake.setMotors(-.75);
+        }
     }
-    
+
     protected void interrupted() {
-        
+
     }
-    
+
     protected void end() {
-        
+
+        Robot.getInstance().intake.setMotors(this.speed);
     }
 
     protected void initialize() {
         Robot.getInstance().intake.setActuators(this.state);
-        Robot.getInstance().intake.setMotors(this.speed);
         this.setTimeout(timeout);
     }
 

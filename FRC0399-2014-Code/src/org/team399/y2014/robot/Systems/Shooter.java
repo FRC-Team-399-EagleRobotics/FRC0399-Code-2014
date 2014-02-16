@@ -28,8 +28,8 @@ public class Shooter {
     private AnalogChannel m_pot = null; // Position sensor
     private DigitalInput m_switch = null; //auto-zero switch
     private double goal = 0;
-    private double m_upperLim = 0.0;
-    private double m_lowerLim = 5.0;
+    public double m_upperLim = 0.0;
+    public double m_lowerLim = 5.0;
     private boolean m_limitsEnabled = false;
     private ThrottledPrinter fsmStatus = new ThrottledPrinter(0.5);
 
@@ -122,14 +122,12 @@ public class Shooter {
     public void setManual(double input) {
         this.manualInput = input;
     }
-    
+
     double goalOffset = 0.0;
-    
+
     public void setGoalOffset(double goalOffset) {
         this.goalOffset = goalOffset;
     }
-    
-    
 
     /**
      * Contains state values for shooter system finite state machine.
@@ -314,13 +312,13 @@ public class Shooter {
              */
         } else if (curr_state == States.LIVE_CAL) {
             // Teleop phase autocal
-            
-            if(!zero) {
+
+            if (!zero) {
                 output = .4;
             } else {
                 output = 0;
             }
-            
+
         } else if (curr_state == States.TEST) {  //Auto Calibrate Mode
             SmartDashboard.putBoolean("AUTOCALIBRATE", false);
             Double newUpper = null;
@@ -350,23 +348,19 @@ public class Shooter {
 
         SmartDashboard.putNumber("ShooterOut", output);
 
-
-
         SmartDashboard.putBoolean("ZERO", zero);
         if (zero) {
-
 
             if (output > 0) {
                 output = 0;
             }
-            
+
             this.setSoftLimits(this.getPosition(), this.m_upperLim, true);
             System.out.println("[SHOOTER] Zero!");
         }
         if (output > Constants.Shooter.DOWN_SPEED) {
             output = Constants.Shooter.DOWN_SPEED;
         }
-
 
         this.setOutput(output);
     }
