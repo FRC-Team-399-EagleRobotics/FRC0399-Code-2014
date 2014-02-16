@@ -25,6 +25,18 @@ public class IntakeCommand extends Command {
         this.state = state;
         this.timeout = timeout;
     }
+    
+    protected void execute() {
+        
+    }
+    
+    protected void interrupted() {
+        
+    }
+    
+    protected void end() {
+        
+    }
 
     protected void initialize() {
         Robot.getInstance().intake.setActuators(this.state);

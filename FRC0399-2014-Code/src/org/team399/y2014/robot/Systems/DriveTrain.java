@@ -69,7 +69,10 @@ public class DriveTrain {
         leftEnc = new Encoder(leftEncA, leftEncB);
         rightEnc = new Encoder(rightEncA, rightEncB);
         leftEnc.start();
+        leftEnc.reset();
         rightEnc.start();
+        rightEnc.reset();
+        yaw.reset();
     }
 
     public void resetSensors() {
@@ -117,6 +120,7 @@ public class DriveTrain {
     public double getHeading() {
         double heading = yaw.getAngle();
         heading = EagleMath.constrainAngle(heading, -180, 180);
+        heading = EagleMath.truncate(heading, 4);
         return heading;
     }
 
@@ -125,11 +129,11 @@ public class DriveTrain {
     }
 
     public double getEncoderTurn(boolean clear) {
-        double left = -leftEnc.get();
+        double left = leftEnc.get();
         double right = rightEnc.get();
-        System.out.println("L: " + left);
-        System.out.println("R: " + right);
-
+        leftE = left;
+        rightE = right;
+        
         if (clear) {
             leftEnc.reset();
             rightEnc.reset();

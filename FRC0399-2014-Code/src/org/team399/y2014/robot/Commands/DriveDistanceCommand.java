@@ -16,7 +16,7 @@ import org.team399.y2014.robot.Systems.Robot;
  *
  * @author jeremy.germita@gmail.com (Jeremy Germita)
  */
-public abstract class DriveDistanceCommand extends Command {
+public class DriveDistanceCommand extends Command {
 
     private double timeout = 0.0;
     private double distance = 0.0;
@@ -48,9 +48,14 @@ public abstract class DriveDistanceCommand extends Command {
         throttle = EagleMath.cap(throttle, -this.speedLimit, this.speedLimit);
         turning = EagleMath.cap(turning, -this.speedLimit, this.speedLimit);
 
-        Robot.getInstance().drivetrain.arcadeDrive(0, 0);
+        Robot.getInstance().drivetrain.arcadeDrive(throttle, turning);
 
         isDriveAtTarget = atGoal.update(Math.abs(error) < Constants.DriveTrain.TICKS_TO_INCHES);
+    }
+    
+    
+    protected void interrupted() {
+        
     }
 
     protected boolean isFinished() {

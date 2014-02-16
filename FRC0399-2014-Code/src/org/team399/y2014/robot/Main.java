@@ -7,12 +7,13 @@
 package org.team399.y2014.robot;
 
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStationLCD;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.team399.y2014.Utilities.GamePad;
 import org.team399.y2014.Utilities.PulseTriggerBoolean;
+import org.team399.y2014.robot.Auton.TestAuton;
 import org.team399.y2014.robot.Config.Constants;
 import org.team399.y2014.robot.Config.Ports;
 import org.team399.y2014.robot.Systems.Robot;
@@ -48,11 +49,16 @@ public class Main extends IterativeRobot {
     public void testPeriodic() {
         robot.shooter.run();
     }
+    
+    public void autonomousInit() {
+        Scheduler.getInstance().add(new TestAuton());
+    }
 
     /**
      * This function is called periodically during autonomous
      */
     public void autonomousPeriodic() {
+        Scheduler.getInstance().run();
     }
 
     public void disabledPeriodic() {
@@ -62,6 +68,7 @@ public class Main extends IterativeRobot {
         
         robot.drivetrain.getEncoderDisplacement(false);
         //System.out.println("T: " + robot.drivetrain.getEncoderTurn(false));
+        this.updateLcd();
     }
     double armPotInit = 0.0;
 
@@ -180,8 +187,10 @@ public class Main extends IterativeRobot {
      * Updates driver station LCD with important diagnostic information.
      */
     public void updateLcd() {
+        robot.drivetrain.getEncoderDisplacement(false);
         String driveIo = "D: [Le: " + robot.drivetrain.leftE + " Re: " + 
-                robot.drivetrain.rightE + "]";
+                robot.drivetrain.rightE + " Y: " + robot.drivetrain.getHeading() + "]";
+        
         String shooterIo = "S:";
         String intakeIo;
         

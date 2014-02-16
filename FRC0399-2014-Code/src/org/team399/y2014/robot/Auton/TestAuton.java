@@ -5,7 +5,7 @@
 package org.team399.y2014.robot.Auton;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
-import org.team399.y2014.robot.Commands.ArcadeDriveCommand;
+import org.team399.y2014.robot.Commands.DriveDistanceCommand;
 import org.team399.y2014.robot.Commands.IntakeCommand;
 import org.team399.y2014.robot.Config.Constants;
 
@@ -16,9 +16,10 @@ import org.team399.y2014.robot.Config.Constants;
 public class TestAuton extends CommandGroup {
 
     public TestAuton() {
-        this.addParallel(new IntakeCommand(.5, Constants.Intake.EXTENDED, .25));
-        this.addSequential(new ArcadeDriveCommand(.45, 0.0, 1.0));
+        this.addParallel(new IntakeCommand(-.5, Constants.Intake.EXTENDED, .25));
+        this.addSequential(new DriveDistanceCommand(500, .5, 5.0));
         this.addParallel(new IntakeCommand(0, Constants.Intake.RETRACTED, .1));
+        
     }
 
 }
