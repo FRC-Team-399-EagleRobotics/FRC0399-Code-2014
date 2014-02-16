@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.team399.y2014.Utilities.GamePad;
+import org.team399.y2014.Utilities.PulseTriggerBoolean;
 import org.team399.y2014.robot.Config.Constants;
 import org.team399.y2014.robot.Config.Ports;
 import org.team399.y2014.robot.Systems.Robot;
@@ -37,6 +38,7 @@ public class Main extends IterativeRobot {
      */
     public void robotInit() {
         robot = Robot.getInstance();
+        SmartDashboard.putNumber("StageOffset", 0.0);
     }
 
     public void testInit() {
@@ -78,7 +80,12 @@ public class Main extends IterativeRobot {
         robot.shooter.setState(state);
     }
     int state = Shooter.States.MANUAL;
+    
+    PulseTriggerBoolean incUp = new PulseTriggerBoolean();
+    PulseTriggerBoolean incDn = new PulseTriggerBoolean();
 
+    double stageOffset = 0.0;
+    
     /**
      * This function is called periodically during operator control
      */
@@ -95,36 +102,44 @@ public class Main extends IterativeRobot {
         double rightIn = driverRight.getRawAxis(2);
         double scalar = .65;
 
-        if (driverLeft.getRawButton(12) || driverRight.getRawButton(12)) {
+        if (driverLeft.getRawButton(11) || driverRight.getRawButton(11) ||
+                driverLeft.getRawButton(12) || driverRight.getRawButton(12)||
+                driverLeft.getRawButton(13) || driverRight.getRawButton(13)||
+                driverLeft.getRawButton(14) || driverRight.getRawButton(14)||
+                driverLeft.getRawButton(15) || driverRight.getRawButton(15)||
+                driverLeft.getRawButton(16) || driverRight.getRawButton(16)) {
             scalar = 1.0;
         }
         robot.drivetrain.tankDrive(leftIn * scalar, rightIn * scalar);
 
         double offset = 0.0;
+        
+        
+        
         if (gamePad.getButton(9)) {
             state = Shooter.States.MANUAL;
         } else if (gamePad.getButton(10)) {
             state = Shooter.States.STAGE;
         } else if (gamePad.getButton(8) && robot.intake.state == Constants.Intake.EXTENDED) {
 
-            if (gamePad.getButton(1) && gamePad.getButton(2)) {
-                offset = .05;
-            } else if (gamePad.getButton(2) && gamePad.getButton(3)) {
-                offset = .1;
-            } else if (gamePad.getButton(3) && gamePad.getButton(4)) {
-                offset = -.25;
-            } else if (gamePad.getButton(1) && gamePad.getButton(4)) {
-                offset = -.3;
-            } else if (gamePad.getButton(1)) {
-                offset = -.05;
-            } else if (gamePad.getButton(2)) {
-                offset = -.1;
-            } else if (gamePad.getButton(3)) {
-                offset = -.15;
-            } else if (gamePad.getButton(4)) {
-                offset = -.2;
-            }            
-
+//            if (gamePad.getButton(1) && gamePad.getButton(2)) {
+//                offset = .05;
+//            } else if (gamePad.getButton(2) && gamePad.getButton(3)) {
+//                offset = .1;
+//            } else if (gamePad.getButton(3) && gamePad.getButton(4)) {
+//                offset = -.25;
+//            } else if (gamePad.getButton(1) && gamePad.getButton(4)) {
+//                offset = -.3;
+//            } else if (gamePad.getButton(1)) {
+//                offset = -.05;
+//            } else if (gamePad.getButton(2)) {
+//                offset = -.1;
+//            } else if (gamePad.getButton(3)) {
+//                offset = -.15;
+//            } else if (gamePad.getButton(4)) {
+//                offset = -.2;
+//            }            
+            robot.shooter.setGoalOffset(offset);
             state = Shooter.States.SHOOT;
         } else if (gamePad.getButton(6)) {
             state = Shooter.States.SHORT_STAGE;
@@ -136,11 +151,18 @@ public class Main extends IterativeRobot {
             state = Shooter.States.SHORT_STAGE;
         } else if (robot.intake.output < 0) {
             state = Shooter.States.HOLD;
+            robot.shooter.setGoalOffset(SmartDashboard.getNumber("StageOffset", 0));
+        }
+        
+        if(robot.shooter.getState() == Shooter.States.SHOOT || robot.shooter.getState() == Shooter.States.SHORT_SHOT) {
+            robot.comp.stop();
+        } else {
+            robot.comp.start();
         }
 
         robot.shooter.setManual(gamePad.getRightY() / 2);
         robot.shooter.setState(state);
-        robot.shooter.setGoalOffset(offset);
+        
         robot.shooter.run();
         if (gamePad.getDPad(GamePad.DPadStates.UP)) {
             robot.intake.setMotors(.75);
@@ -151,7 +173,7 @@ public class Main extends IterativeRobot {
         }
 
         robot.intake.setToggle(gamePad.getButton(5));
-
+        this.updateLcd();
     }
 
     /**
@@ -163,6 +185,8 @@ public class Main extends IterativeRobot {
         String shooterIo = "S:";
         String intakeIo;
         
-        DriverStationLCD.getInstance().println(DriverStationLCD.Line.kUser1, 0, driveIo);
+        System.out.println(driveIo);
     }
 }
+
+
