@@ -102,7 +102,12 @@ public class Main extends IterativeRobot {
         double rightIn = driverRight.getRawAxis(2);
         double scalar = .65;
 
-        if (driverLeft.getRawButton(12) || driverRight.getRawButton(12)) {
+        if (driverLeft.getRawButton(11) || driverRight.getRawButton(11) ||
+                driverLeft.getRawButton(12) || driverRight.getRawButton(12)||
+                driverLeft.getRawButton(13) || driverRight.getRawButton(13)||
+                driverLeft.getRawButton(14) || driverRight.getRawButton(14)||
+                driverLeft.getRawButton(15) || driverRight.getRawButton(15)||
+                driverLeft.getRawButton(16) || driverRight.getRawButton(16)) {
             scalar = 1.0;
         }
         robot.drivetrain.tankDrive(leftIn * scalar, rightIn * scalar);
@@ -183,3 +188,5 @@ public class Main extends IterativeRobot {
         System.out.println(driveIo);
     }
 }
+
+

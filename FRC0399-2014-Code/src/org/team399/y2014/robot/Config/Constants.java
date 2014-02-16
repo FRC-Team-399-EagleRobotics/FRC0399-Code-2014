@@ -59,7 +59,7 @@ public class Constants {
         public static final double TRUSS_F = 0.0;    // Pass Feed Forward Gain
         public static final double TRUSS_S = 1.0;    // Pass Speed limit
 
-        public static final double HOLD_POS = .225;  // Pass position
+        public static final double HOLD_POS = .2;  // Pass position
         public static final double HOLD_P = 1.9;    // Pass PID gains
         public static final double HOLD_I = 0.0;
         public static final double HOLD_D = 0.0;
