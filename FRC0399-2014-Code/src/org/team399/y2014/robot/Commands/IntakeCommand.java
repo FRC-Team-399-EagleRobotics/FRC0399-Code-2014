@@ -14,7 +14,7 @@ import org.team399.y2014.robot.Systems.Robot;
  *
  * @author jeremy.germita@gmail.com (Jeremy Germita)
  */
-public abstract class IntakeCommand extends Command {
+public class IntakeCommand extends Command {
 
     private double speed = 0.0;
     private boolean state = Constants.Intake.RETRACTED;

@@ -13,7 +13,7 @@ import org.team399.y2014.robot.Systems.Robot;
  *
  * @author jeremy.germita@gmail.com (Jeremy Germita)
  */
-public abstract class ArcadeDriveCommand extends Command {
+public class ArcadeDriveCommand extends Command {
 
     private double speed = 0.0;
     private double turn = 0.0;
@@ -32,6 +32,10 @@ public abstract class ArcadeDriveCommand extends Command {
 
     protected boolean isFinished() {
         return isTimedOut();
+    }
+
+    protected void execute() {
+
     }
 
     protected void end() {
