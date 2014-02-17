@@ -67,7 +67,7 @@ public class Constants {
         public static final double HOLD_F = 0.0;    // Pass Feed Forward Gain
         public static final double HOLD_S = 0.8;    // Pass Speed limit
 
-        public static final double SHOT_POS = 1.1;//1.3186;  // Shot final position
+        public static final double SHOT_POS = 1.1; //1.3186;  // Shot final position
         public static final double SHOT_START = 0.0;// Shot start threshold position
         public static final double SHOT_INIT_SPEED = -1.0;// Shot start speed
         public static final double SHOT_FINAL_SPEED = -1.0; // Shot Final speed.
