@@ -15,35 +15,27 @@ import org.team399.y2014.robot.Systems.Shooter;
  *
  * @author jeremy.germita@gmail.com (Jeremy Germita)
  */
-public class ShootCommand extends Command {
+public class CalibrateCommand extends Command {
 
     private double timeout = 0.0;
 
-    public ShootCommand(double timeout) {
+    public CalibrateCommand(double timeout) {
         this.timeout = timeout;
     }
 
     protected void initialize() {
         this.setTimeout(timeout);
-        Robot.getInstance().shooter.setState(Shooter.States.SHOOT);
-        
-        if(Robot.getInstance().intake.state 
-                == Constants.Intake.RETRACTED) {
-            Robot.getInstance().intake.setActuators(
-                    Constants.Intake.EXTENDED);
-        }
-        
-        Robot.getInstance().comp.stop();
+        Robot.getInstance().shooter.setState(Shooter.States.TEST);
     }
 
     protected void execute() {
         Robot.getInstance().shooter.run();
+        Robot.getInstance().shooter.setState(Shooter.States.TEST);
     }
 
     protected void end() {
-        Robot.getInstance().shooter.setState(Shooter.States.STAGE);
-        //Robot.getInstance().comp.start();
-        Robot.getInstance().shooter.setOutput(0.0);
+        Robot.getInstance().shooter.setState(Shooter.States.MANUAL);
+        Robot.getInstance().shooter.setManual(0.0);
     }
     
     protected void interrupted() {
@@ -51,6 +43,6 @@ public class ShootCommand extends Command {
     }
 
     protected boolean isFinished() {
-        return Robot.getInstance().shooter.getShootDone() || this.isTimedOut();
+        return this.isTimedOut();
     }
 }

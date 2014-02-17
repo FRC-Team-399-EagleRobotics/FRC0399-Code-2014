@@ -27,9 +27,10 @@ public class IntakeCommand extends Command {
     }
 
     protected void execute() {
+        Robot.getInstance().shooter.run();
         if (this.state == Constants.Intake.EXTENDED) {
             //If extended, run intake in to stage ball properly.
-            Robot.getInstance().intake.setMotors(-.75);
+            Robot.getInstance().intake.setMotors(-.35);
         }
     }
 

@@ -27,7 +27,7 @@ public class DriveDistanceCommand extends Command {
 
     public DriveDistanceCommand(double distance, double speed, double timeout) {
         this.timeout = timeout;
-        this.distance = distance;
+        this.distance = Robot.getInstance().drivetrain.inchesToTicks(distance);
         this.speedLimit = speed;
     }
 
@@ -36,17 +36,35 @@ public class DriveDistanceCommand extends Command {
         Robot.getInstance().drivetrain.getEncoderDisplacement(true);
     }
 
+    double iErr = 0;
+    double prevPos = 0;
+    double displacement = 0;;
+    
     protected void execute() {
-        double displacement
-                = Robot.getInstance().drivetrain.getEncoderDisplacement(false);
+        Robot.getInstance().shooter.run();
+        
+        prevPos = displacement;
+        displacement = Robot.getInstance().drivetrain.getEncoderDisplacement(false);
         double encTurn = Robot.getInstance().drivetrain.getEncoderTurn(false);
         double error = distance - displacement;
+        
+        iErr += error;
+        
+        if(iErr > 1) {
+            iErr = 1;
+        } else if(iErr < -1) {
+            iErr = -1;
+        }
 
-        double throttle = error * Constants.DriveTrain.DRIVE_P;
+        double throttle = (error * Constants.DriveTrain.DRIVE_P) + 
+                (Constants.DriveTrain.DRIVE_I * iErr) 
+                - (Constants.DriveTrain.DRIVE_D * (prevPos - displacement));
         double turning = encTurn * Constants.DriveTrain.STRAIGHT_P;
+        
+        System.out.println("[DRIVE] Error: " + error);
 
-        throttle = EagleMath.cap(throttle, -this.speedLimit, this.speedLimit);
-        turning = EagleMath.cap(turning, -this.speedLimit, this.speedLimit);
+        throttle = -EagleMath.cap(throttle, -this.speedLimit, this.speedLimit);
+        turning = 0;//EagleMath.cap(turning, -this.speedLimit, this.speedLimit);
 
         Robot.getInstance().drivetrain.arcadeDrive(throttle, turning);
 

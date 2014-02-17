@@ -153,14 +153,14 @@ public class DriveTrain {
         double left = leftEnc.get();
         double right = rightEnc.get();
         leftE = left;
-        rightE = right;
+        //rightE = right;
 
         if (clear) {
             leftEnc.reset();
             rightEnc.reset();
         }
 
-        return (left + right) / 2.0;
+        return left;//(left + right) / 2.0;
     }
 
     public double twoStickToTurning(double left, double right) {

@@ -32,6 +32,7 @@ public class Shooter {
     public double m_lowerLim = 5.0;
     private boolean m_limitsEnabled = false;
     private ThrottledPrinter fsmStatus = new ThrottledPrinter(0.5);
+    boolean isCalibrated = false;
 
     /**
      * Constructor

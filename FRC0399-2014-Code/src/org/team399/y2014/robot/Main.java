@@ -14,7 +14,6 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.team399.y2014.Utilities.GamePad;
-import org.team399.y2014.Utilities.PulseTriggerBoolean;
 import org.team399.y2014.robot.Auton.MobilityAuton;
 import org.team399.y2014.robot.Auton.OneBallAuton;
 import org.team399.y2014.robot.Auton.TestAuton;
@@ -55,7 +54,7 @@ public class Main extends IterativeRobot {
         autonChooser.addObject("One Ball", new OneBallAuton());
         autonChooser.addObject("Two Ball", new TwoBallAuton());
         autonChooser.addObject("Three Ball", new ThreeBallAuton());
-
+        SmartDashboard.putData("Auton Chooser", autonChooser);
     }
 
     public void testInit() {
@@ -67,14 +66,16 @@ public class Main extends IterativeRobot {
     }
 
     public void autonomousInit() {
+        robot.comp.stop();
         System.out.println("[AUTON] Starting: "
-                + autonChooser.getSmartDashboardType());
+                + autonChooser.getSelected().toString());
         if (currAuton != null) {
             currAuton.cancel();
             currAuton = null;
         }
-        currAuton = (CommandGroup) autonChooser.getSelected();
+        currAuton = new OneBallAuton();//(CommandGroup) autonChooser.getSelected();
         Scheduler.getInstance().add(currAuton);
+//        this.updateLcd();
     }
 
     /**
@@ -93,10 +94,11 @@ public class Main extends IterativeRobot {
         //System.out.println("T: " + robot.drivetrain.getEncoderTurn(false));
         this.updateLcd();
     }
+    
     double armPotInit = 0.0;
 
     public void teleopInit() {
-
+        robot.comp.start();
         robot.shooter.setManual(0);
 
         if (robot.shooter.getPosition()

@@ -6,13 +6,14 @@
 package org.team399.y2014.robot.Commands;
 
 import edu.wpi.first.wpilibj.command.Command;
+import org.team399.y2014.robot.Systems.Robot;
 
 /**
  * Command for a simple do nothing and wait
  *
  * @author jeremy.germita@gmail.com (Jeremy Germita)
  */
-public abstract class WaitCommand extends Command {
+public class WaitCommand extends Command {
 
     private double timeout = 0.0;
 
@@ -22,6 +23,18 @@ public abstract class WaitCommand extends Command {
 
     protected void initialize() {
         this.setTimeout(timeout);
+    }
+    
+    protected void execute() {
+        Robot.getInstance().shooter.run();
+    }
+    
+    protected void interrupted() {
+        
+    }
+    
+    protected void end() {
+        
     }
 
     protected boolean isFinished() {

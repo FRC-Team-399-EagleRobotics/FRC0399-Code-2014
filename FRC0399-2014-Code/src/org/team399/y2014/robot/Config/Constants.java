@@ -19,14 +19,15 @@ public class Constants {
         public static double TURN_I = 0.0;
         //TURN PID VALUES
         public static double TURN_P = -10.0;
-        public static double DRIVE_D = 0;
+        public static double DRIVE_D = -.005;
         public static double TURN_D = 1.0;
         public static final double WIDTH = 26.0;
-        public static double DRIVE_I = 0;
+        
         //DRIVE PID VALUES
-        public static double DRIVE_P = .01;
+        public static double DRIVE_P = .001;
+        public static double DRIVE_I = .1;
         public static double STRAIGHT_P = .01;
-        public static final double TICKS_TO_INCHES = 16.5694;
+        public static final double TICKS_TO_INCHES = 28.6624203;
 
     }
 
@@ -45,7 +46,7 @@ public class Constants {
         public static final double STOW_F = 0.0;    // Stow Feed Forward Gain
         public static final double STOW_S = 0.4;    // Stow Speed limit
 
-        public static final double STAGE_POS = .082;  // Pass position
+        public static final double STAGE_POS = .315;  // Pass position
         public static final double STAGE_P = 1.2;    // Pass PID gains
         public static final double STAGE_I = 0.0;
         public static final double STAGE_D = 0.0;
@@ -58,8 +59,8 @@ public class Constants {
         public static final double TRUSS_D = 0.0;
         public static final double TRUSS_F = 0.0;    // Pass Feed Forward Gain
         public static final double TRUSS_S = 1.0;    // Pass Speed limit
-
-        public static final double HOLD_POS = .25;  // Pass position
+        
+        public static final double HOLD_POS = .225;  // Pass position
         public static final double HOLD_P = 1.9;    // Pass PID gains
         public static final double HOLD_I = 0.0;
         public static final double HOLD_D = 0.0;
