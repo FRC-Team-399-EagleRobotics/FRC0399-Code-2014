@@ -55,6 +55,13 @@ public class Main extends IterativeRobot {
         autonChooser.addObject("Two Ball", new TwoBallAuton());
         autonChooser.addObject("Three Ball", new ThreeBallAuton());
         SmartDashboard.putData("Auton Chooser", autonChooser);
+        
+        SmartDashboard.putNumber("h_low", ((driverLeft.getRawAxis(3)+1)/2) * 180);
+        SmartDashboard.putNumber("h_high", ((driverLeft.getRawAxis(3)+1)/2) * 180);
+        SmartDashboard.putNumber("s_low", 50);
+        SmartDashboard.putNumber("s_high", 100);
+        SmartDashboard.putNumber("v_low", 50);
+        SmartDashboard.putNumber("v_high", 100);
     }
 
     public void testInit() {
@@ -86,6 +93,8 @@ public class Main extends IterativeRobot {
     }
 
     public void disabledPeriodic() {
+        
+        
         SmartDashboard.putNumber("ArmPosition", robot.shooter.getPosition());
         SmartDashboard.putNumber("ArmOffset", robot.shooter.getOffsetFromBottom());
         //System.out.println("D: " + robot.drivetrain.getEncoderDisplacement(false));
