@@ -33,8 +33,8 @@ public class Ports {
     public final static int RIGHT_DRIVE = 4;
     public final static int LEFT_ENC_A = 2;
     public final static int LEFT_ENC_B = 1;
-    public final static int RIGHT_ENC_A = 4;
-    public final static int RIGHT_ENC_B = 3;
+    public final static int RIGHT_ENC_A = 3;
+    public final static int RIGHT_ENC_B = 4;
     public final static int GYRO = 2;
 
     public final static int COMP_SWITCH = 5;

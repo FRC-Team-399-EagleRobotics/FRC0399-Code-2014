@@ -94,7 +94,8 @@ public class Main extends IterativeRobot {
 
     public void disabledPeriodic() {
         
-        
+        System.out.println(" left Encoder "  + robot.drivetrain.leftEnc.getDistance());
+        System.out.println(" Right Encoder " + robot.drivetrain.rightEnc.getDistance());
         SmartDashboard.putNumber("ArmPosition", robot.shooter.getPosition());
         SmartDashboard.putNumber("ArmOffset", robot.shooter.getOffsetFromBottom());
         //System.out.println("D: " + robot.drivetrain.getEncoderDisplacement(false));

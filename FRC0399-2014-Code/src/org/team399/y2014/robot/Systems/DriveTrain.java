@@ -25,8 +25,8 @@ public class DriveTrain {
     private Talon rightB = null;
     private Talon rightC = null;
     private Gyro yaw = null;
-    private Encoder leftEnc = null;
-    private Encoder rightEnc = null;
+    public Encoder leftEnc = null;
+    public Encoder rightEnc = null;
     private int fsmState = 0;
 
     /**
@@ -62,6 +62,7 @@ public class DriveTrain {
         rightB = new Talon(rB);
         rightC = new Talon(rC);
     }
+    
 
     public void setSensors(int gyro, int leftEncA, int leftEncB, int rightEncA, int rightEncB) //gets angle and constrains it between 0 and 359 then returns it
     {
