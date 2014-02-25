@@ -315,7 +315,7 @@ public class Shooter {
             // Teleop phase autocal
 
             if (!zero) {
-                output = .4;
+                output = .25;
             } else {
                 output = 0;
             }
@@ -376,6 +376,17 @@ public class Shooter {
         return (curr_state == States.SHOOT || curr_state == States.SHORT_SHOT)
                 && (System.currentTimeMillis() - timeStateChange > 800);
     }
+    /**
+     * Gets the state of a timer indicating whether or not a shot has been
+     * assumed as complete
+     *
+     * @return true if the fsm has been in the shooter state for 800ms
+     */
+    public boolean getStageDone() {
+        return (curr_state == States.STAGE || curr_state == States.SHORT_STAGE)
+                && (System.currentTimeMillis() - timeStateChange > 800);
+    }
+    
     private double error = 0, prevError = 0;
     private double intError = 0;
 

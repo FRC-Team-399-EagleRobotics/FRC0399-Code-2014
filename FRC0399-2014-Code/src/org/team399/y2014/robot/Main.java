@@ -81,7 +81,7 @@ public class Main extends IterativeRobot {
             currAuton.cancel();
             currAuton = null;
         }
-        currAuton = new OneBallAuton();//(CommandGroup) autonChooser.getSelected();
+        currAuton = new TwoBallAuton();//(CommandGroup) autonChooser.getSelected();
         Scheduler.getInstance().add(currAuton);
 //        this.updateLcd();
     }
@@ -201,6 +201,8 @@ public class Main extends IterativeRobot {
             //state = Shooter.States.HOLD;
         } else if (robot.shooter.getShootDone()) {
             state = Shooter.States.SHORT_STAGE;
+        } else if (robot.shooter.getStageDone()){
+            state = Shooter.States.LIVE_CAL;
         } else if (robot.intake.output < 0) {
             state = Shooter.States.HOLD;
             robot.shooter.setGoalOffset(SmartDashboard.getNumber("StageOffset", 0));
