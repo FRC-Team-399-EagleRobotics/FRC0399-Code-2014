@@ -21,6 +21,7 @@ import org.team399.y2014.robot.Auton.ThreeBallAuton;
 import org.team399.y2014.robot.Auton.TwoBallAuton;
 import org.team399.y2014.robot.Config.Constants;
 import org.team399.y2014.robot.Config.Ports;
+import org.team399.y2014.robot.Systems.DriveTrain;
 import org.team399.y2014.robot.Systems.Robot;
 import org.team399.y2014.robot.Systems.Shooter;
 
@@ -110,6 +111,7 @@ public class Main extends IterativeRobot {
     public void teleopInit() {
         robot.comp.start();
         robot.shooter.setManual(0);
+        
 
         if (robot.shooter.getPosition()
                 < (Constants.Shooter.INTAKE_LIMIT + robot.shooter.m_lowerLim)) {
@@ -126,12 +128,13 @@ public class Main extends IterativeRobot {
 
     double stageOffset = 0.0;
 
+    int driveState = 0;
     /**
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
         //System.out.println("ARM_POT" + robot.shooter.getPosition());
-        SmartDashboard.putNumber("ArmPosition", robot.shooter.getPosition());
+       SmartDashboard.putNumber("ArmPosition", robot.shooter.getPosition());
         SmartDashboard.putNumber("ArmOffset", robot.shooter.getOffsetFromBottom());
         SmartDashboard.putNumber("ArmState", robot.shooter.getState());
         SmartDashboard.putString("ArmStateString", Shooter.States.toString(robot.shooter.getState()));
@@ -142,15 +145,25 @@ public class Main extends IterativeRobot {
         double rightIn = driverRight.getRawAxis(2);
         double scalar = .65;
 
-        if (driverLeft.getRawButton(11) || driverRight.getRawButton(11)
-                || driverLeft.getRawButton(12) || driverRight.getRawButton(12)
-                || driverLeft.getRawButton(13) || driverRight.getRawButton(13)
-                || driverLeft.getRawButton(14) || driverRight.getRawButton(14)
-                || driverLeft.getRawButton(15) || driverRight.getRawButton(15)
-                || driverLeft.getRawButton(16) || driverRight.getRawButton(16)) {
+        
+        if (driverRight.getRawButton(2)) {
             scalar = 1.0;
         }
-        robot.drivetrain.tankDrive(leftIn * scalar, rightIn * scalar);
+        
+        //this.updateLcd();
+        
+        if(driverLeft.getRawButton(2)) {
+            robot.drivetrain.setState(DriveTrain.States.PID_BRAKE);
+            //robot.drivetrain.setState(driveState);
+        } else {
+            robot.drivetrain.setState(DriveTrain.States.TANK_DRIVE);
+            //
+            
+        }
+        
+        
+        robot.drivetrain.setTankDrive(leftIn * scalar, rightIn * scalar);
+        robot.drivetrain.run();
 
         double offset = 0.0;
 
@@ -177,6 +190,7 @@ public class Main extends IterativeRobot {
 //            } else if (gamePad.getButton(4)) {
 //                offset = -.2;
 //            }
+            
             robot.shooter.setGoalOffset(offset);
             state = Shooter.States.SHOOT;
         } else if (gamePad.getButton(6)) {
@@ -203,14 +217,14 @@ public class Main extends IterativeRobot {
 
         robot.shooter.run();
         if (gamePad.getDPad(GamePad.DPadStates.UP)) {
-            robot.intake.setMotors(.75);
+            robot.intake.setMotors(1.0);
         } else if (gamePad.getDPad(GamePad.DPadStates.DOWN)) {
-            robot.intake.setMotors(-.75);
+            robot.intake.setMotors(-1.0);
         } else {
             robot.intake.setMotors(0);
         }
 
-        robot.intake.setToggle(gamePad.getButton(5));
+        robot.intake.setToggle(gamePad.getButton(5) || driverLeft.getRawButton(1) && driverRight.getRawButton(1));
         this.updateLcd();
     }
 

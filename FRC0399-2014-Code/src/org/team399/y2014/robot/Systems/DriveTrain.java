@@ -62,7 +62,6 @@ public class DriveTrain {
         rightB = new Talon(rB);
         rightC = new Talon(rC);
     }
-    
 
     public void setSensors(int gyro, int leftEncA, int leftEncB, int rightEncA, int rightEncB) //gets angle and constrains it between 0 and 359 then returns it
     {
@@ -110,6 +109,11 @@ public class DriveTrain {
         }
     }
 
+    public void setTankDrive(double tank_left, double tank_right) {
+        this.tank_left = tank_left;
+        this.tank_right = tank_right;
+    }
+
     public void arcadeDrive(double throttle, double turning) {
         tankDrive(throttle + turning, throttle - turning);
     }
@@ -134,7 +138,7 @@ public class DriveTrain {
         double right = rightEnc.get();
         leftE = left;
         rightE = right;
-        
+
         if (clear) {
             leftEnc.reset();
             rightEnc.reset();
@@ -146,22 +150,21 @@ public class DriveTrain {
     public double getEncoderDisplacement() {
         return getEncoderDisplacement(true);
     }
-
     public double leftE = 0;
     public double rightE = 0;
-    
+
     public double getEncoderDisplacement(boolean clear) {
         double left = leftEnc.get();
         double right = rightEnc.get();
         leftE = left;
-        //rightE = right;
+        rightE = right;
 
         if (clear) {
             leftEnc.reset();
             rightEnc.reset();
         }
 
-        return left;//(left + right) / 2.0;
+        return (left + right) / 2.0;
     }
 
     public double twoStickToTurning(double left, double right) {
@@ -171,7 +174,6 @@ public class DriveTrain {
     public double twoStickToThrottle(double left, double right) {
         return (left + right) / 2;
     }
-
     private double old_wheel = 0.0;
     private double neg_inertia_accumulator = 0.0;
     private static final double CD_SENS_HIGH = 0.875;
@@ -265,5 +267,114 @@ public class DriveTrain {
             right_pwm = -1.0;
         }
         tankDrive((left_pwm), (right_pwm));
+    }
+
+    public static class States {
+
+        public final static int TANK_DRIVE = 0;
+        public final static int ARCADE_DRIVE = 1;
+        public final static int PID_TURN = 2;
+        public final static int PID_DRIVE = 3;
+        public final static int PID_BRAKE = 4;
+    }
+    private int curr_state = 0, prev_state = 0;
+
+    public void setState(int newState) {
+        prev_state = curr_state;
+        curr_state = newState;
+    }
+
+    public int getState() {
+        return curr_state;
+    }
+    //Drive FSM
+    //0 = tank drive
+    //1 = arcade drive
+    //2 = PID Turn
+    //3 = PID distance
+    //4 = Reset
+    //FSM state values:
+    private double tank_left = 0;
+    private double tank_right = 0;
+    private double arcade_throttle = 0;
+    private double arcade_turning = 0;
+    private double dist_distance = 0;
+    private double turn_angle = 0;
+    private double goal = 0.0;
+    private int prevState = 0;
+
+    public void run() {
+        if (curr_state != prevState) {
+            //state change
+            if (curr_state == States.PID_BRAKE) {
+                this.getEncoderDisplacement(true);
+                System.out.println( "encoder reset");
+            }
+        }
+
+        double outL = 0.0, outR = 0.0;
+
+        System.out.println("[DRIVE] State: " + curr_state);
+
+        if (curr_state == States.TANK_DRIVE) {
+            outL = tank_left;
+            outR = tank_right;
+        } else if (curr_state == States.ARCADE_DRIVE) {
+        } else if (curr_state == 2) {
+        } else if (curr_state == 4) {
+            
+            outL = this.getEncoderDisplacement(false) * Constants.DriveTrain.DRIVE_P;
+            outR = outL;
+            System.out.println("output" + outL);
+        }
+
+        tankDrive(outL, outR);
+    }
+    private double error = 0, prevError = 0;
+    private double intError = 0;
+
+    /**
+     * Calculates a position control output for shooter arm positioning
+     *
+     * @param p Proportional gain
+     * @param i Integral gain
+     * @param d Derivative Gain
+     * @param f Feed Forward Gain
+     * @param s Speed Limit
+     * @return a calculated closed loop control output
+     */
+    public static String toString(int state) {
+        return "error";
+    }
+
+    private double pidControl(double p,
+            double i,
+            double d,
+            double f,
+            double s) {
+        prevError = error;
+        error = this.getEncoderDisplacement(false) ;
+
+        intError += error;
+        if (Math.abs(intError) > 0.5) {
+            intError = 0.5 * EagleMath.signum(intError);
+        }
+
+        double pOut = p * error;
+        double iOut = i * intError;
+        double dOut = d * (error - prevError);
+
+        double output = pOut + iOut + dOut + f;
+
+        if (Math.abs(output) > Math.abs(s)) {
+            output = Math.abs(s) * EagleMath.signum(output);
+
+
+        }
+
+
+
+
+        return -output;
     }
 }
