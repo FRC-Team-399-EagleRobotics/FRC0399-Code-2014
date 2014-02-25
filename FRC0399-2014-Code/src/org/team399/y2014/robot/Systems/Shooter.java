@@ -100,6 +100,21 @@ public class Shooter {
     }
 
     /**
+     * Returns true if the potentiometer sensor is broken. Assumes sensor is
+     * broken if the position is outside a "safe" range.
+     *
+     * @return
+     */
+    public boolean isSensorBroken() {
+        double upperBound = 4.95;
+        double lowerBound = 0.05;
+
+        return !EagleMath.isInBand(this.getPosition(),
+                upperBound,
+                lowerBound);
+    }
+
+    /**
      * Sets software position limits and sets an enable flag
      *
      * @param upper upper positional limit
@@ -167,6 +182,12 @@ public class Shooter {
         public final static int SHORT_STAGE = 6;
         public final static int LIVE_CAL = -2;
 
+        /**
+         * Returns a string representation of the current system state.
+         *
+         * @param state numerical representation of the system state
+         * @return
+         */
         public static String toString(int state) {
             if (state == STOW) {
                 return "STOW";
@@ -186,6 +207,8 @@ public class Shooter {
                 return "SHORT_STAGE";
             } else if (state == HOLD) {
                 return "HOLD";
+            } else if (state == LIVE_CAL) {
+                return "LIVE_CAL";
             } else {
                 return "ERROR";
             }
@@ -376,17 +399,18 @@ public class Shooter {
         return (curr_state == States.SHOOT || curr_state == States.SHORT_SHOT)
                 && (System.currentTimeMillis() - timeStateChange > 800);
     }
+
     /**
-     * Gets the state of a timer indicating whether or not a shot has been
-     * assumed as complete
+     * Gets the state of a timer indicating whether or not a stage transition
+     * has been assumed as complete
      *
-     * @return true if the fsm has been in the shooter state for 800ms
+     * @return true if the fsm has been in a stage state for 800ms
      */
     public boolean getStageDone() {
         return (curr_state == States.STAGE || curr_state == States.SHORT_STAGE)
                 && (System.currentTimeMillis() - timeStateChange > 800);
     }
-    
+
     private double error = 0, prevError = 0;
     private double intError = 0;
 
