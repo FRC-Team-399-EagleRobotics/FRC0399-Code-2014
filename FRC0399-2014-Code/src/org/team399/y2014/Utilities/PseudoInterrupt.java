@@ -7,7 +7,7 @@ package org.team399.y2014.Utilities;
 
 /**
  * A simple class to monitor a boolean variable and return various values based on previous states
- * @author Jeremy Germita
+ * (jeremy.germita@gmail.com) Jeremy Germita Germita
  */
 public class PseudoInterrupt {
 

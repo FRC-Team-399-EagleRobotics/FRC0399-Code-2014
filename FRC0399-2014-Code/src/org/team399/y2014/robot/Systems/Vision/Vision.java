@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  *
- * @author Ivan
+ * @author ivansalazar003@gmail.com (Ivan Salazar)
  */
 public class Vision {
 

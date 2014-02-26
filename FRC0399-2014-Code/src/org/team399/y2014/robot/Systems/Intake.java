@@ -14,7 +14,7 @@ import org.team399.y2014.robot.Config.Constants;
  * Contains functions related to operation of intake system.
  *
  * @author (jeremy.germita@gmail.com) Jeremy Germita
- * @author (ivansalazar003@gmail.com) Ivan Salazar
+ * @author ivansalazar003@gmail.com (Ivan Salazar)
  */
 public class Intake {
 

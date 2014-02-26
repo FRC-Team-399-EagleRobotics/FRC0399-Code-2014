@@ -7,7 +7,7 @@ package org.team399.y2014.robot.Config;
 
 /**
  *
- * @author Jeremy
+ * (jeremy.germita@gmail.com) Jeremy Germita
  */
 public class Constants {
 

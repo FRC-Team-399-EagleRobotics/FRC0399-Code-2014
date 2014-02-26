@@ -10,7 +10,7 @@ import javax.microedition.io.Connector;
 
 /**
  * Class used to provide functionality for reading files
- * @author Jeremy
+ * (jeremy.germita@gmail.com) Jeremy Germita
  */
 public class FileReader {
 

@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.DriverStationLCD;
 
 /**
  * Class used to print to the DriverStationLCD display
- * @author Jeremy
+ * (jeremy.germita@gmail.com) Jeremy Germita
  */
 public class DsLcdStream {
     private static DriverStationLCD lcd = DriverStationLCD.getInstance();

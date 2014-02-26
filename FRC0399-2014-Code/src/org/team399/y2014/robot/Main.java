@@ -60,9 +60,9 @@ public class Main extends IterativeRobot {
         autonChooser.addObject("Do Nothing Auton #Sweg ", new DoNothingAuton());
         //autonChooser.addObject("Three Ball", new ThreeBallAuton());
         SmartDashboard.putData("Auton Chooser", autonChooser);
-        
-        SmartDashboard.putNumber("h_low", ((driverLeft.getRawAxis(3)+1)/2) * 180);
-        SmartDashboard.putNumber("h_high", ((driverLeft.getRawAxis(3)+1)/2) * 180);
+
+        SmartDashboard.putNumber("h_low", ((driverLeft.getRawAxis(3) + 1) / 2) * 180);
+        SmartDashboard.putNumber("h_high", ((driverLeft.getRawAxis(3) + 1) / 2) * 180);
         SmartDashboard.putNumber("s_low", 50);
         SmartDashboard.putNumber("s_high", 100);
         SmartDashboard.putNumber("v_low", 50);
@@ -71,7 +71,7 @@ public class Main extends IterativeRobot {
 
     public void testInit() {
         robot.shooter.setState(Shooter.States.TEST);  // shooter autocalibrate mode
-        if (currAuton != null) {
+        if (currAuton != null) {    //Cancel auton if it hasn't already ended.
             currAuton.cancel();
             currAuton = null;
         }
@@ -100,7 +100,7 @@ public class Main extends IterativeRobot {
     public void autonomousPeriodic() {
         Scheduler.getInstance().run();
     }
-    
+
     public void disabledInit() {
         if (currAuton != null) {
             currAuton.cancel();
@@ -109,8 +109,8 @@ public class Main extends IterativeRobot {
     }
 
     public void disabledPeriodic() {
-        
-        System.out.println(" left Encoder "  + robot.drivetrain.leftEnc.getDistance());
+
+        System.out.println(" left Encoder " + robot.drivetrain.leftEnc.getDistance());
         System.out.println(" Right Encoder " + robot.drivetrain.rightEnc.getDistance());
         SmartDashboard.putNumber("ArmPosition", robot.shooter.getPosition());
         SmartDashboard.putNumber("ArmOffset", robot.shooter.getOffsetFromBottom());
@@ -120,7 +120,7 @@ public class Main extends IterativeRobot {
         //System.out.println("T: " + robot.drivetrain.getEncoderTurn(false));
         this.updateLcd();
     }
-    
+
     double armPotInit = 0.0;
 
     public void teleopInit() {
@@ -147,12 +147,13 @@ public class Main extends IterativeRobot {
     double stageOffset = 0.0;
 
     int driveState = 0;
+
     /**
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
         //System.out.println("ARM_POT" + robot.shooter.getPosition());
-       SmartDashboard.putNumber("ArmPosition", robot.shooter.getPosition());
+        SmartDashboard.putNumber("ArmPosition", robot.shooter.getPosition());
         SmartDashboard.putNumber("ArmOffset", robot.shooter.getOffsetFromBottom());
         SmartDashboard.putNumber("ArmState", robot.shooter.getState());
         SmartDashboard.putString("ArmStateString", Shooter.States.toString(robot.shooter.getState()));
@@ -163,23 +164,20 @@ public class Main extends IterativeRobot {
         double rightIn = driverRight.getRawAxis(2);
         double scalar = .65;
 
-        
         if (driverRight.getRawButton(2)) {
             scalar = 1.0;
         }
-        
+
         //this.updateLcd();
-        
-        if(driverLeft.getRawButton(2)) {
+        if (driverLeft.getRawButton(2)) {
             robot.drivetrain.setState(DriveTrain.States.PID_BRAKE);
             //robot.drivetrain.setState(driveState);
         } else {
             robot.drivetrain.setState(DriveTrain.States.TANK_DRIVE);
             //
-            
+
         }
-        
-        
+
         robot.drivetrain.setTankDrive(leftIn * scalar, rightIn * scalar);
         robot.drivetrain.run();
 
@@ -208,7 +206,6 @@ public class Main extends IterativeRobot {
 //            } else if (gamePad.getButton(4)) {
 //                offset = -.2;
 //            }
-            
             robot.shooter.setGoalOffset(offset);
             state = Shooter.States.SHOOT;
         } else if (gamePad.getButton(6)) {
@@ -219,7 +216,7 @@ public class Main extends IterativeRobot {
             //state = Shooter.States.HOLD;
         } else if (robot.shooter.getShootDone()) {
             state = Shooter.States.SHORT_STAGE;
-        } else if (robot.shooter.wantLiveCal()){
+        } else if (robot.shooter.wantLiveCal()) {
             state = Shooter.States.LIVE_CAL;
         } else if (robot.intake.output < 0) {
             state = Shooter.States.HOLD;

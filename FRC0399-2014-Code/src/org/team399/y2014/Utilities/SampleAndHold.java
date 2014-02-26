@@ -6,7 +6,7 @@ package org.team399.y2014.Utilities;
 
 /**
  * Simple utility to monitor a value and return a value at the time the hold() method was called
- * @author Jeremy
+ * (jeremy.germita@gmail.com) Jeremy Germita
  */
 public class SampleAndHold {
 

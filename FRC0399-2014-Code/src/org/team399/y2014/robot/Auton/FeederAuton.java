@@ -13,7 +13,7 @@ import org.team399.y2014.robot.Config.Constants;
 
 /**
  *
- * @author Ivan
+ * @author ivansalazar003@gmail.com (Ivan Salazar)
  */
 public class FeederAuton extends CommandGroup {
     

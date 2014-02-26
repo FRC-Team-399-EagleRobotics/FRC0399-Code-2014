@@ -13,8 +13,9 @@ import org.team399.y2014.Utilities.EagleMath;
 import org.team399.y2014.robot.Config.Constants;
 
 /**
+ * Contains functions related to input and output of the drivetrain subsystem.
  *
- * @author Ivan
+ * @author ivansalazar003@gmail.com (Ivan Salazar)
  */
 public class DriveTrain {
 
@@ -63,6 +64,15 @@ public class DriveTrain {
         rightC = new Talon(rC);
     }
 
+    /**
+     * Initialize sensors
+     *
+     * @param gyro Gyro analog port
+     * @param leftEncA Encoder port - left A
+     * @param leftEncB
+     * @param rightEncA
+     * @param rightEncB
+     */
     public void setSensors(int gyro, int leftEncA, int leftEncB, int rightEncA, int rightEncB) //gets angle and constrains it between 0 and 359 then returns it
     {
         yaw = new Gyro(gyro);
@@ -75,12 +85,21 @@ public class DriveTrain {
         yaw.reset();
     }
 
+    /**
+     * Reinitializes sensors to default values.
+     */
     public void resetSensors() {
         yaw.reset();
         leftEnc.reset();
         rightEnc.reset();
     }
 
+    /**
+     * Outputs power to the left and right sides of the drivetrain.
+     *
+     * @param leftPower
+     * @param rightPower
+     */
     public void tankDrive(double leftPower, double rightPower) {
         leftPower = -leftPower;
         rightPower = -rightPower;
@@ -109,19 +128,44 @@ public class DriveTrain {
         }
     }
 
+    /**
+     * Sets tank drive inputs for FSM use only!
+     *
+     * @param tank_left
+     * @param tank_right
+     */
     public void setTankDrive(double tank_left, double tank_right) {
         this.tank_left = tank_left;
         this.tank_right = tank_right;
     }
 
+    /**
+     * Arcade drive function. takes a throttle and turning rate input and
+     * converts it into left/right tank drive controls.
+     *
+     * @param throttle
+     * @param turning
+     */
     public void arcadeDrive(double throttle, double turning) {
         tankDrive(throttle + turning, throttle - turning);
     }
 
+    /**
+     * Conversion from inches to encoder ticks.
+     *
+     * @param inches
+     * @return a distance in encoder ticks.
+     */
     public double inchesToTicks(double inches) {
         return inches * Constants.DriveTrain.TICKS_TO_INCHES;
     }
 
+    /**
+     * Returns the current value of the gyro sensor, constrained from -180 to
+     * 180.
+     *
+     * @return
+     */
     public double getHeading() {
         double heading = yaw.getAngle();
         heading = EagleMath.constrainAngle(heading, -180, 180);
@@ -129,10 +173,23 @@ public class DriveTrain {
         return heading;
     }
 
+    /**
+     * Returns the difference between the encoder values on the left and right
+     * drivetrain sides
+     *
+     * @return
+     */
     public double getEncoderTurn() {
-        return getEncoderTurn(true);
+        return getEncoderTurn(false);
     }
 
+    /**
+     * Returns the difference between the encoder values on the left and right
+     * drivetrain sides.
+     *
+     * @param clear set to true to reset the encoder value.
+     * @return
+     */
     public double getEncoderTurn(boolean clear) {
         double left = -leftEnc.get();
         double right = rightEnc.get();
@@ -147,12 +204,23 @@ public class DriveTrain {
         return (left - right);
     }
 
+    /**
+     * Get the encoder displacement from the last reset
+     *
+     * @return
+     */
     public double getEncoderDisplacement() {
-        return getEncoderDisplacement(true);
+        return getEncoderDisplacement(false);
     }
     public double leftE = 0;
     public double rightE = 0;
 
+    /**
+     * Get the encoder displacement from the last reset
+     *
+     * @param clear set to true to reset the encoders.
+     * @return
+     */
     public double getEncoderDisplacement(boolean clear) {
         double left = -leftEnc.get();
         double right = rightEnc.get();
@@ -167,108 +235,9 @@ public class DriveTrain {
         return (left + right) / 2.0;
     }
 
-    public double twoStickToTurning(double left, double right) {
-        return (left - right) / 2;
-    }
-
-    public double twoStickToThrottle(double left, double right) {
-        return (left + right) / 2;
-    }
-    private double old_wheel = 0.0;
-    private double neg_inertia_accumulator = 0.0;
-    private static final double CD_SENS_HIGH = 0.875;
-    private static final double CD_SENS_LOW = 1.111;
-    private static final double CD_WHEEL_NONLIN_HIGH = 1.0;
-    private static final double CD_WHEEL_NONLIN_LOW = 0.8;
-    private static final double CD_NEG_INERTIA = 3.0;
-
-    public void cheesyDrive(double leftP, double rightP) {
-        double wheel = twoStickToTurning(leftP, rightP);
-        double throttle = twoStickToTurning(leftP, rightP);
-
-        double left_pwm, right_pwm, overPower;
-        double sensitivity = 1.2;
-        double angular_power;
-        double linear_power;
-        double wheelNonLinearity;
-        boolean quickTurn = Math.abs(throttle) < .05;//Math.abs(wheel) > .375 &&
-
-        double neg_inertia = wheel - old_wheel;
-        old_wheel = wheel;
-
-        wheelNonLinearity = CD_WHEEL_NONLIN_HIGH;        //Used to be .9 higher is less sensitive
-        // Apply a sin function that's scaled to make it feel bette
-//            wheel = Math.sin(Math.PI / 2.0 * wheelNonLinearity * wheel) / Math.sin(Math.PI / 2.0 * wheelNonLinearity);
-        wheel = Math.sin(Math.PI / 2.0 * wheelNonLinearity * wheel) / Math.sin(Math.PI / 2.0 * wheelNonLinearity);
-
-        double neg_inertia_scalar;
-        if (wheel * neg_inertia > 0) {
-            neg_inertia_scalar = CD_NEG_INERTIA * 1.66;
-        } else {
-            if (Math.abs(wheel) > 0.65) {
-                neg_inertia_scalar = CD_NEG_INERTIA * 3.33;
-            } else {
-                neg_inertia_scalar = CD_NEG_INERTIA;
-            }
-        }
-        sensitivity = CD_SENS_HIGH; //lower is less sensitive
-
-        if (Math.abs(throttle) > 0.1) {
-            sensitivity = .9 - (.9 - sensitivity) / Math.abs(throttle);
-        }
-        //neg_inertia_scalar *= .4;
-        double neg_inertia_power = neg_inertia * neg_inertia_scalar;
-        if (Math.abs(throttle) >= 0.05 || quickTurn) {
-            neg_inertia_accumulator += neg_inertia_power;
-        }
-        wheel = wheel + neg_inertia_accumulator;
-        if (neg_inertia_accumulator > 1) {
-            neg_inertia_accumulator -= 1;
-        } else if (neg_inertia_accumulator < -1) {
-            neg_inertia_accumulator += 1;
-        } else {
-            neg_inertia_accumulator = 0;
-        }
-
-        linear_power = throttle;
-
-        if ((!EagleMath.isInBand(throttle, -0.2, 0.2) || !(EagleMath.isInBand(wheel, -0.65, 0.65))) && quickTurn) {
-            overPower = 1.0;
-            sensitivity = 1.0;
-            sensitivity = 1.0;
-            angular_power = wheel;
-        } else {
-            overPower = 0.0;
-            angular_power = Math.abs(throttle) * wheel * sensitivity;
-        }
-
-        if (quickTurn) {
-            angular_power = EagleMath.signedSquare(angular_power, 1);   //make turning less sensitive under quickturn
-            if (Math.abs(angular_power) >= .745) {
-                //    angular_power = 1.0*EagleMath.signum(angular_power);
-            }
-        }
-
-        right_pwm = left_pwm = linear_power;
-        left_pwm += angular_power;
-        right_pwm -= angular_power;
-
-        if (left_pwm > 1.0) {
-            right_pwm -= overPower * (left_pwm - 1.0);
-            left_pwm = 1.0;
-        } else if (right_pwm > 1.0) {
-            left_pwm -= overPower * (right_pwm - 1.0);
-            right_pwm = 1.0;
-        } else if (left_pwm < -1.0) {
-            right_pwm += overPower * (-1.0 - left_pwm);
-            left_pwm = -1.0;
-        } else if (right_pwm < -1.0) {
-            left_pwm += overPower * (-1.0 - right_pwm);
-            right_pwm = -1.0;
-        }
-        tankDrive((left_pwm), (right_pwm));
-    }
-
+    /**
+     * States for drivetrain finite state machine.
+     */
     public static class States {
 
         public final static int TANK_DRIVE = 0;
@@ -308,7 +277,7 @@ public class DriveTrain {
             //state change
             if (curr_state == States.PID_BRAKE) {
                 this.getEncoderDisplacement(true);
-                System.out.println( "encoder reset");
+                System.out.println("encoder reset");
             }
         }
 
@@ -322,7 +291,7 @@ public class DriveTrain {
         } else if (curr_state == States.ARCADE_DRIVE) {
         } else if (curr_state == 2) {
         } else if (curr_state == 4) {
-            
+
             outL = this.getEncoderDisplacement(false) * Constants.DriveTrain.DRIVE_P;
             outR = outL;
             System.out.println("output" + outL);
@@ -353,7 +322,7 @@ public class DriveTrain {
             double f,
             double s) {
         prevError = error;
-        error = this.getEncoderDisplacement(false) ;
+        error = this.getEncoderDisplacement(false);
 
         intError += error;
         if (Math.abs(intError) > 0.5) {
@@ -369,11 +338,7 @@ public class DriveTrain {
         if (Math.abs(output) > Math.abs(s)) {
             output = Math.abs(s) * EagleMath.signum(output);
 
-
         }
-
-
-
 
         return -output;
     }

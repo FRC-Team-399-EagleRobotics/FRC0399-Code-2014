@@ -8,7 +8,7 @@ import java.util.Vector;
 
 /**
  * Class of string utilities
- * @author Jeremy
+ * (jeremy.germita@gmail.com) Jeremy Germita
  */
 public class StringUtils {
 

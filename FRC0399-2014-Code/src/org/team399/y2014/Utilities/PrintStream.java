@@ -7,7 +7,7 @@ package org.team399.y2014.Utilities;
 /**
  * Standard print stream utility class. Contains various functions to modify the print stream
  * for easy debugging or readability
- * @author Jeremy
+ * (jeremy.germita@gmail.com) Jeremy Germita
  */
 public class PrintStream {
 

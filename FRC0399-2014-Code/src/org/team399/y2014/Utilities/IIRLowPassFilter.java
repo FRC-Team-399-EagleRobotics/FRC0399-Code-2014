@@ -6,7 +6,7 @@ package org.team399.y2014.Utilities;
 
 /**
  * An Infinite Impulse Response Low pass filter.
- * @author Jeremy
+ * (jeremy.germita@gmail.com) Jeremy Germita
  */
 public class IIRLowPassFilter {
 

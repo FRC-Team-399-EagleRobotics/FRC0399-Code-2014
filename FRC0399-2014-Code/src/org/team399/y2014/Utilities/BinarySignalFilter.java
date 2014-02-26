@@ -8,7 +8,7 @@ import com.sun.squawk.util.MathUtils;
 
 /**
  * Simple filter to debounce a boolean input. Set a buffer size. will only return true if 
- * @author Jeremy
+ * (jeremy.germita@gmail.com) Jeremy Germita
  */
 public class BinarySignalFilter {
 

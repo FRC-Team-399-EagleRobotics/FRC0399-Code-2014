@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.Joystick;
 
 /**
  * A joystick wrapper class for the Rumblepad 2 Gamepad We will be using
- * @author Jeremy Germita
+ * (jeremy.germita@gmail.com) Jeremy Germita Germita
  */
 public class GamePad {
 

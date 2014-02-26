@@ -19,7 +19,7 @@ import org.team399.y2014.robot.Config.Constants;
  * Shooter class. Base functions for shooter mechanism
  *
  * @author (jeremy.germita@gmail.com) Jeremy Germita
- * @author (ivansalazar003@gmail.com) Ivan Salazar
+ * @author ivansalazar003@gmail.com (Ivan Salazar)
  */
 public class Shooter {
 
@@ -235,8 +235,6 @@ public class Shooter {
         return curr_state;
     }
     public long timeStateChange = 0;
-    
-    
 
     /**
      * Runs the shooter finite state machine with control loops
@@ -267,7 +265,7 @@ public class Shooter {
                     Constants.Shooter.STOW_F,
                     Constants.Shooter.STOW_S);
         } else if (curr_state == States.SHORT_SHOT) {
-            
+
             isCalibrated = false;
             // Else if shoot, do this
             output = 0;

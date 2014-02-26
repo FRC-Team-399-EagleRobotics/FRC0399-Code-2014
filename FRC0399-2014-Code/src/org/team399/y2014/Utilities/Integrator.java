@@ -6,7 +6,7 @@ package org.team399.y2014.Utilities;
 
 /**
  *
- * @author Jeremy
+ * (jeremy.germita@gmail.com) Jeremy Germita
  */
 public class Integrator {
     private double value = 0.0;

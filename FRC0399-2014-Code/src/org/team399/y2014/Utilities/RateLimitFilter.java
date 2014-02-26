@@ -7,7 +7,7 @@ package org.team399.y2014.Utilities;
 /**
  * Rate Limit Filter Filters output by rate of change of input
  *
- * @author Jeremy
+ * (jeremy.germita@gmail.com) Jeremy Germita
  */
 public class RateLimitFilter {
 
