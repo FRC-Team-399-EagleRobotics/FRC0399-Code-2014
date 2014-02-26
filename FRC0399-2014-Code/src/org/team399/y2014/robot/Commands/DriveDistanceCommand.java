@@ -64,7 +64,7 @@ public class DriveDistanceCommand extends Command {
         System.out.println("[DRIVE] Error: " + error);
 
         throttle = -EagleMath.cap(throttle, -this.speedLimit, this.speedLimit);
-        turning = 0;//EagleMath.cap(turning, -this.speedLimit, this.speedLimit);
+        turning = EagleMath.cap(turning, -this.speedLimit, this.speedLimit);
 
         Robot.getInstance().drivetrain.arcadeDrive(throttle, turning);
 

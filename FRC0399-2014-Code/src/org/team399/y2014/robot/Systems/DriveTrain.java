@@ -134,7 +134,7 @@ public class DriveTrain {
     }
 
     public double getEncoderTurn(boolean clear) {
-        double left = leftEnc.get();
+        double left = -leftEnc.get();
         double right = rightEnc.get();
         leftE = left;
         rightE = right;

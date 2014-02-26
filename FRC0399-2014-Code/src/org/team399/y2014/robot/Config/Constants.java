@@ -26,7 +26,7 @@ public class Constants {
         //DRIVE PID VALUES
         public static double DRIVE_P = .001;
         public static double DRIVE_I = .1;
-        public static double STRAIGHT_P = .01;
+        public static double STRAIGHT_P = .002;
         public static final double TICKS_TO_INCHES = 28.6624;
         public static double BRAKE_P = .01;
 

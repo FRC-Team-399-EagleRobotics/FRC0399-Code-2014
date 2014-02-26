@@ -32,7 +32,7 @@ public class Shooter {
     public double m_lowerLim = 5.0;
     private boolean m_limitsEnabled = false;
     private ThrottledPrinter fsmStatus = new ThrottledPrinter(0.5);
-    boolean isCalibrated = false;
+    public boolean isCalibrated = false;
 
     /**
      * Constructor
@@ -235,6 +235,8 @@ public class Shooter {
         return curr_state;
     }
     public long timeStateChange = 0;
+    
+    
 
     /**
      * Runs the shooter finite state machine with control loops
@@ -265,6 +267,8 @@ public class Shooter {
                     Constants.Shooter.STOW_F,
                     Constants.Shooter.STOW_S);
         } else if (curr_state == States.SHORT_SHOT) {
+            
+            isCalibrated = false;
             // Else if shoot, do this
             output = 0;
             double s = 0.0;
@@ -278,6 +282,7 @@ public class Shooter {
                     s);
             System.out.println("Shot! Output: " + output);
         } else if (curr_state == States.SHOOT) {
+            isCalibrated = false;
             // Else if shoot, do this
             output = 0;
             double s = 0.0;
@@ -341,6 +346,8 @@ public class Shooter {
                 output = .25;
             } else {
                 output = 0;
+                isCalibrated = true;
+                this.setState(States.SHORT_STAGE);
             }
 
         } else if (curr_state == States.TEST) {  //Auto Calibrate Mode
@@ -366,6 +373,7 @@ public class Shooter {
             this.setState(States.MANUAL);
             this.setManual(0);
             SmartDashboard.putBoolean("AUTOCALIBRATE", true);
+            isCalibrated = true;
         } else {
             System.out.println("[SHOOTER] Invalid State!!");
         }
@@ -406,9 +414,9 @@ public class Shooter {
      *
      * @return true if the fsm has been in a stage state for 800ms
      */
-    public boolean getStageDone() {
+    public boolean wantLiveCal() {
         return (curr_state == States.STAGE || curr_state == States.SHORT_STAGE)
-                && (System.currentTimeMillis() - timeStateChange > 800);
+                && (System.currentTimeMillis() - timeStateChange > 800 && !isCalibrated);
     }
 
     private double error = 0, prevError = 0;
