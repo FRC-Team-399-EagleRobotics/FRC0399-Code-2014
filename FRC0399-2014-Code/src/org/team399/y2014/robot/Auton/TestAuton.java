@@ -22,18 +22,10 @@ public class TestAuton extends CommandGroup {
     public TestAuton() {
         this.addSequential(new CalibrateCommand(.500));
         //this.addSequential(new WaitCommand(.75));
-        this.addSequential(new StageCommand(.5));
-        this.addSequential(new DriveDistanceCommand(-36, 1.0, 10));
-        this.addSequential(new IntakeCommand(0, Constants.Intake.EXTENDED, 1.0));
-        this.addSequential(new StageCommand(1));
-        this.addSequential(new ShootCommand(1.0));
-        this.addSequential(new WaitCommand(1.0));
-        this.addSequential(new StageCommand(.5));
-        this.addSequential(new WaitCommand(1.0));
-        //this.addSequential(new DriveDistanceCommand(216, 1.0, 10));
-        //this.addSequential(new WaitCommand(2.0));
-        this.addSequential(new IntakeCommand(0, Constants.Intake.RETRACTED, .1));
-        this.addSequential(new StageCommand(.5));
-    }
 
+        this.addSequential(new DriveDistanceCommand(-96, .25, 10));
+        this.addSequential(new DriveDistanceCommand(96, .5, 10));
+        this.addSequential(new DriveDistanceCommand(-96, .75, 10));
+        this.addSequential(new DriveDistanceCommand(96, 1.0, 10));
+    }
 }

@@ -14,11 +14,13 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.team399.y2014.Utilities.GamePad;
+import org.team399.y2014.robot.Auton.FeederAuton;
 import org.team399.y2014.robot.Auton.MobilityAuton;
 import org.team399.y2014.robot.Auton.OneBallAuton;
 import org.team399.y2014.robot.Auton.TestAuton;
 import org.team399.y2014.robot.Auton.ThreeBallAuton;
 import org.team399.y2014.robot.Auton.TwoBallAuton;
+import org.team399.y2014.robot.Commands.DoNothingAuton;
 import org.team399.y2014.robot.Config.Constants;
 import org.team399.y2014.robot.Config.Ports;
 import org.team399.y2014.robot.Systems.DriveTrain;
@@ -54,7 +56,9 @@ public class Main extends IterativeRobot {
         autonChooser.addObject("Mobility Only", new MobilityAuton());
         autonChooser.addObject("One Ball", new OneBallAuton());
         autonChooser.addObject("Two Ball", new TwoBallAuton());
-        autonChooser.addObject("Three Ball", new ThreeBallAuton());
+        autonChooser.addObject("Feeder", new FeederAuton());
+        autonChooser.addObject("Do Nothing Auton #Sweg ", new DoNothingAuton());
+        //autonChooser.addObject("Three Ball", new ThreeBallAuton());
         SmartDashboard.putData("Auton Chooser", autonChooser);
         
         SmartDashboard.putNumber("h_low", ((driverLeft.getRawAxis(3)+1)/2) * 180);
@@ -67,6 +71,10 @@ public class Main extends IterativeRobot {
 
     public void testInit() {
         robot.shooter.setState(Shooter.States.TEST);  // shooter autocalibrate mode
+        if (currAuton != null) {
+            currAuton.cancel();
+            currAuton = null;
+        }
     }
 
     public void testPeriodic() {
@@ -81,7 +89,7 @@ public class Main extends IterativeRobot {
             currAuton.cancel();
             currAuton = null;
         }
-        currAuton = new TwoBallAuton();//(CommandGroup) autonChooser.getSelected();
+        currAuton = (CommandGroup) autonChooser.getSelected();
         Scheduler.getInstance().add(currAuton);
 //        this.updateLcd();
     }
@@ -91,6 +99,13 @@ public class Main extends IterativeRobot {
      */
     public void autonomousPeriodic() {
         Scheduler.getInstance().run();
+    }
+    
+    public void disabledInit() {
+        if (currAuton != null) {
+            currAuton.cancel();
+            currAuton = null;
+        }
     }
 
     public void disabledPeriodic() {
@@ -111,7 +126,10 @@ public class Main extends IterativeRobot {
     public void teleopInit() {
         robot.comp.start();
         robot.shooter.setManual(0);
-        
+        if (currAuton != null) {
+            currAuton.cancel();
+            currAuton = null;
+        }
 
         if (robot.shooter.getPosition()
                 < (Constants.Shooter.INTAKE_LIMIT + robot.shooter.m_lowerLim)) {
@@ -201,7 +219,7 @@ public class Main extends IterativeRobot {
             //state = Shooter.States.HOLD;
         } else if (robot.shooter.getShootDone()) {
             state = Shooter.States.SHORT_STAGE;
-        } else if (robot.shooter.getStageDone()){
+        } else if (robot.shooter.wantLiveCal()){
             state = Shooter.States.LIVE_CAL;
         } else if (robot.intake.output < 0) {
             state = Shooter.States.HOLD;
