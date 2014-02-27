@@ -61,7 +61,7 @@ public class Shooter {
         double answer = m_pot.getVoltage();
         return answer;
     }
-    private Debouncer zeroSwitchDebouncer = new Debouncer(.125);
+    private Debouncer zeroSwitchDebouncer = new Debouncer(.06);
 
     /**
      * Gets debounced state of bottom limit zero switch.
@@ -332,6 +332,10 @@ public class Shooter {
         } else if (curr_state == States.MANUAL) {
             // Else if manual control, do this
             output = manualInput;
+            if(zero) { 
+                isCalibrated = true;
+            }
+            
             /*
              * if (this.getPosition() > this.m_upperLim && output > 0 &&
              * m_limitsEnabled) { output = 0; } else if (this.getPosition() <
@@ -340,7 +344,7 @@ public class Shooter {
         } else if (curr_state == States.LIVE_CAL) {
             // Teleop phase autocal
 
-            if (!zero) {
+            if ((!zero) && (!isCalibrated)) {
                 output = .25;
             } else {
                 output = 0;
@@ -349,7 +353,7 @@ public class Shooter {
             }
 
         } else if (curr_state == States.TEST) {  //Auto Calibrate Mode
-            SmartDashboard.putBoolean("AUTOCALIBRATE", false);
+            
             Double newUpper = null;
             Double newLower = null;
 
@@ -370,21 +374,19 @@ public class Shooter {
             System.out.println("[SHOOTER] Auto-Calibrate Complete! New Limits: L: " + newLower.doubleValue() + " U: " + newUpper.doubleValue());
             this.setState(States.MANUAL);
             this.setManual(0);
-            SmartDashboard.putBoolean("AUTOCALIBRATE", true);
+            
             isCalibrated = true;
         } else {
             System.out.println("[SHOOTER] Invalid State!!");
         }
 
-        SmartDashboard.putNumber("ShooterOut", output);
+        
 
-        SmartDashboard.putBoolean("ZERO", zero);
+        
         if (zero) {
-
             if (output > 0) {
                 output = 0;
             }
-
             this.setSoftLimits(this.getPosition(), this.m_upperLim, true);
             System.out.println("[SHOOTER] Zero!");
         }

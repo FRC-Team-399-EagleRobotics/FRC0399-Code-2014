@@ -29,12 +29,12 @@ public class Vision {
     public void setHsv(double hLow, double hHigh,
             double sLow, double sHigh,
             double vLow, double vHigh) {
-        SmartDashboard.putNumber("h_low", hLow);
-        SmartDashboard.putNumber("h_high", hHigh);
-        SmartDashboard.putNumber("s_low", sLow);
-        SmartDashboard.putNumber("s_high", sHigh);
-        SmartDashboard.putNumber("v_low", vHigh);
-        SmartDashboard.putNumber("v_high", vHigh);
+        
+        
+        
+        
+        
+        
 
     }
 

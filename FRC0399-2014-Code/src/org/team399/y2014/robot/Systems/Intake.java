@@ -22,7 +22,7 @@ public class Intake {
     private Solenoid m_solA = null;
     private Solenoid m_solB = null;
 
-    public boolean state = false;
+    public boolean state = Constants.Intake.RETRACTED;
     public double output = 0.0;
     /**
      * Constructor.

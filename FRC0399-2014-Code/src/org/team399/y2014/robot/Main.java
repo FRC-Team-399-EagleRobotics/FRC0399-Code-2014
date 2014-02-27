@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.command.Scheduler;
+import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.team399.y2014.Utilities.GamePad;
@@ -40,7 +41,6 @@ public class Main extends IterativeRobot {
     Joystick driverLeft = new Joystick(Ports.DRIVER_LEFT_JOYSTICK_USB);
     Joystick driverRight = new Joystick(Ports.DRIVER_RIGHT_JOYSTICK_USB);
     GamePad gamePad = new GamePad(Ports.OPERATOR_GAMEPAD_USB);
-
     SendableChooser autonChooser = new SendableChooser();
     CommandGroup currAuton = null;
 
@@ -50,7 +50,7 @@ public class Main extends IterativeRobot {
      */
     public void robotInit() {
         robot = Robot.getInstance();
-        SmartDashboard.putNumber("StageOffset", 0.0);
+
 
         autonChooser.addDefault("Test Auton", new TestAuton());
         autonChooser.addObject("Mobility Only", new MobilityAuton());
@@ -59,14 +59,7 @@ public class Main extends IterativeRobot {
         autonChooser.addObject("Feeder", new FeederAuton());
         autonChooser.addObject("Do Nothing Auton #Sweg ", new DoNothingAuton());
         //autonChooser.addObject("Three Ball", new ThreeBallAuton());
-        SmartDashboard.putData("Auton Chooser", autonChooser);
-
-        SmartDashboard.putNumber("h_low", ((driverLeft.getRawAxis(3) + 1) / 2) * 180);
-        SmartDashboard.putNumber("h_high", ((driverLeft.getRawAxis(3) + 1) / 2) * 180);
-        SmartDashboard.putNumber("s_low", 50);
-        SmartDashboard.putNumber("s_high", 100);
-        SmartDashboard.putNumber("v_low", 50);
-        SmartDashboard.putNumber("v_high", 100);
+        SmartDashboard.putData("auton Chooser", autonChooser);
     }
 
     public void testInit() {
@@ -74,11 +67,15 @@ public class Main extends IterativeRobot {
         if (currAuton != null) {    //Cancel auton if it hasn't already ended.
             currAuton.cancel();
             currAuton = null;
+        
         }
+        LiveWindow.setEnabled(false);
     }
 
     public void testPeriodic() {
+        LiveWindow.setEnabled(false);
         robot.shooter.run();
+        updateSmartDashboard();
     }
 
     public void autonomousInit() {
@@ -99,6 +96,7 @@ public class Main extends IterativeRobot {
      */
     public void autonomousPeriodic() {
         Scheduler.getInstance().run();
+        updateSmartDashboard();
     }
 
     public void disabledInit() {
@@ -109,24 +107,25 @@ public class Main extends IterativeRobot {
     }
 
     public void disabledPeriodic() {
+        updateSmartDashboard();
 
         System.out.println(" left Encoder " + robot.drivetrain.leftEnc.getDistance());
         System.out.println(" Right Encoder " + robot.drivetrain.rightEnc.getDistance());
-        SmartDashboard.putNumber("ArmPosition", robot.shooter.getPosition());
-        SmartDashboard.putNumber("ArmOffset", robot.shooter.getOffsetFromBottom());
+
+
         //System.out.println("D: " + robot.drivetrain.getEncoderDisplacement(false));
 
         robot.drivetrain.getEncoderDisplacement(false);
         //System.out.println("T: " + robot.drivetrain.getEncoderTurn(false));
         this.updateLcd();
     }
-
     double armPotInit = 0.0;
 
     public void teleopInit() {
         robot.comp.start();
         robot.shooter.setManual(0);
         if (currAuton != null) {
+            
             currAuton.cancel();
             currAuton = null;
         }
@@ -143,9 +142,7 @@ public class Main extends IterativeRobot {
         robot.shooter.setState(state);
     }
     int state = Shooter.States.MANUAL;
-
     double stageOffset = 0.0;
-
     int driveState = 0;
 
     /**
@@ -153,18 +150,20 @@ public class Main extends IterativeRobot {
      */
     public void teleopPeriodic() {
         //System.out.println("ARM_POT" + robot.shooter.getPosition());
-        SmartDashboard.putNumber("ArmPosition", robot.shooter.getPosition());
-        SmartDashboard.putNumber("ArmOffset", robot.shooter.getOffsetFromBottom());
-        SmartDashboard.putNumber("ArmState", robot.shooter.getState());
-        SmartDashboard.putString("ArmStateString", Shooter.States.toString(robot.shooter.getState()));
 
-        SmartDashboard.putNumber("BatteryV", DriverStation.getInstance().getBatteryVoltage());
+
+
+
+
+
 
         double leftIn = driverLeft.getRawAxis(2);
         double rightIn = driverRight.getRawAxis(2);
         double scalar = .75;
 
-        if (driverRight.getRawButton(2)) {
+        if (driverRight.getRawButton(12)) {
+            scalar = 1.0;
+        } else if (driverRight.getRawButton(11)){
             scalar = 1.0;
         }
 
@@ -243,6 +242,7 @@ public class Main extends IterativeRobot {
 
         robot.intake.setToggle(gamePad.getButton(5) || driverLeft.getRawButton(1) && driverRight.getRawButton(1));
         this.updateLcd();
+        this.updateSmartDashboard();
     }
 
     /**
@@ -257,5 +257,16 @@ public class Main extends IterativeRobot {
         String intakeIo;
 
         System.out.println(driveIo);
+    }
+    
+    public void updateSmartDashboard() {
+        SmartDashboard.putNumber("armOffset", robot.shooter.getOffsetFromBottom());
+        SmartDashboard.putNumber("armPosition", robot.shooter.getPosition());
+        SmartDashboard.putString("Current armState", Shooter.States.toString(robot.shooter.getState()));
+        SmartDashboard.putNumber("Battery voltage", DriverStation.getInstance().getBatteryVoltage());
+        SmartDashboard.putBoolean("is calibrated", robot.shooter.isCalibrated);
+        SmartDashboard.putBoolean("Intake State", robot.intake.state);
+        //SmartDashboard.putData("auton Chooser", autonChooser);
+
     }
 }
