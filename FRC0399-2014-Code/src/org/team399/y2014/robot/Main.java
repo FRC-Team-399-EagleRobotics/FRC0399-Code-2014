@@ -162,7 +162,7 @@ public class Main extends IterativeRobot {
 
         double leftIn = driverLeft.getRawAxis(2);
         double rightIn = driverRight.getRawAxis(2);
-        double scalar = .65;
+        double scalar = .75;
 
         if (driverRight.getRawButton(2)) {
             scalar = 1.0;
