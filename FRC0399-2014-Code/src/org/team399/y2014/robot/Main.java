@@ -52,14 +52,14 @@ public class Main extends IterativeRobot {
         robot = Robot.getInstance();
 
 
-        autonChooser.addDefault("Test Auton", new TestAuton());
+        autonChooser.addObject("Test Auton", new TestAuton());
         autonChooser.addObject("Mobility Only", new MobilityAuton());
         autonChooser.addObject("One Ball", new OneBallAuton());
-        autonChooser.addObject("Two Ball", new TwoBallAuton());
+        autonChooser.addDefault("Two Ball", new TwoBallAuton());
         autonChooser.addObject("Feeder", new FeederAuton());
         autonChooser.addObject("Do Nothing Auton #Sweg ", new DoNothingAuton());
         //autonChooser.addObject("Three Ball", new ThreeBallAuton());
-        SmartDashboard.putData("auton Chooser", autonChooser);
+       // SmartDashboard.putData("auton Chooser", autonChooser);
     }
 
     public void testInit() {
@@ -266,7 +266,7 @@ public class Main extends IterativeRobot {
         SmartDashboard.putNumber("Battery voltage", DriverStation.getInstance().getBatteryVoltage());
         SmartDashboard.putBoolean("is calibrated", robot.shooter.isCalibrated);
         SmartDashboard.putBoolean("Intake State", robot.intake.state);
-        //SmartDashboard.putData("auton Chooser", autonChooser);
+        SmartDashboard.putData("auton Chooser", autonChooser);
 
     }
 }
