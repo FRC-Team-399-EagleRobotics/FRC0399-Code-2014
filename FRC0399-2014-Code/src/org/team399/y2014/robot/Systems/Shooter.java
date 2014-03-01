@@ -181,6 +181,8 @@ public class Shooter {
         public final static int SHORT_SHOT = 5;
         public final static int SHORT_STAGE = 6;
         public final static int LIVE_CAL = -2;
+        public final static int AUTON_STAGE = 7;
+        public final static int AUTON_SHOT = 8;
 
         /**
          * Returns a string representation of the current system state.
@@ -209,6 +211,10 @@ public class Shooter {
                 return "HOLD";
             } else if (state == LIVE_CAL) {
                 return "LIVE_CAL";
+            } else if (state == AUTON_STAGE){
+                return "AUTON_STAGE";
+            } else if (state == AUTON_SHOT){
+                return "AUTON_SHOT";
             } else {
                 return "ERROR";
             }
@@ -291,7 +297,7 @@ public class Shooter {
                     Constants.Shooter.SHOT_I,
                     Constants.Shooter.SHOT_D,
                     Constants.Shooter.SHOT_F,
-                    s);
+                    Constants.Shooter.SHOT_S);
         } else if (curr_state == States.STAGE) {
             // Pass do this
             goal = Constants.Shooter.STAGE_POS;
@@ -328,6 +334,24 @@ public class Shooter {
                     Constants.Shooter.HOLD_D,
                     Constants.Shooter.HOLD_F,
                     Constants.Shooter.HOLD_S);
+        } else if (curr_state == States.AUTON_STAGE) {
+            // Pass do this
+            goal = Constants.Shooter.AUTON_STAGE_POS;
+            output = pidControl(
+                    Constants.Shooter.AUTON_STAGE_P,
+                    Constants.Shooter.AUTON_STAGE_I,
+                    Constants.Shooter.AUTON_STAGE_D,
+                    Constants.Shooter.AUTON_STAGE_F,
+                    Constants.Shooter.AUTON_STAGE_S);
+        }else if (curr_state == States.AUTON_SHOT) {
+            // Pass do this
+            goal = Constants.Shooter.AUTON_SHOT_POS;
+            output = pidControl(
+                    Constants.Shooter.AUTON_SHOT_P,
+                    Constants.Shooter.AUTON_SHOT_I,
+                    Constants.Shooter.AUTON_SHOT_D,
+                    Constants.Shooter.AUTON_SHOT_F,
+                    Constants.Shooter.AUTON_SHOT_S);
 
         } else if (curr_state == States.MANUAL) {
             // Else if manual control, do this

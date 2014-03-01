@@ -26,7 +26,7 @@ public class Constants {
         //DRIVE PID VALUES
         public static double DRIVE_P = .001;
         public static double DRIVE_I = .1;
-        public static double STRAIGHT_P = .002;
+        public static double STRAIGHT_P = .000;
         public static final double TICKS_TO_INCHES = 28.6624;
         public static double BRAKE_P = .01;
 
@@ -47,12 +47,12 @@ public class Constants {
         public static final double STOW_F = 0.0;    // Stow Feed Forward Gain
         public static final double STOW_S = 0.4;    // Stow Speed limit
 
-        public static final double STAGE_POS = .25;  // Pass position
+        public static final double STAGE_POS = .45;  // Pass position //short_stage .4
         public static final double STAGE_P = 1.2;    // Pass PID gains
         public static final double STAGE_I = 0.0;
         public static final double STAGE_D = 0.0;
         public static final double STAGE_F = 0.0;    // Pass Feed Forward Gain
-        public static final double STAGE_S = 0.45;    // Pass Speed limit
+        public static final double STAGE_S = 0.3;    // Pass Speed limit
 
         public static final double TRUSS_POS = 0.4021;  // Pass position
         public static final double TRUSS_P = 3.0;    // Pass PID gains
@@ -61,7 +61,7 @@ public class Constants {
         public static final double TRUSS_F = 0.0;    // Pass Feed Forward Gain
         public static final double TRUSS_S = 1.0;    // Pass Speed limit
         
-        public static final double HOLD_POS = .150;  // Pass position
+        public static final double HOLD_POS = .225;  // Pass position
         public static final double HOLD_P = 1.9;    // Pass PID gains
         public static final double HOLD_I = 0.0;
         public static final double HOLD_D = 0.0;
@@ -76,7 +76,7 @@ public class Constants {
         public static final double SHOT_I = 0.0;
         public static final double SHOT_D = 0.0;
         public static final double SHOT_F = 0.0;    // Pass Feed Forward Gain
-        public static final double SHOT_S = 01.0;    // Pass Speed limit
+        public static final double SHOT_S = 0.85;    // Pass Speed limit
 
         public static final double SHORT_POS = 0.80
                 ;  // Shot final position
@@ -87,12 +87,31 @@ public class Constants {
         public static final double SHORT_F = 0.0;    // Pass Feed Forward Gain
         public static final double SHORT_S = .75;    // Pass Speed limit
 
-        public static final double SHORT_STAGE_POS = .159;  // Pass position
+        public static final double SHORT_STAGE_POS = .4;  // Pass position
         public static final double SHORT_STAGE_P = 1.8;    // Pass PID gains
         public static final double SHORT_STAGE_I = 0.0;
         public static final double SHORT_STAGE_D = 0.0;
         public static final double SHORT_STAGE_F = 0.0;    // Pass Feed Forward Gain
         public static final double SHORT_STAGE_S = 0.45;    // Pass Speed limit
+        
+         public static final double AUTON_STAGE_POS = .475;  // Pass position
+        public static final double AUTON_STAGE_P = 1.2;    // Pass PID gains
+        public static final double AUTON_STAGE_I = 0.0;
+        public static final double AUTON_STAGE_D = 0.0;
+        public static final double AUTON_STAGE_F = 0.0;    // Pass Feed Forward Gain
+        public static final double AUTON_STAGE_S = 0.3;
+        
+         public static final double AUTON_SHOT_POS = 1.1; //1.3186;  // Shot final position
+        public static final double AUTON_SHOT_START = 0.0;// Shot start threshold position
+        public static final double AUTON_SHOT_INIT_SPEED = -1.0;// Shot start speed
+        public static final double AUTON_SHOT_FINAL_SPEED = -1.0; // Shot Final speed.
+        public static final double AUTON_SHOT_P = 5;    // Pass PID gains
+        public static final double AUTON_SHOT_I = 0.0;
+        public static final double AUTON_SHOT_D = 0.0;
+        public static final double AUTON_SHOT_F = 0.0;    // Pass Feed Forward Gain
+        public static final double AUTON_SHOT_S = 0.85;    // Pass Speed limit
+        
+        
 
     }
 

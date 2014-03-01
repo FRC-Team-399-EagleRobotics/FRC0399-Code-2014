@@ -31,10 +31,10 @@ public class Ports {
     // Drive Train ports
     public final static int LEFT_DRIVE = 3;
     public final static int RIGHT_DRIVE = 4;
-    public final static int LEFT_ENC_A = 3;
-    public final static int LEFT_ENC_B = 4;
-    public final static int RIGHT_ENC_A = 1;
-    public final static int RIGHT_ENC_B = 2;
+    public final static int LEFT_ENC_A = 1;
+    public final static int LEFT_ENC_B = 2;
+    public final static int RIGHT_ENC_A = 3;
+    public final static int RIGHT_ENC_B = 4;
     public final static int GYRO = 2;
 
     public final static int COMP_SWITCH = 5;

@@ -25,7 +25,7 @@ public class ShootCommand extends Command {
 
     protected void initialize() {
         this.setTimeout(timeout);
-        Robot.getInstance().shooter.setState(Shooter.States.SHOOT);
+        Robot.getInstance().shooter.setState(Shooter.States.AUTON_SHOT);
         
         if(Robot.getInstance().intake.state 
                 == Constants.Intake.RETRACTED) {
@@ -41,7 +41,7 @@ public class ShootCommand extends Command {
     }
 
     protected void end() {
-        Robot.getInstance().shooter.setState(Shooter.States.STAGE);
+        Robot.getInstance().shooter.setState(Shooter.States.AUTON_STAGE);
         //Robot.getInstance().comp.start();
         Robot.getInstance().shooter.setOutput(0.0);
     }

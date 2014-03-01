@@ -5,9 +5,11 @@
 package org.team399.y2014.robot.Auton;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
+import org.team399.y2014.robot.Commands.ArcadeDriveCommand;
 import org.team399.y2014.robot.Commands.CalibrateCommand;
 import org.team399.y2014.robot.Commands.DriveDistanceCommand;
 import org.team399.y2014.robot.Commands.IntakeCommand;
+import org.team399.y2014.robot.Commands.IntakeStageCommand;
 import org.team399.y2014.robot.Commands.ShootCommand;
 import org.team399.y2014.robot.Commands.StageCommand;
 import org.team399.y2014.robot.Commands.WaitCommand;
@@ -22,10 +24,8 @@ public class TestAuton extends CommandGroup {
     public TestAuton() {
         this.addSequential(new CalibrateCommand(.500));
         //this.addSequential(new WaitCommand(.75));
-
-        this.addSequential(new DriveDistanceCommand(-96, .25, 10));
-        this.addSequential(new DriveDistanceCommand(96, .5, 10));
-        this.addSequential(new DriveDistanceCommand(-96, .75, 10));
-        this.addSequential(new DriveDistanceCommand(96, 1.0, 10));
+        this.addSequential(new IntakeStageCommand(.75));
+        this.addSequential(new ArcadeDriveCommand(.75, 0, 1.0));
+     
     }
 }

@@ -191,7 +191,7 @@ public class DriveTrain {
      * @return
      */
     public double getEncoderTurn(boolean clear) {
-        double left = -leftEnc.get();
+        double left =  -1*leftEnc.get(); // practivce bot, this value needs to be negated
         double right = rightEnc.get();
         leftE = left;
         rightE = right;
@@ -222,7 +222,7 @@ public class DriveTrain {
      * @return
      */
     public double getEncoderDisplacement(boolean clear) {
-        double left = -leftEnc.get();
+        double left =  leftEnc.get();
         double right = rightEnc.get();
         leftE = left;
         rightE = right;
@@ -232,7 +232,7 @@ public class DriveTrain {
             rightEnc.reset();
         }
 
-        return (left + right) / 2.0;
+        return (right);
     }
 
     /**

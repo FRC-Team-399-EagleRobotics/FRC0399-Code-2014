@@ -80,16 +80,19 @@ public class Main extends IterativeRobot {
 
     public void autonomousInit() {
         robot.comp.stop();
-        System.out.println("[AUTON] Starting: "
-                + autonChooser.getSelected().toString());
+        robot.drivetrain.resetSensors();
+        /*System.out.println("[AUTON] Starting: "
+                + autonChooser.getSelected().toString());*/
         if (currAuton != null) {
             currAuton.cancel();
             currAuton = null;
         }
-        currAuton = (CommandGroup) autonChooser.getSelected();
+        currAuton = new TwoBallAuton();//(CommandGroup) autonChooser.getSelected();
         Scheduler.getInstance().add(currAuton);
 //        this.updateLcd();
     }
+   
+    
 
     /**
      * This function is called periodically during autonomous
@@ -97,6 +100,8 @@ public class Main extends IterativeRobot {
     public void autonomousPeriodic() {
         Scheduler.getInstance().run();
         updateSmartDashboard();
+        
+        System.out.println( "displacement "+robot.drivetrain.getEncoderDisplacement(true));
     }
 
     public void disabledInit() {
@@ -207,7 +212,7 @@ public class Main extends IterativeRobot {
 //            }
             robot.shooter.setGoalOffset(offset);
             state = Shooter.States.SHOOT;
-        } else if (gamePad.getButton(6)) {
+        } else if (gamePad.getButton(1)) {
             state = Shooter.States.SHORT_STAGE;
         } else if (gamePad.getButton(7) && robot.intake.state == Constants.Intake.EXTENDED) {
             state = Shooter.States.SHORT_SHOT;

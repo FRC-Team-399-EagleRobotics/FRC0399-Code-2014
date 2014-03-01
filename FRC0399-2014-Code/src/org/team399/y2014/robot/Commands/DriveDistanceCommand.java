@@ -56,14 +56,14 @@ public class DriveDistanceCommand extends Command {
             iErr = -1;
         }
 
-        double throttle = (error * Constants.DriveTrain.DRIVE_P) + 
+        double throttle = -(error * Constants.DriveTrain.DRIVE_P) + 
                 (Constants.DriveTrain.DRIVE_I * iErr) 
                 - (Constants.DriveTrain.DRIVE_D * (prevPos - displacement));
         double turning = encTurn * Constants.DriveTrain.STRAIGHT_P;
-        
+        System.out.println("[DRIVE] Disp : " + displacement);
         System.out.println("[DRIVE] Error: " + error);
 
-        throttle = -EagleMath.cap(throttle, -this.speedLimit, this.speedLimit);
+        throttle = EagleMath.cap(throttle, -this.speedLimit, this.speedLimit);
         turning = EagleMath.cap(turning, -this.speedLimit, this.speedLimit);
 
         Robot.getInstance().drivetrain.arcadeDrive(throttle, turning);
