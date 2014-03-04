@@ -87,7 +87,7 @@ public class Main extends IterativeRobot {
             currAuton.cancel();
             currAuton = null;
         }
-        currAuton = new TwoBallAuton();//(CommandGroup) autonChooser.getSelected();
+        currAuton = new OneBallAuton();//(CommandGroup) autonChooser.getSelected();
         Scheduler.getInstance().add(currAuton);
 //        this.updateLcd();
     }
@@ -154,7 +154,7 @@ public class Main extends IterativeRobot {
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
-        //System.out.println("ARM_POT" + robot.shooter.getPosition());
+        System.out.println("ARM_POT" + robot.shooter.getPosition());
 
 
 

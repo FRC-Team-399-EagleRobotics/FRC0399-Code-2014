@@ -47,7 +47,7 @@ public class Constants {
         public static final double STOW_F = 0.0;    // Stow Feed Forward Gain
         public static final double STOW_S = 0.4;    // Stow Speed limit
 
-        public static final double STAGE_POS = .45;  // Pass position //short_stage .4
+        public static final double STAGE_POS = .475;  // Pass position //short_stage .4
         public static final double STAGE_P = 1.2;    // Pass PID gains
         public static final double STAGE_I = 0.0;
         public static final double STAGE_D = 0.0;
@@ -61,7 +61,7 @@ public class Constants {
         public static final double TRUSS_F = 0.0;    // Pass Feed Forward Gain
         public static final double TRUSS_S = 1.0;    // Pass Speed limit
         
-        public static final double HOLD_POS = .225;  // Pass position
+        public static final double HOLD_POS = .2;  // Pass position
         public static final double HOLD_P = 1.9;    // Pass PID gains
         public static final double HOLD_I = 0.0;
         public static final double HOLD_D = 0.0;
@@ -99,7 +99,7 @@ public class Constants {
         public static final double AUTON_STAGE_I = 0.0;
         public static final double AUTON_STAGE_D = 0.0;
         public static final double AUTON_STAGE_F = 0.0;    // Pass Feed Forward Gain
-        public static final double AUTON_STAGE_S = 0.3;
+        public static final double AUTON_STAGE_S = 0.15;
         
          public static final double AUTON_SHOT_POS = 1.1; //1.3186;  // Shot final position
         public static final double AUTON_SHOT_START = 0.0;// Shot start threshold position
