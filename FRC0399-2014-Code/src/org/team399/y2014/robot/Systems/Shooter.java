@@ -9,10 +9,10 @@ import edu.wpi.first.wpilibj.AnalogChannel;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.team399.y2014.Utilities.Debouncer;
 import org.team399.y2014.Utilities.EagleMath;
 import org.team399.y2014.Utilities.ThrottledPrinter;
+import org.team399.y2014.Utilities.Velocity;
 import org.team399.y2014.robot.Config.Constants;
 
 /**
@@ -211,9 +211,9 @@ public class Shooter {
                 return "HOLD";
             } else if (state == LIVE_CAL) {
                 return "LIVE_CAL";
-            } else if (state == AUTON_STAGE){
+            } else if (state == AUTON_STAGE) {
                 return "AUTON_STAGE";
-            } else if (state == AUTON_SHOT){
+            } else if (state == AUTON_SHOT) {
                 return "AUTON_SHOT";
             } else {
                 return "ERROR";
@@ -241,6 +241,7 @@ public class Shooter {
         return curr_state;
     }
     public long timeStateChange = 0;
+    Velocity vel = new Velocity();
 
     /**
      * Runs the shooter finite state machine with control loops
@@ -286,6 +287,9 @@ public class Shooter {
                     s);
             System.out.println("Shot! Output: " + output);
         } else if (curr_state == States.SHOOT) {
+            vel.run(this.getPosition());
+            System.out.println("Shooter Velocity: " + vel.getVelocity());
+
             isCalibrated = false;
             // Else if shoot, do this
             output = 0;
@@ -343,7 +347,7 @@ public class Shooter {
                     Constants.Shooter.AUTON_STAGE_D,
                     Constants.Shooter.AUTON_STAGE_F,
                     Constants.Shooter.AUTON_STAGE_S);
-        }else if (curr_state == States.AUTON_SHOT) {
+        } else if (curr_state == States.AUTON_SHOT) {
             // Pass do this
             goal = Constants.Shooter.AUTON_SHOT_POS;
             output = pidControl(
@@ -356,10 +360,10 @@ public class Shooter {
         } else if (curr_state == States.MANUAL) {
             // Else if manual control, do this
             output = manualInput;
-            if(zero) { 
+            if (zero) {
                 isCalibrated = true;
             }
-            
+
             /*
              * if (this.getPosition() > this.m_upperLim && output > 0 &&
              * m_limitsEnabled) { output = 0; } else if (this.getPosition() <
@@ -377,7 +381,7 @@ public class Shooter {
             }
 
         } else if (curr_state == States.TEST) {  //Auto Calibrate Mode
-            
+
             Double newUpper = null;
             Double newLower = null;
 
@@ -398,15 +402,12 @@ public class Shooter {
             System.out.println("[SHOOTER] Auto-Calibrate Complete! New Limits: L: " + newLower.doubleValue() + " U: " + newUpper.doubleValue());
             this.setState(States.MANUAL);
             this.setManual(0);
-            
+
             isCalibrated = true;
         } else {
             System.out.println("[SHOOTER] Invalid State!!");
         }
 
-        
-
-        
         if (zero) {
             if (output > 0) {
                 output = 0;
