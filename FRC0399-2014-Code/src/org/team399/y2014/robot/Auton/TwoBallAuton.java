@@ -26,19 +26,20 @@ public class TwoBallAuton extends CommandGroup {
     public TwoBallAuton() {
         System.out.println("TwoBall Auton!");
         this.addSequential(new CalibrateCommand(.500));
+        //this.addSequential( new IntakeStageCommand(.5));       
         //this.addSequential(new WaitCommand(.75));
         this.addSequential(new StageCommand(.25));
         // #yolo
         this.addSequential(new IntakeCommand(0, Constants.Intake.EXTENDED, .3));
         this.addSequential(new WaitCommand(.5));
-        this.addSequential(new IntakeCommand(-.3, Constants.Intake.EXTENDED, 0));
+        this.addSequential(new IntakeCommand(-.05, Constants.Intake.EXTENDED, 0));
+        this.addSequential(new IntakeCommand(0.0, Constants.Intake.EXTENDED,.25));
         this.addSequential(new ArcadeDriveCommand(.5, 0, 1.0));
-        this.addSequential(new IntakeCommand(0.0, Constants.Intake.EXTENDED,1.0));
+       // this.addSequential(new IntakeCommand(0.0, Constants.Intake.EXTENDED,1.0));
         //this.addSequential(new IntakeCommand(0.0, Constants.Intake.EXTENDED, .2));
         // this.addSequential(new IntakeCommand(0, Constants.Intake.EXTENDED, 1.0));
         //this.addSequential(new DriveDistanceCommand(-72, .8, 10));
-        this.addSequential(new StageCommand(.75));
-        this.addSequential(new WaitCommand(.25));
+        this.addSequential(new StageCommand(1.0));
         this.addSequential(new ShootCommand(.75));
         //this.addSequential(new WaitCommand(.75));
        // this.addSequential(new StageCommand(.5));
@@ -49,11 +50,14 @@ public class TwoBallAuton extends CommandGroup {
         this.addSequential(new IntakeStageCommand(.75));
         this.addSequential(new WaitCommand(.25));
         this.addSequential(new IntakeCommand(-.75, Constants.Intake.EXTENDED, 0.0));
-        this.addSequential(new ArcadeDriveCommand(-.25,0,.5));
-        this.addSequential(new WaitCommand(1.25));
-        this.addSequential(new StageCommand(.5));
+       // this.addSequential(new IntakeCommand(0.0,Constants.Intake.EXTENDED,0.3));
+        this.addSequential(new ArcadeDriveCommand(-.4,0,.5));
+        this.addSequential(new WaitCommand(.2));
+        this.addSequential(new ArcadeDriveCommand(.8,0,.25));
+        //this.addSequential(new WaitCommand(.25));
+        this.addSequential(new StageCommand(1.0));
         this.addSequential(new ShootCommand(.75));
-        this.addSequential(new StageCommand(.5));
+        this.addSequential(new IntakeStageCommand(.5));
         this.addSequential(new StopAllCommand());
         //this.setTimeout(10);
     }
