@@ -283,7 +283,7 @@ public class DriveTrain {
 
         double outL = 0.0, outR = 0.0;
 
-        System.out.println("[DRIVE] State: " + curr_state);
+       // System.out.println("[DRIVE] State: " + curr_state);
 
         if (curr_state == States.TANK_DRIVE) {
             outL = tank_left;

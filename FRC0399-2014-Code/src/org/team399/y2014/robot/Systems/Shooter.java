@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.AnalogChannel;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.team399.y2014.Utilities.Debouncer;
 import org.team399.y2014.Utilities.EagleMath;
 import org.team399.y2014.Utilities.ThrottledPrinter;
@@ -81,7 +82,7 @@ public class Shooter {
      * @return Potentiometer value
      */
     public double getOffsetFromBottom() {
-        double answer = this.getPosition() - Constants.Shooter.LOWER_LIMIT;
+        double answer = this.getPosition() - this.m_lowerLim;
         return answer;
     }
 
@@ -287,9 +288,7 @@ public class Shooter {
                     s);
             System.out.println("Shot! Output: " + output);
         } else if (curr_state == States.SHOOT) {
-            vel.run(this.getPosition());
-            System.out.println("Shooter Velocity: " + vel.getVelocity());
-
+            
             isCalibrated = false;
             // Else if shoot, do this
             output = 0;
@@ -325,6 +324,7 @@ public class Shooter {
             goal = Constants.Shooter.TRUSS_POS;
             output = pidControl(
                     Constants.Shooter.TRUSS_P,
+                    
                     Constants.Shooter.TRUSS_I,
                     Constants.Shooter.TRUSS_D,
                     Constants.Shooter.TRUSS_F,
@@ -349,6 +349,13 @@ public class Shooter {
                     Constants.Shooter.AUTON_STAGE_S);
         } else if (curr_state == States.AUTON_SHOT) {
             // Pass do this
+            
+            vel.run(this.getPosition());
+            System.out.println("Shooter Velocity: " + vel.getVelocity());
+            
+            SmartDashboard.putNumber("Shooter Velocity",vel.getVelocity());
+            double velGoal = -5.5;
+            double velocityOffset = (velGoal - vel.getVelocity()) * Constants.Shooter.VEL_P;
             goal = Constants.Shooter.AUTON_SHOT_POS;
             output = pidControl(
                     Constants.Shooter.AUTON_SHOT_P,
@@ -356,6 +363,11 @@ public class Shooter {
                     Constants.Shooter.AUTON_SHOT_D,
                     Constants.Shooter.AUTON_SHOT_F,
                     Constants.Shooter.AUTON_SHOT_S);
+            
+            if(Math.abs(this.error) < .04 ) { // might want to change to .02 for comp bot
+                velocityOffset = 0;
+            }
+            output += velocityOffset;
 
         } else if (curr_state == States.MANUAL) {
             // Else if manual control, do this
@@ -417,6 +429,11 @@ public class Shooter {
         }
         if (output > Constants.Shooter.DOWN_SPEED) {
             output = Constants.Shooter.DOWN_SPEED;
+        }
+        
+        if (output < 0 && (this.getOffsetFromBottom() > Constants.Shooter.UPPER_LIMIT)) {
+            output = 0;
+            
         }
 
         this.setOutput(output);

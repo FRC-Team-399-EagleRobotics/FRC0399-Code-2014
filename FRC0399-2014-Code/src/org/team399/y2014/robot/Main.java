@@ -19,7 +19,7 @@ import org.team399.y2014.robot.Auton.FeederAuton;
 import org.team399.y2014.robot.Auton.MobilityAuton;
 import org.team399.y2014.robot.Auton.OneBallAuton;
 import org.team399.y2014.robot.Auton.TestAuton;
-import org.team399.y2014.robot.Auton.ThreeBallAuton;
+import org.team399.y2014.robot.Auton.TestAutonShot;
 import org.team399.y2014.robot.Auton.TwoBallAuton;
 import org.team399.y2014.robot.Commands.DoNothingAuton;
 import org.team399.y2014.robot.Config.Constants;
@@ -27,6 +27,7 @@ import org.team399.y2014.robot.Config.Ports;
 import org.team399.y2014.robot.Systems.DriveTrain;
 import org.team399.y2014.robot.Systems.Robot;
 import org.team399.y2014.robot.Systems.Shooter;
+
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -58,8 +59,9 @@ public class Main extends IterativeRobot {
         autonChooser.addDefault("Two Ball", new TwoBallAuton());
         autonChooser.addObject("Feeder", new FeederAuton());
         autonChooser.addObject("Do Nothing Auton #Sweg ", new DoNothingAuton());
+        autonChooser.addObject("TestShoot", new TestAutonShot());
         //autonChooser.addObject("Three Ball", new ThreeBallAuton());
-       // SmartDashboard.putData("auton Chooser", autonChooser);
+        SmartDashboard.putData("auton Chooser", autonChooser);
     }
 
     public void testInit() {
@@ -87,7 +89,7 @@ public class Main extends IterativeRobot {
             currAuton.cancel();
             currAuton = null;
         }
-        currAuton = new TwoBallAuton();//(CommandGroup) autonChooser.getSelected();
+        currAuton = (CommandGroup) autonChooser.getSelected();
         Scheduler.getInstance().add(currAuton);
 //        this.updateLcd();
     }
@@ -101,7 +103,7 @@ public class Main extends IterativeRobot {
         Scheduler.getInstance().run();
         updateSmartDashboard();
         
-        System.out.println( "displacement "+robot.drivetrain.getEncoderDisplacement(true));
+        //System.out.println( "displacement "+robot.drivetrain.getEncoderDisplacement(true));
     }
 
     public void disabledInit() {
@@ -114,8 +116,8 @@ public class Main extends IterativeRobot {
     public void disabledPeriodic() {
         updateSmartDashboard();
 
-        System.out.println(" left Encoder " + robot.drivetrain.leftEnc.getDistance());
-        System.out.println(" Right Encoder " + robot.drivetrain.rightEnc.getDistance());
+        //System.out.println(" left Encoder " + robot.drivetrain.leftEnc.getDistance());
+        //System.out.println(" Right Encoder " + robot.drivetrain.rightEnc.getDistance());
 
 
         //System.out.println("D: " + robot.drivetrain.getEncoderDisplacement(false));
@@ -127,6 +129,7 @@ public class Main extends IterativeRobot {
     double armPotInit = 0.0;
 
     public void teleopInit() {
+        
         robot.comp.start();
         robot.shooter.setManual(0);
         if (currAuton != null) {
@@ -143,6 +146,11 @@ public class Main extends IterativeRobot {
             state = Shooter.States.MANUAL;
             System.out.println("ARM TOO HIGH, MANUAL!");
         }
+        
+        if(!robot.shooter.isCalibrated){
+            robot.shooter.setState(Shooter.States.TEST);  // shooter autocalibrate mode
+            robot.shooter.run();
+        }
 
         robot.shooter.setState(state);
     }
@@ -154,7 +162,7 @@ public class Main extends IterativeRobot {
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
-        System.out.println("ARM_POT" + robot.shooter.getPosition());
+        //System.out.println("ARM_POT" + robot.shooter.getPosition());
 
 
 
@@ -261,7 +269,7 @@ public class Main extends IterativeRobot {
         String shooterIo = "S:";
         String intakeIo;
 
-        System.out.println(driveIo);
+        //System.out.println(driveIo);
     }
     
     public void updateSmartDashboard() {

@@ -36,6 +36,7 @@ public class Velocity {
         prevPos = currPos;
         this.currPos = pos;
         vel = (currPos - prevPos) / (prevTime - System.currentTimeMillis());
+        vel *= 1000.0;
         prevTime = System.currentTimeMillis();
     }
 

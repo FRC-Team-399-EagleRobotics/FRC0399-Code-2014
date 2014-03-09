@@ -13,6 +13,7 @@ import org.team399.y2014.robot.Commands.IntakeCommand;
 import org.team399.y2014.robot.Commands.IntakeStageCommand;
 import org.team399.y2014.robot.Commands.ShootCommand;
 import org.team399.y2014.robot.Commands.StageCommand;
+import org.team399.y2014.robot.Commands.StopAllCommand;
 import org.team399.y2014.robot.Commands.WaitCommand;
 import org.team399.y2014.robot.Config.Constants;
 
@@ -42,7 +43,7 @@ public class OneBallAuton extends CommandGroup {
         this.addSequential(new WaitCommand(1.25));
         this.addSequential(new ShootCommand(.75));
         this.addSequential( new IntakeStageCommand(.5));
-        
+        this.addSequential(new StopAllCommand());
        
     }
 }

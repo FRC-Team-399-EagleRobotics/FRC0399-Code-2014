@@ -38,7 +38,7 @@ public class Constants {
         public static double DOWN_SPEED = .4;
 
         public static double LOWER_LIMIT = 1.896; // the lower limits of the pot
-        public static double UPPER_LIMIT = 3.105; // the upper limits of the pot
+        public static double UPPER_LIMIT = 1.15; // the upper limits of the pot
         public static double INTAKE_LIMIT = .6720;
 
         public static final double STOW_POS = 0.007;  // Stow position value
@@ -111,6 +111,8 @@ public class Constants {
         public static final double AUTON_SHOT_D = 0.0;
         public static final double AUTON_SHOT_F = 0.0;    // Pass Feed Forward Gain
         public static final double AUTON_SHOT_S = 0.85;    // Pass Speed limit
+        
+        public static final double VEL_P = .4; // Velocity P
         
         
 
