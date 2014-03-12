@@ -174,9 +174,9 @@ public class Main extends IterativeRobot {
         double rightIn = driverRight.getRawAxis(2);
         double scalar = .75;
 
-        if (driverRight.getRawButton(12)) {
+        if (driverRight.getRawButton(12)|| driverRight.getRawButton(1)) {
             scalar = 1.0;
-        } else if (driverRight.getRawButton(11)){
+        } else if (driverRight.getRawButton(1)){
             scalar = 1.0;
         }
 
