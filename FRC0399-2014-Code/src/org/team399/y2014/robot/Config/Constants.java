@@ -106,7 +106,7 @@ public class Constants {
         public static final double AUTON_SHOT_START = 0.0;// Shot start threshold position
         public static final double AUTON_SHOT_INIT_SPEED = -1.0;// Shot start speed
         public static final double AUTON_SHOT_FINAL_SPEED = -1.0; // Shot Final speed.
-        public static final double AUTON_SHOT_P = 5;    // Pass PID gains
+        public static final double AUTON_SHOT_P = 5.0;    // Pass PID gains
         public static final double AUTON_SHOT_I = 0.0;
         public static final double AUTON_SHOT_D = 0.0;
         public static final double AUTON_SHOT_F = 0.0;    // Pass Feed Forward Gain

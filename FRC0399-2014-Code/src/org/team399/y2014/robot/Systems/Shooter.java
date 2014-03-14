@@ -354,7 +354,7 @@ public class Shooter {
             System.out.println("Shooter Velocity: " + vel.getVelocity());
             
             SmartDashboard.putNumber("Shooter Velocity",vel.getVelocity());
-            double velGoal = -5.5;
+            double velGoal = -4.0;
             double velocityOffset = (velGoal - vel.getVelocity()) * Constants.Shooter.VEL_P;
             goal = Constants.Shooter.AUTON_SHOT_POS;
             output = pidControl(
@@ -364,7 +364,7 @@ public class Shooter {
                     Constants.Shooter.AUTON_SHOT_F,
                     Constants.Shooter.AUTON_SHOT_S);
             
-            if(Math.abs(this.error) < .04 ) { // might want to change to .02 for comp bot
+            if(Math.abs(this.error) < .15 ) { // might want to change to .02 for comp bot
                 velocityOffset = 0;
             }
             output += velocityOffset;
