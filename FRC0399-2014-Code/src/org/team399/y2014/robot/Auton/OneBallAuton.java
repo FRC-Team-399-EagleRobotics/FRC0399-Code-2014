@@ -34,7 +34,7 @@ public class OneBallAuton extends CommandGroup {
         //this.addSequential( new IntakeStageCommand(.5));
         this.addSequential(new WaitCommand(.5));
         this.addSequential(new IntakeCommand(-.3, Constants.Intake.EXTENDED, 0));
-        this.addSequential(new ArcadeDriveCommand(.5, 0, 1.0));
+        this.addSequential(new ArcadeDriveCommand(.5, 0, 1.2));
         this.addSequential(new IntakeCommand(0.0, Constants.Intake.EXTENDED,1.0));
         //this.addSequential(new IntakeCommand(0.0, Constants.Intake.EXTENDED, .2));
         // this.addSequential(new IntakeCommand(0, Constants.Intake.EXTENDED, 1.0));

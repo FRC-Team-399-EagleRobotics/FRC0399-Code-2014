@@ -69,6 +69,13 @@ public class Constants {
         public static final double HOLD_F = 0.0;    // Pass Feed Forward Gain
         public static final double HOLD_S = 0.8;    // Pass Speed limit
 
+        public static final double INTAKE_HOLD_POS = .235;  // Pass position
+        public static final double INTAKE_HOLD_P = 1.5;    // Pass PID gains
+        public static final double INTAKE_HOLD_I = 0.0;
+        public static final double INTAKE_HOLD_D = 0.0;
+        public static final double INTAKE_HOLD_F = 0.0;    // Pass Feed Forward Gain
+        public static final double INTAKE_HOLD_S = 0.8;    // Pass Speed limit
+
         public static final double SHOT_POS = 1.1; //1.3186;  // Shot final position
         public static final double SHOT_START = 0.0;// Shot start threshold position
         public static final double SHOT_INIT_SPEED = -1.0;// Shot start speed
@@ -86,7 +93,7 @@ public class Constants {
         public static final double SHORT_I = 0.0;
         public static final double SHORT_D = 0.0;
         public static final double SHORT_F = 0.0;    // Pass Feed Forward Gain
-        public static final double SHORT_S = .75;    // Pass Speed limit
+        public static final double SHORT_S = .76;    // Pass Speed limit
 
         public static final double SHORT_STAGE_POS = .4;  // Pass position
         public static final double SHORT_STAGE_P = 1.8;    // Pass PID gains

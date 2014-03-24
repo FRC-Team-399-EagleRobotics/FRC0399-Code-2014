@@ -249,6 +249,7 @@ public class Main extends IterativeRobot {
             robot.intake.setMotors(1.0);
         } else if (gamePad.getDPad(GamePad.DPadStates.DOWN)) {
             robot.intake.setMotors(-1.0);
+            
         } else {
             robot.intake.setMotors(0);
         }

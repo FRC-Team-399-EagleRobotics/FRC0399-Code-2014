@@ -178,6 +178,7 @@ public class Shooter {
         /**
          * Hold state is for intake stowed ball holding
          */
+        public final static int INTAKE_HOLD = 10; 
         public final static int HOLD = 4;
         public final static int SHORT_SHOT = 5;
         public final static int SHORT_STAGE = 6;
@@ -210,6 +211,8 @@ public class Shooter {
                 return "SHORT_STAGE";
             } else if (state == HOLD) {
                 return "HOLD";
+            } else if (state == INTAKE_HOLD) {
+                return "INTAKE_HOLD";
             } else if (state == LIVE_CAL) {
                 return "LIVE_CAL";
             } else if (state == AUTON_STAGE) {
@@ -329,7 +332,8 @@ public class Shooter {
                     Constants.Shooter.TRUSS_D,
                     Constants.Shooter.TRUSS_F,
                     Constants.Shooter.TRUSS_S);
-        } else if (curr_state == States.HOLD) {
+        }
+         else if (curr_state == States.HOLD) {
             // Pass do this
             goal = Constants.Shooter.HOLD_POS + goalOffset;
             output = pidControl(
@@ -354,7 +358,7 @@ public class Shooter {
             System.out.println("Shooter Velocity: " + vel.getVelocity());
             
             SmartDashboard.putNumber("Shooter Velocity",vel.getVelocity());
-            double velGoal = -4.0;
+            double velGoal = -3.9;
             double velocityOffset = (velGoal - vel.getVelocity()) * Constants.Shooter.VEL_P;
             goal = Constants.Shooter.AUTON_SHOT_POS;
             output = pidControl(
@@ -447,7 +451,7 @@ public class Shooter {
      */
     public boolean getShootDone() {
         return (curr_state == States.SHOOT || curr_state == States.SHORT_SHOT)
-                && (System.currentTimeMillis() - timeStateChange > 800);
+                && (System.currentTimeMillis() - timeStateChange > 1000);
     }
 
     /**
@@ -458,7 +462,7 @@ public class Shooter {
      */
     public boolean wantLiveCal() {
         return (curr_state == States.STAGE || curr_state == States.SHORT_STAGE)
-                && (System.currentTimeMillis() - timeStateChange > 800 && !isCalibrated);
+                && (System.currentTimeMillis() - timeStateChange > 1000 && !isCalibrated);
     }
 
     private double error = 0, prevError = 0;
