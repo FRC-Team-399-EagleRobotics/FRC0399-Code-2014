@@ -12,14 +12,14 @@ import org.team399.y2014.robot.Systems.Robot;
  *
  * @author Ivan
  */
-public class IntakeDriveCommand  extends Command{
+public class IntakeTimeDriveCommand  extends Command{
      private double speedDrive = 0.0;
      private double speedIntake = 0.0;
      private double turn = 0.0;
     private boolean state = Constants.Intake.RETRACTED;
     private double timeout = 0.0;
 
-    public IntakeDriveCommand(double speedDrive,double speedIntake, double turn, boolean state, double timeout) {
+    public IntakeTimeDriveCommand(double speedDrive,double speedIntake, double turn, boolean state, double timeout) {
         this.speedDrive = speedDrive;
         this.speedIntake = speedIntake;
         this.turn = turn;
