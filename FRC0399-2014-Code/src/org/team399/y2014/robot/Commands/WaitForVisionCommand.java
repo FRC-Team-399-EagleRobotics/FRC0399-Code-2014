@@ -26,7 +26,6 @@ public abstract class WaitForVisionCommand extends Command {
     protected void initialize() {
         this.setTimeout(timeout);
     }
-
     protected void execute() {
         Target targ = Robot.getInstance().camera.getTarget();
         found = (targ.x != 0 && targ.y != 0);   //might need to rethink found criteria

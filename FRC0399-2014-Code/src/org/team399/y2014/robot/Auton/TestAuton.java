@@ -22,10 +22,11 @@ import org.team399.y2014.robot.Config.Constants;
 public class TestAuton extends CommandGroup {
 
     public TestAuton() {
-        this.addSequential(new CalibrateCommand(.500));
+       // this.addSequential(new CalibrateCommand(.500));
         //this.addSequential(new WaitCommand(.75));
-        this.addSequential(new IntakeStageCommand(.75));
-        this.addSequential(new ArcadeDriveCommand(.75, 0, 1.0));
+       // this.addSequential(new IntakeStageCommand(.75));
+        this.addSequential(new DriveDistanceCommand(-96, .65,15.0));
+        this.addSequential(new DriveDistanceCommand(96,.65,15.0));
      
     }
 }

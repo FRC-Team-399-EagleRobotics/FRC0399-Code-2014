@@ -116,8 +116,8 @@ public class Main extends IterativeRobot {
     public void disabledPeriodic() {
         updateSmartDashboard();
 
-        //System.out.println(" left Encoder " + robot.drivetrain.leftEnc.getDistance());
-        //System.out.println(" Right Encoder " + robot.drivetrain.rightEnc.getDistance());
+        System.out.println("right" + robot.drivetrain.rightEnc.getDistance());
+        System.out.println("left" + -robot.drivetrain.leftEnc.getDistance());
 
 
         //System.out.println("D: " + robot.drivetrain.getEncoderDisplacement(false));
