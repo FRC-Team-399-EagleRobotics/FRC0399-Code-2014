@@ -25,7 +25,7 @@ public class TestAuton extends CommandGroup {
        // this.addSequential(new CalibrateCommand(.500));
         //this.addSequential(new WaitCommand(.75));
        // this.addSequential(new IntakeStageCommand(.75));
-        this.addSequential(new DriveDistanceCommand(-96, .65,15.0));
+        this.addSequential(new DriveDistanceCommand(-180, .5,15.0));
         this.addSequential(new DriveDistanceCommand(96,.65,15.0));
      
     }

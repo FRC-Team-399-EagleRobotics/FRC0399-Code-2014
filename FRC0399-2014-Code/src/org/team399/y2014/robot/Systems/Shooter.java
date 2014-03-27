@@ -462,7 +462,7 @@ public class Shooter {
      */
     public boolean wantLiveCal() {
         return (curr_state == States.STAGE || curr_state == States.SHORT_STAGE)
-                && (System.currentTimeMillis() - timeStateChange > 1 && !isCalibrated);
+                && (System.currentTimeMillis() - timeStateChange > 100 && !isCalibrated);
     }
 
     private double error = 0, prevError = 0;

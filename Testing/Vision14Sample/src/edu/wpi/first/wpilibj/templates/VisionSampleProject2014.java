@@ -46,7 +46,7 @@ public class VisionSampleProject2014 extends SimpleRobot {
     final int LR_SCORE_LIMIT = 50;
 
     //Minimum area of particles to be considered
-    final int AREA_MINIMUM = 150;
+    final int AREA_MINIMUM = 50;
 
     //Maximum number of particles to process
     final int MAX_PARTICLES = 8;
@@ -168,9 +168,16 @@ public class VisionSampleProject2014 extends SimpleRobot {
                                             target.tapeWidthScore = tapeWidthScore;
                                             target.verticalScore = verticalScore;
                                     }
+                                    
+                                    target.Hot = (horizWidth/horizHeight) >= 3.0;
+                                    if(target.Hot)
+                                    {
+                                            System.out.println("Hot target located");
+                                     //       System.out.println("Distance: " + distance);
+                                    }
                                 }
                                 //Determine if the best target is a Hot target
-                                target.Hot = hotOrNot(target);
+                                
                             }
 
                             if(verticalTargetCount > 0)

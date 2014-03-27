@@ -40,7 +40,7 @@ public class DriveDistanceIntakeCommand extends Command {
         Robot.getInstance().shooter.run();
         if (this.state == Constants.Intake.EXTENDED) {
             //If extended, run intake in to stage ball properly.
-            Robot.getInstance().intake.setMotors(-.55);
+            Robot.getInstance().intake.setMotors(-.75);
         prevPos = displacement;
         displacement = Robot.getInstance().drivetrain.getEncoderDisplacement(false);
         double encTurn = Robot.getInstance().drivetrain.getEncoderTurn(false);
@@ -67,6 +67,10 @@ public class DriveDistanceIntakeCommand extends Command {
         Robot.getInstance().drivetrain.arcadeDrive(throttle, turning);
 
         isDriveAtTarget = atGoal.update(Math.abs(error) < Constants.DriveTrain.TICKS_TO_INCHES);
+        if(error> -450){
+            Robot.getInstance().intake.setMotors(0.0);
+            
+        }
             
             
         }
