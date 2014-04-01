@@ -18,6 +18,8 @@ public abstract class WaitForVisionCommand extends Command {
 
     private double timeout = 0.0;
     private boolean found = false;
+    boolean timedOut;
+    long startTime = 0;
 
     public WaitForVisionCommand(double timeout) {
         this.timeout = timeout;
@@ -25,14 +27,18 @@ public abstract class WaitForVisionCommand extends Command {
 
     protected void initialize() {
         this.setTimeout(timeout);
+        startTime = System.currentTimeMillis();
     }
-    protected void execute() {
-        Target targ = Robot.getInstance().camera.getTarget();
-        found = (targ.x != 0 && targ.y != 0);   //might need to rethink found criteria
 
+    protected void execute() {
+        timedOut = System.currentTimeMillis() - startTime > (long) (timeout * 1000.0);
+        if (!timedOut) {
+            Robot.getInstance().camera.run();
+        }
+        found = Robot.getInstance().camera.getHotGoal();
     }
 
     protected boolean isFinished() {
-        return this.isTimedOut() || found;
+        return found || timedOut;
     }
 }
