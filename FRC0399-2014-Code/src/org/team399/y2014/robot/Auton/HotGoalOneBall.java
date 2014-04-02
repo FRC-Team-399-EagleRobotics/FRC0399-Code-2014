@@ -31,7 +31,7 @@ public class HotGoalOneBall extends CommandGroup {
         this.addSequential(new IntakeStageCommand(.35));
         this.addSequential(new IntakeCommand(0.0, Constants.Intake.EXTENDED, 0.0));
         this.addSequential(new ShortShotCommand(.25));
-        //this.addSequential(new IntakeStageCommand(.5));
+        this.addSequential(new IntakeStageCommand(.5));
         
     }
     
