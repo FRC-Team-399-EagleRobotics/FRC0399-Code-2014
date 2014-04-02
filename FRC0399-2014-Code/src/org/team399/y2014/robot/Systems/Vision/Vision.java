@@ -30,13 +30,13 @@ public class Vision {
     final double PI = 3.141592653;
 
     //Score limits used for target identification
-    final int RECTANGULARITY_LIMIT = 40;
-    final int ASPECT_RATIO_LIMIT = 55;
+    final int RECTANGULARITY_LIMIT = 10;
+    final int ASPECT_RATIO_LIMIT = 10;
 
     //Score limits used for hot target determination
-    final int TAPE_WIDTH_LIMIT = 50;
-    final int VERTICAL_SCORE_LIMIT = 50;
-    final int LR_SCORE_LIMIT = 50;
+    final int TAPE_WIDTH_LIMIT = 10;
+    final int VERTICAL_SCORE_LIMIT = 10;
+    final int LR_SCORE_LIMIT = 10;
 
     //Minimum area of particles to be considered
     final int AREA_MINIMUM = 150;
@@ -77,7 +77,7 @@ public class Vision {
             ColorImage image = camera.getImage();     // comment if using stored images
             //ColorImage image;                           // next 2 lines read image from flash on cRIO
             //image = new RGBImage("/testImage.jpg");		// get the sample image from the cRIO flash
-            BinaryImage thresholdImage = image.thresholdHSV(35, 170, 100, 255, 125, 255);   // keep only green objects
+            BinaryImage thresholdImage = image.thresholdHSV(35, 170, 50, 255, 125, 255);   // keep only green objects
             thresholdImage.write("/threshold.bmp");
             BinaryImage filteredImage = thresholdImage.particleFilter(cc);           // filter out small particles
             filteredImage.write("/filteredImage.bmp");
@@ -99,6 +99,7 @@ public class Vision {
                     //Check if the particle is a horizontal target, if not, check if it's a vertical target
                     if (scoreCompare(scores[i], false)) {
                         System.out.println("particle: " + i + "is a Horizontal Target centerX: " + report.center_mass_x + "centerY: " + report.center_mass_y);
+                        hotGoalPresent = true;
                         horizontalTargets[horizontalTargetCount++] = i; //Add particle to target array and increment count
                     } else if (scoreCompare(scores[i], true)) {
                         System.out.println("particle: " + i + "is a Vertical Target centerX: " + report.center_mass_x + "centerY: " + report.center_mass_y);
@@ -166,6 +167,7 @@ public class Vision {
                 }
             } else {
                 System.out.println("Looking for targets...");
+                hotGoalPresent = false;
             }
 
             /**

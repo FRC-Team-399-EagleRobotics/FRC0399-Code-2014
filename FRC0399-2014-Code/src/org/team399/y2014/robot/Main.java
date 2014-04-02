@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.team399.y2014.Utilities.GamePad;
 import org.team399.y2014.robot.Auton.FeederAuton;
+import org.team399.y2014.robot.Auton.HotGoalOneBall;
 import org.team399.y2014.robot.Auton.MobilityAuton;
 import org.team399.y2014.robot.Auton.OneBallAuton;
 import org.team399.y2014.robot.Auton.TestAuton;
@@ -62,7 +63,7 @@ public class Main extends IterativeRobot {
         autonChooser.addObject("Do Nothing Auton #Sweg ", new DoNothingAuton());
         autonChooser.addObject("TestShoot", new TestAutonShot());
         autonChooser.addObject("TwoBallEncoder", new TwoBallEncoder());
-        //autonChooser.addObject("Three Ball", new ThreeBallAuton());
+        autonChooser.addObject("HotGoalOneBall", new HotGoalOneBall());
         SmartDashboard.putData("auton Chooser", autonChooser);
     }
 

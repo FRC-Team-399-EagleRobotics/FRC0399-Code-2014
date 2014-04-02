@@ -14,7 +14,7 @@ import org.team399.y2014.robot.Systems.Vision.Target;
  *
  * @author jeremy.germita@gmail.com (Jeremy Germita)
  */
-public abstract class WaitForVisionCommand extends Command {
+public class WaitForVisionCommand extends Command {
 
     private double timeout = 0.0;
     private boolean found = false;
@@ -31,14 +31,23 @@ public abstract class WaitForVisionCommand extends Command {
     }
 
     protected void execute() {
+        
         timedOut = System.currentTimeMillis() - startTime > (long) (timeout * 1000.0);
         if (!timedOut) {
             Robot.getInstance().camera.run();
         }
         found = Robot.getInstance().camera.getHotGoal();
+        
+        Robot.getInstance().shooter.setOutput(0.0);
     }
-
+    
     protected boolean isFinished() {
         return found || timedOut;
+    }
+    protected void end(){
+        
+    }
+    protected void interrupted(){
+        
     }
 }
