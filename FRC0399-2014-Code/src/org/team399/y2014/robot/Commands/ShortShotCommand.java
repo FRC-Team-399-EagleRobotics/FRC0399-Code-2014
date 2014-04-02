@@ -22,7 +22,7 @@ public class ShortShotCommand extends Command {
 
     protected void initialize() {
         this.setTimeout(timeout);
-        Robot.getInstance().shooter.setState(Shooter.States.SHOOT);
+        Robot.getInstance().shooter.setState(Shooter.States.AUTON_SHORT_SHOT);
         
         if(Robot.getInstance().intake.state 
                 == Constants.Intake.RETRACTED) {
