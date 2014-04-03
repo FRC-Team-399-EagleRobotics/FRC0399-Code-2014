@@ -63,7 +63,7 @@ public class Constants {
         public static final double TRUSS_S = 1.0;    // Pass Speed limit
         
         public static final double HOLD_POS = .155;  // Pass position
-        public static final double HOLD_P = 7.5;    // Pass PID gains
+        public static final double HOLD_P = 6.5;    // Pass PID gains
         public static final double HOLD_I = 0.0;
         public static final double HOLD_D = 0.0;
         public static final double HOLD_F = 0.0;    // Pass Feed Forward Gain
@@ -118,6 +118,16 @@ public class Constants {
         public static final double AUTON_SHOT_D = 0.0;
         public static final double AUTON_SHOT_F = 0.0;    // Pass Feed Forward Gain
         public static final double AUTON_SHOT_S = 0.85;    // Pass Speed limit
+        
+        public static final double AUTON_SHORT_SHOT_POS = .8; //1.3186;  // Shot final position
+        public static final double AUTON_SHORT_SHOT_START = 0.0;// Shot start threshold position
+        public static final double AUTON_SHORT_SHOT_INIT_SPEED = -1.0;// Shot start speed
+        public static final double AUTON_SHORT_SHOT_FINAL_SPEED = -1.0; // Shot Final speed.
+        public static final double AUTON_SHORT_SHOT_P = 5;    // Pass PID gains
+        public static final double AUTON_SHORT_SHOT_I = 0.0;
+        public static final double AUTON_SHORT_SHOT_D = 0.0;
+        public static final double AUTON_SHORT_SHOT_F = 0.0;    // Pass Feed Forward Gain
+        public static final double AUTON_SHORT_SHOT_S = 1.0;
         
         public static final double VEL_P = .4; // Velocity P
         

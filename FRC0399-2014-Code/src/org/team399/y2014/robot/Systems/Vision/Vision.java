@@ -39,7 +39,7 @@ public class Vision {
     final int LR_SCORE_LIMIT = 10;
 
     //Minimum area of particles to be considered
-    final int AREA_MINIMUM = 150;
+    final int AREA_MINIMUM = 200;
 
     //Maximum number of particles to process
     final int MAX_PARTICLES = 8;

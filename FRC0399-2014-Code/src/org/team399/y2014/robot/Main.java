@@ -46,6 +46,7 @@ public class Main extends IterativeRobot {
     GamePad gamePad = new GamePad(Ports.OPERATOR_GAMEPAD_USB);
     SendableChooser autonChooser = new SendableChooser();
     CommandGroup currAuton = null;
+    double intake = 0.0;
 
     /**
      * This function is run when the robot is first started up and should be
@@ -238,7 +239,7 @@ public class Main extends IterativeRobot {
             robot.shooter.setGoalOffset(SmartDashboard.getNumber("StageOffset", 0));
         }
 
-        if (robot.shooter.getState() == Shooter.States.SHOOT || robot.shooter.getState() == Shooter.States.SHORT_SHOT) {
+        if (robot.shooter.getState() == Shooter.States.SHOOT || robot.shooter.getState() == Shooter.States.SHORT_SHOT || intake == 1.0) {
             robot.comp.stop();
         } else {
             robot.comp.start();
@@ -249,12 +250,15 @@ public class Main extends IterativeRobot {
 
         robot.shooter.run();
         if (gamePad.getDPad(GamePad.DPadStates.UP)) {
-            robot.intake.setMotors(1.0);
+            intake = 1.0;
+            robot.intake.setMotors(intake);
         } else if (gamePad.getDPad(GamePad.DPadStates.DOWN)) {
-            robot.intake.setMotors(-1.0);
+            intake = 1.0;
+            robot.intake.setMotors(-intake);
             
         } else {
-            robot.intake.setMotors(0);
+            intake = 0.0;
+            robot.intake.setMotors(intake);
         }
 
         robot.intake.setToggle(gamePad.getButton(5) || driverLeft.getRawButton(1) && driverRight.getRawButton(1));

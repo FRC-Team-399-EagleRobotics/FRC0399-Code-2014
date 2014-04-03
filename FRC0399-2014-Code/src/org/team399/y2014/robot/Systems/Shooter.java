@@ -185,6 +185,7 @@ public class Shooter {
         public final static int LIVE_CAL = -2;
         public final static int AUTON_STAGE = 7;
         public final static int AUTON_SHOT = 8;
+        public final static int AUTON_SHORT_SHOT = 22;
 
         /**
          * Returns a string representation of the current system state.
@@ -219,7 +220,9 @@ public class Shooter {
                 return "AUTON_STAGE";
             } else if (state == AUTON_SHOT) {
                 return "AUTON_SHOT";
-            } else {
+            }else if (state == AUTON_SHORT_SHOT){
+                    return "AUTON_SHORT_SHOT";
+                 } else {
                 return "ERROR";
             }
         }
@@ -342,6 +345,17 @@ public class Shooter {
                     Constants.Shooter.HOLD_D,
                     Constants.Shooter.HOLD_F,
                     Constants.Shooter.HOLD_S);
+         }else if (curr_state == States.AUTON_SHORT_SHOT){
+             output = 0;
+             double s = 0.0;
+             s = Constants.Shooter.AUTON_SHORT_SHOT_FINAL_SPEED;
+            goal = Constants.Shooter.AUTON_SHORT_SHOT_POS + goalOffset;
+            output = pidControl(
+                    Constants.Shooter.AUTON_SHORT_SHOT_P,
+                    Constants.Shooter.AUTON_SHORT_SHOT_I,
+                    Constants.Shooter.AUTON_SHORT_SHOT_D,
+                    Constants.Shooter.AUTON_SHORT_SHOT_F,
+                    Constants.Shooter.AUTON_SHORT_SHOT_S);
         } else if (curr_state == States.AUTON_STAGE) {
             // Pass do this
             goal = Constants.Shooter.AUTON_STAGE_POS;

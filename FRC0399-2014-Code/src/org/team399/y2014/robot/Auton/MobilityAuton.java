@@ -5,10 +5,20 @@
  */
 package org.team399.y2014.robot.Auton;
 
+import edu.wpi.first.wpilibj.command.CommandGroup;
+import org.team399.y2014.robot.Commands.ArcadeDriveCommand;
+import org.team399.y2014.robot.Commands.CalibrateCommand;
+
 /**
  *
  * @author jeremy.germita@gmail.com (Jeremy Germita)
  */
-public class MobilityAuton {
+public class MobilityAuton extends CommandGroup {
+    
+    public MobilityAuton(){
+     System.out.println("Mobility Auton!");   
+     this.addSequential(new CalibrateCommand(.500));
+     this.addSequential(new ArcadeDriveCommand(.75, 0, 2.0));
+    }
 
 }
