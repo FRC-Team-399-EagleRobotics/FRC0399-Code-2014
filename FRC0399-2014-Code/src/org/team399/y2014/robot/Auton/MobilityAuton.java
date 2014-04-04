@@ -18,7 +18,7 @@ public class MobilityAuton extends CommandGroup {
     public MobilityAuton(){
      System.out.println("Mobility Auton!");   
      this.addSequential(new CalibrateCommand(.500));
-     this.addSequential(new ArcadeDriveCommand(.75, 0, 2.0));
+     this.addSequential(new ArcadeDriveCommand(.65, 0, 1.5));
     }
 
 }

@@ -25,13 +25,13 @@ public class StageCommand extends Command {
 
     protected void initialize() {
         this.setTimeout(timeout);
-        Robot.getInstance().shooter.setState(Shooter.States.AUTON_STAGE);
+        Robot.getInstance().shooter.setState(Shooter.States.STAGE);
         
     }
 
     protected void execute() {
         Robot.getInstance().shooter.run();
-        Robot.getInstance().shooter.setState(Shooter.States.AUTON_STAGE);
+        Robot.getInstance().shooter.setState(Shooter.States.STAGE);
     }
 
     protected void end() {

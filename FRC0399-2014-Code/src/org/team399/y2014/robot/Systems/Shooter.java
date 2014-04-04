@@ -280,19 +280,42 @@ public class Shooter {
                     Constants.Shooter.STOW_S);
         } else if (curr_state == States.SHORT_SHOT) {
 
-            isCalibrated = false;
-            // Else if shoot, do this
-            output = 0;
-            double s = 0.0;
-            s = Constants.Shooter.SHORT_S;
+//            isCalibrated = false;
+//            // Else if shoot, do this
+//            output = 0;
+//            double s = 0.0;
+//            s = Constants.Shooter.SHORT_S;
+//            goal = Constants.Shooter.SHORT_POS;
+//            output = pidControl(
+//                    Constants.Shooter.SHOT_P,
+//                    Constants.Shooter.SHOT_I,
+//                    Constants.Shooter.SHOT_D,
+//                    Constants.Shooter.SHOT_F,
+//                    s);
+//            System.out.println("Shot! Output: " + output);
+            
+               vel.run(this.getPosition());
+            System.out.println("Shooter Velocity: " + vel.getVelocity());
+            
+            SmartDashboard.putNumber("Shooter Velocity",vel.getVelocity());
+            double velGoal = -4.15;
+            double velocityOffset = (velGoal - vel.getVelocity()) * Constants.Shooter.TELEOP_VEL_P;
             goal = Constants.Shooter.SHORT_POS;
             output = pidControl(
-                    Constants.Shooter.SHOT_P,
-                    Constants.Shooter.SHOT_I,
-                    Constants.Shooter.SHOT_D,
-                    Constants.Shooter.SHOT_F,
-                    s);
-            System.out.println("Shot! Output: " + output);
+                    Constants.Shooter.SHORT_P,
+                    Constants.Shooter.SHORT_I,
+                    Constants.Shooter.SHORT_D,
+                    Constants.Shooter.SHORT_F,
+                    Constants.Shooter.SHORT_S);
+            
+            if(Math.abs(this.error) < .15 ) { // might want to change to .02 for comp bot
+                velocityOffset = 0;
+            }
+            output += velocityOffset;
+            
+            
+            
+            
         } else if (curr_state == States.SHOOT) {
             
             isCalibrated = false;
@@ -307,6 +330,27 @@ public class Shooter {
                     Constants.Shooter.SHOT_D,
                     Constants.Shooter.SHOT_F,
                     Constants.Shooter.SHOT_S);
+            
+//             vel.run(this.getPosition());
+//            System.out.println("Shooter Velocity: " + vel.getVelocity());
+//            
+//            SmartDashboard.putNumber("Shooter Velocity",vel.getVelocity());
+//            double velGoal = -3.9;
+//            double velocityOffset = (velGoal - vel.getVelocity()) * Constants.Shooter.TELEOP_VEL_P;
+//            goal = Constants.Shooter.SHOT_POS;
+//            output = pidControl(
+//                    Constants.Shooter.SHOT_P,
+//                    Constants.Shooter.SHOT_I,
+//                    Constants.Shooter.SHOT_D,
+//                    Constants.Shooter.SHOT_F,
+//                    Constants.Shooter.SHOT_S);
+//            
+//            if(Math.abs(this.error) < .15 ) { // might want to change to .02 for comp bot
+//                velocityOffset = 0;
+//            }
+//            output += velocityOffset;
+            
+            
         } else if (curr_state == States.STAGE) {
             // Pass do this
             goal = Constants.Shooter.STAGE_POS;

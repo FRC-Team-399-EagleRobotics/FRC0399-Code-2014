@@ -41,14 +41,14 @@ public class Constants {
         public static double UPPER_LIMIT = 1.15; // the upper limits of the pot
         public static double INTAKE_LIMIT = .6720;
 
-        public static final double STOW_POS = 0.007;  // Stow position value
-        public static final double STOW_P = 1.0;    // Stow PID gains
+        public static final double STOW_POS = 0.095;  // Stow position value
+        public static final double STOW_P = 2.5;    // Stow PID gains
         public static final double STOW_I = 0.0;
         public static final double STOW_D = 0.0;
         public static final double STOW_F = 0.0;    // Stow Feed Forward Gain
         public static final double STOW_S = 0.4;    // Stow Speed limit
 
-        public static final double STAGE_POS = .475;  // Pass position //short_stage .4
+        public static final double STAGE_POS = .25;  // Pass position //short_stage .4
         public static final double STAGE_P = 1.2;    // Pass PID gains
         public static final double STAGE_I = 0.0;
         public static final double STAGE_D = 0.0;
@@ -62,8 +62,8 @@ public class Constants {
         public static final double TRUSS_F = 0.0;    // Pass Feed Forward Gain
         public static final double TRUSS_S = 1.0;    // Pass Speed limit
         
-        public static final double HOLD_POS = .155;  // Pass position
-        public static final double HOLD_P = 6.5;    // Pass PID gains
+        public static final double HOLD_POS = .125;  // Pass position
+        public static final double HOLD_P = 4.0;    // Pass PID gains
         public static final double HOLD_I = 0.0;
         public static final double HOLD_D = 0.0;
         public static final double HOLD_F = 0.0;    // Pass Feed Forward Gain
@@ -76,7 +76,7 @@ public class Constants {
         public static final double INTAKE_HOLD_F = 0.0;    // Pass Feed Forward Gain
         public static final double INTAKE_HOLD_S = 0.8;    // Pass Speed limit
 
-        public static final double SHOT_POS = .8; //1.3186;  // Shot final position
+        public static final double SHOT_POS = .725; //1.3186;  // Shot final position
         public static final double SHOT_START = 0.0;// Shot start threshold position
         public static final double SHOT_INIT_SPEED = -1.0;// Shot start speed
         public static final double SHOT_FINAL_SPEED = -1.0; // Shot Final speed.
@@ -86,7 +86,7 @@ public class Constants {
         public static final double SHOT_F = 0.0;    // Pass Feed Forward Gain
         public static final double SHOT_S = 1.0;    // Pass Speed limit
 
-        public static final double SHORT_POS = 0.80
+        public static final double SHORT_POS = 1.1
                 ;  // Shot final position
         public static final double SHORT_START = 0.0;// Shot start threshold position
         public static final double SHORT_P = 5;    // Pass PID gains
@@ -119,7 +119,7 @@ public class Constants {
         public static final double AUTON_SHOT_F = 0.0;    // Pass Feed Forward Gain
         public static final double AUTON_SHOT_S = 0.85;    // Pass Speed limit
         
-        public static final double AUTON_SHORT_SHOT_POS = .8; //1.3186;  // Shot final position
+        public static final double AUTON_SHORT_SHOT_POS = 1.1; //1.3186;  // Shot final position
         public static final double AUTON_SHORT_SHOT_START = 0.0;// Shot start threshold position
         public static final double AUTON_SHORT_SHOT_INIT_SPEED = -1.0;// Shot start speed
         public static final double AUTON_SHORT_SHOT_FINAL_SPEED = -1.0; // Shot Final speed.
@@ -127,9 +127,10 @@ public class Constants {
         public static final double AUTON_SHORT_SHOT_I = 0.0;
         public static final double AUTON_SHORT_SHOT_D = 0.0;
         public static final double AUTON_SHORT_SHOT_F = 0.0;    // Pass Feed Forward Gain
-        public static final double AUTON_SHORT_SHOT_S = 1.0;
+        public static final double AUTON_SHORT_SHOT_S = .75;
         
         public static final double VEL_P = .4; // Velocity P
+        public static final double TELEOP_VEL_P = .2375;
         
         
 

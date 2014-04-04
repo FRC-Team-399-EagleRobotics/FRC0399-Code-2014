@@ -229,7 +229,7 @@ public class Main extends IterativeRobot {
         } else if (gamePad.getButton(7) && robot.intake.state == Constants.Intake.EXTENDED) {
             state = Shooter.States.SHORT_SHOT;
         } else if (robot.intake.state == Constants.Intake.RETRACTED && robot.shooter.getOffsetFromBottom() < .75 )  {
-            state = Shooter.States.HOLD;
+            state = Shooter.States.STOW;
         } else if (robot.shooter.getShootDone()) {
             state = Shooter.States.SHORT_STAGE;
         } else if (robot.shooter.wantLiveCal()) {
