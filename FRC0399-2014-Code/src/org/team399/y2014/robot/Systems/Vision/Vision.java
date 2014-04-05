@@ -39,7 +39,7 @@ public class Vision {
     final int LR_SCORE_LIMIT = 10;
 
     //Minimum area of particles to be considered
-    final int AREA_MINIMUM = 200;
+    final int AREA_MINIMUM = 100;
 
     //Maximum number of particles to process
     final int MAX_PARTICLES = 8;
@@ -54,7 +54,7 @@ public class Vision {
     CriteriaCollection cc;      // the criteria for doing the particle filter operation
 
     private Vision() {
-        camera = AxisCamera.getInstance("10.93.99.11");          // the axis camera object (connected to the switch)
+        camera = AxisCamera.getInstance("10.3.99.11");          // the axis camera object (connected to the switch)
         cc = new CriteriaCollection();      // create the criteria for the particle filter
         cc.addCriteria(NIVision.MeasurementType.IMAQ_MT_AREA, AREA_MINIMUM, 65535, false);
 
@@ -77,7 +77,7 @@ public class Vision {
             ColorImage image = camera.getImage();     // comment if using stored images
             //ColorImage image;                           // next 2 lines read image from flash on cRIO
             //image = new RGBImage("/testImage.jpg");		// get the sample image from the cRIO flash
-            BinaryImage thresholdImage = image.thresholdHSV(35, 170, 50, 255, 125, 255);   // keep only green objects
+            BinaryImage thresholdImage = image.thresholdHSL(45, 120, 160, 255, 30, 120);//thresholdHSV(55, 150, 50, 255, 125, 255);   // keep only green objects
             thresholdImage.write("/threshold.bmp");
             BinaryImage filteredImage = thresholdImage.particleFilter(cc);           // filter out small particles
             filteredImage.write("/filteredImage.bmp");

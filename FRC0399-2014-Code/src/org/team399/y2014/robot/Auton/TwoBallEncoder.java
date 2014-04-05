@@ -35,7 +35,7 @@ public class TwoBallEncoder extends CommandGroup {
         this.addSequential(new IntakeCommand(0, Constants.Intake.EXTENDED, .2));
         this.addSequential(new WaitCommand(.25));
         this.addSequential(new StageCommand(.25));
-        this.addSequential(new DriveDistanceIntakeCommand(.85 , -155.0 , -.05 , 0.0 , Constants.Intake.EXTENDED , 2.0 ));
+        this.addSequential(new DriveDistanceIntakeCommand(.85 , -154.0 , -.05 , 0.0 , Constants.Intake.EXTENDED , 2.0 ));
         
         
         //this.addSequential(new StageCommand(.75));

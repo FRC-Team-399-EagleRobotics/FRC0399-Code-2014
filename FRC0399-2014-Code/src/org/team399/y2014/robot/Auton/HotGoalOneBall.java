@@ -24,7 +24,7 @@ public class HotGoalOneBall extends CommandGroup {
     
     public HotGoalOneBall(){
         this.addSequential(new CalibrateCommand(.500));
-        this.addSequential(new IntakeStageCommand(.35));
+        this.addSequential(new StageCommand(.5));
 
         this.addSequential(new WaitForVisionCommand(4.0));
         //this.addSequential(new DummyCommand());

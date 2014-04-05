@@ -23,6 +23,7 @@ import org.team399.y2014.robot.Auton.TestAuton;
 import org.team399.y2014.robot.Auton.TestAutonShot;
 import org.team399.y2014.robot.Auton.TwoBallAuton;
 import org.team399.y2014.robot.Auton.TwoBallEncoder;
+import org.team399.y2014.robot.Auton.VisionTestAuton;
 import org.team399.y2014.robot.Commands.DoNothingAuton;
 import org.team399.y2014.robot.Config.Constants;
 import org.team399.y2014.robot.Config.Ports;
@@ -65,6 +66,7 @@ public class Main extends IterativeRobot {
         autonChooser.addObject("TestShoot", new TestAutonShot());
         autonChooser.addObject("TwoBallEncoder", new TwoBallEncoder());
         autonChooser.addObject("HotGoalOneBall", new HotGoalOneBall());
+        autonChooser.addObject("Tuning Vision", new VisionTestAuton());
         SmartDashboard.putData("auton Chooser", autonChooser);
     }
 
