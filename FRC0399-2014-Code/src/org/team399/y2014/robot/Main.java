@@ -60,11 +60,11 @@ public class Main extends IterativeRobot {
         autonChooser.addObject("Test Auton", new TestAuton());
         autonChooser.addObject("Mobility Only", new MobilityAuton());
         autonChooser.addObject("One Ball", new OneBallAuton());
-        autonChooser.addDefault("Two Ball", new TwoBallAuton());
+        autonChooser.addObject("Two Ball", new TwoBallAuton());
         autonChooser.addObject("Feeder", new FeederAuton());
         autonChooser.addObject("Do Nothing Auton #Sweg ", new DoNothingAuton());
         autonChooser.addObject("TestShoot", new TestAutonShot());
-        autonChooser.addObject("TwoBallEncoder", new TwoBallEncoder());
+        autonChooser.addDefault("TwoBallEncoder", new TwoBallEncoder());
         autonChooser.addObject("HotGoalOneBall", new HotGoalOneBall());
         autonChooser.addObject("Tuning Vision", new VisionTestAuton());
         SmartDashboard.putData("auton Chooser", autonChooser);

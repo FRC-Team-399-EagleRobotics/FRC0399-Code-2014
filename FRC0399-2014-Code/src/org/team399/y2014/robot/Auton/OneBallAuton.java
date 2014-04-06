@@ -51,10 +51,11 @@ public class OneBallAuton extends CommandGroup {
 
        // this.addSequential(new WaitForVisionCommand(4.0));
         //this.addSequential(new DummyCommand());
-        this.addSequential(new DriveDistanceIntakeCommand(1.0 ,-155.0 , -.05 , 0.0 , Constants.Intake.EXTENDED , 2.5));
+        //Drive distance originally -155.0
+        this.addSequential(new DriveDistanceIntakeCommand(1.0 ,-125.0 , -.05 , 0.0 , Constants.Intake.EXTENDED , 2.5));
         this.addSequential(new StageCommand(.35));
         //this.addSequential(new IntakeCommand(0.0, Constants.Intake.EXTENDED, 0.0));
-        this.addSequential(new ShortShotCommand(.25));
+        this.addSequential(new ShootCommand(.25)); // originally ShortShotCommand
         this.addSequential(new IntakeStageCommand(.5));
         this.addSequential(new StopAllCommand());
        

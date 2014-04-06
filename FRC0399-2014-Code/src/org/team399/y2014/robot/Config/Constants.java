@@ -47,7 +47,7 @@ public class Constants {
         public static final double STOW_D = 0.0;
         public static final double STOW_F = 0.0;    // Stow Feed Forward Gain
         public static final double STOW_S = 0.4;    // Stow Speed limit
-        //  Values for teleop stage button 10
+        //  Values for AUTON STAGE AND BUTTON 10
         public static final double STAGE_POS = .2;  // Pass position //short_stage .4
         public static final double STAGE_P = 1.2;    // Pass PID gains
         public static final double STAGE_I = 0.0;
@@ -119,7 +119,7 @@ public class Constants {
         public static final double AUTON_STAGE_S = 0.15;
         // values for Regular Auton Shot
         
-         public static final double AUTON_SHOT_POS = 1.1; //1.3186;  // Shot final position
+         public static final double AUTON_SHOT_POS = .9; //1.3186;  // Shot final position
         public static final double AUTON_SHOT_START = 0.0;// Shot start threshold position
         public static final double AUTON_SHOT_INIT_SPEED = -1.0;// Shot start speed
         public static final double AUTON_SHOT_FINAL_SPEED = -1.0; // Shot Final speed.
@@ -127,7 +127,7 @@ public class Constants {
         public static final double AUTON_SHOT_I = 0.0;
         public static final double AUTON_SHOT_D = 0.0;
         public static final double AUTON_SHOT_F = 0.0;    // Pass Feed Forward Gain
-        public static final double AUTON_SHOT_S = 0.85;    // Pass Speed limit
+        public static final double AUTON_SHOT_S = 0.65;    // Pass Speed limit
         
         // values for the AUTON Short Shot Command
         
