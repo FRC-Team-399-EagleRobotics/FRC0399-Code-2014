@@ -116,7 +116,7 @@ public class Constants {
         public static final double AUTON_STAGE_I = 0.0;
         public static final double AUTON_STAGE_D = 0.0;
         public static final double AUTON_STAGE_F = 0.0;    // Pass Feed Forward Gain
-        public static final double AUTON_STAGE_S = 0.15;
+        public static final double AUTON_STAGE_S = 0.3;
         // values for Regular Auton Shot
         
          public static final double AUTON_SHOT_POS = .9; //1.3186;  // Shot final position
