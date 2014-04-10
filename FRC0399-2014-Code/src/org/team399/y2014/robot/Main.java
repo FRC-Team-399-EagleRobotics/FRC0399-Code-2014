@@ -6,31 +6,16 @@
 /*----------------------------------------------------------------------------*/
 package org.team399.y2014.robot;
 
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.IterativeRobot;
-import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.command.CommandGroup;
-import edu.wpi.first.wpilibj.command.Scheduler;
-import edu.wpi.first.wpilibj.livewindow.LiveWindow;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import org.team399.y2014.Utilities.GamePad;
-import org.team399.y2014.robot.Auton.FeederAuton;
-import org.team399.y2014.robot.Auton.HotGoalOneBall;
-import org.team399.y2014.robot.Auton.MobilityAuton;
-import org.team399.y2014.robot.Auton.OneBallAuton;
-import org.team399.y2014.robot.Auton.TestAuton;
-import org.team399.y2014.robot.Auton.TestAutonShot;
-import org.team399.y2014.robot.Auton.TwoBallAuton;
-import org.team399.y2014.robot.Auton.TwoBallEncoder;
-import org.team399.y2014.robot.Auton.VisionTestAuton;
-import org.team399.y2014.robot.Commands.DoNothingAuton;
-import org.team399.y2014.robot.Config.Constants;
-import org.team399.y2014.robot.Config.Ports;
-import org.team399.y2014.robot.Systems.DriveTrain;
-import org.team399.y2014.robot.Systems.Robot;
-import org.team399.y2014.robot.Systems.Shooter;
-
+import org.team399.y2014.robot.Auton.DoNothingAuton;
+import edu.wpi.first.wpilibj.*;
+import edu.wpi.first.wpilibj.command.*;
+import edu.wpi.first.wpilibj.livewindow.*;
+import edu.wpi.first.wpilibj.smartdashboard.*;
+import org.team399.y2014.Utilities.*;
+import org.team399.y2014.robot.Auton.*;
+import org.team399.y2014.robot.Commands.*;
+import org.team399.y2014.robot.Config.*;
+import org.team399.y2014.robot.Systems.*;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -47,6 +32,12 @@ public class Main extends IterativeRobot {
     GamePad gamePad = new GamePad(Ports.OPERATOR_GAMEPAD_USB);
     SendableChooser autonChooser = new SendableChooser();
     CommandGroup currAuton = null;
+
+    // Cheesy Vision server instance and port number for auton hot goal
+    // indication.
+    CheesyVisionServer server = CheesyVisionServer.getInstance();
+    public final int listenPort = 1180;
+
     double intake = 0.0;
 
     /**
@@ -54,8 +45,8 @@ public class Main extends IterativeRobot {
      * used for any initialization code.
      */
     public void robotInit() {
+        // Initialization of robot system.s
         robot = Robot.getInstance();
-
 
         autonChooser.addObject("Test Auton", new TestAuton());
         autonChooser.addObject("Mobility Only", new MobilityAuton());
@@ -68,14 +59,17 @@ public class Main extends IterativeRobot {
         autonChooser.addObject("HotGoalOneBall", new HotGoalOneBall());
         autonChooser.addObject("Tuning Vision", new VisionTestAuton());
         SmartDashboard.putData("auton Chooser", autonChooser);
+
+        // Cheesy Vision server initialization.
+        server.setPort(listenPort);
+        server.start();
     }
 
     public void testInit() {
         robot.shooter.setState(Shooter.States.TEST);  // shooter autocalibrate mode
-        if (currAuton != null) {    //Cancel auton if it hasn't already ended.
+        if (currAuton != null) {    // Cancel auton if it hasn't already ended.
             currAuton.cancel();
             currAuton = null;
-        
         }
         LiveWindow.setEnabled(false);
     }
@@ -90,17 +84,18 @@ public class Main extends IterativeRobot {
         robot.comp.stop();
         robot.drivetrain.resetSensors();
         /*System.out.println("[AUTON] Starting: "
-                + autonChooser.getSelected().toString());*/
+         + autonChooser.getSelected().toString());*/
         if (currAuton != null) {
             currAuton.cancel();
             currAuton = null;
         }
         currAuton = (CommandGroup) autonChooser.getSelected();
         Scheduler.getInstance().add(currAuton);
-//        this.updateLcd();
+
+        // CheesyVision server begin. Resets counter and starts it for auton.
+        server.reset();
+        server.startSamplingCounts();
     }
-   
-    
 
     /**
      * This function is called periodically during autonomous
@@ -108,11 +103,15 @@ public class Main extends IterativeRobot {
     public void autonomousPeriodic() {
         Scheduler.getInstance().run();
         updateSmartDashboard();
-        
+
         //System.out.println( "displacement "+robot.drivetrain.getEncoderDisplacement(true));
     }
 
     public void disabledInit() {
+
+        // Stop cheesy vision server polling in disabled.
+        server.stopSamplingCounts();
+
         if (currAuton != null) {
             currAuton.cancel();
             currAuton = null;
@@ -125,9 +124,7 @@ public class Main extends IterativeRobot {
         System.out.println("right" + robot.drivetrain.rightEnc.getDistance());
         System.out.println("left" + -robot.drivetrain.leftEnc.getDistance());
 
-
         //System.out.println("D: " + robot.drivetrain.getEncoderDisplacement(false));
-
         robot.drivetrain.getEncoderDisplacement(false);
         //System.out.println("T: " + robot.drivetrain.getEncoderTurn(false));
         this.updateLcd();
@@ -135,15 +132,15 @@ public class Main extends IterativeRobot {
     double armPotInit = 0.0;
 
     public void teleopInit() {
-        
-        robot.comp.start();
-        robot.shooter.setManual(0);
-        if (currAuton != null) {
-            
+
+        robot.comp.start();         // Begin compressor control loop
+        robot.shooter.setManual(0); // Zero out manual input on shooter
+        if (currAuton != null) {    // Cancel auton if it hasn't ended naturally
             currAuton.cancel();
             currAuton = null;
         }
 
+        // Shooter safety logic. put shooter in manual if it hasn't properly stowed
         if (robot.shooter.getPosition()
                 < (Constants.Shooter.INTAKE_LIMIT + robot.shooter.m_lowerLim)) {
             state = Shooter.States.HOLD;
@@ -152,8 +149,9 @@ public class Main extends IterativeRobot {
             state = Shooter.States.MANUAL;
             System.out.println("ARM TOO HIGH, MANUAL!");
         }
-        
-        if(!robot.shooter.isCalibrated){
+
+        // Shooter auto calibrate if it hasn't already been completed.
+        if (!robot.shooter.isCalibrated) {
             robot.shooter.setState(Shooter.States.TEST);  // shooter autocalibrate mode
             robot.shooter.run();
         }
@@ -170,19 +168,13 @@ public class Main extends IterativeRobot {
     public void teleopPeriodic() {
         //System.out.println("ARM_POT" + robot.shooter.getPosition());
 
-
-
-
-
-
-
         double leftIn = driverLeft.getRawAxis(2);
         double rightIn = driverRight.getRawAxis(2);
         double scalar = .75;
 
-        if (driverRight.getRawButton(12)|| driverRight.getRawButton(1)) {
+        if (driverRight.getRawButton(12) || driverRight.getRawButton(1)) {
             scalar = 1.0;
-        } else if (driverRight.getRawButton(1)){
+        } else if (driverRight.getRawButton(1)) {
             scalar = 1.0;
         }
 
@@ -230,7 +222,7 @@ public class Main extends IterativeRobot {
             state = Shooter.States.SHORT_STAGE;
         } else if (gamePad.getButton(7) && robot.intake.state == Constants.Intake.EXTENDED) {
             state = Shooter.States.SHORT_SHOT;
-        } else if (robot.intake.state == Constants.Intake.RETRACTED && robot.shooter.getOffsetFromBottom() < .75 )  {
+        } else if (robot.intake.state == Constants.Intake.RETRACTED && robot.shooter.getOffsetFromBottom() < .75) {
             state = Shooter.States.STOW;
         } else if (robot.shooter.getShootDone()) {
             state = Shooter.States.SHORT_STAGE;
@@ -257,7 +249,7 @@ public class Main extends IterativeRobot {
         } else if (gamePad.getDPad(GamePad.DPadStates.DOWN)) {
             intake = 1.0;
             robot.intake.setMotors(-intake);
-            
+
         } else {
             intake = 0.0;
             robot.intake.setMotors(intake);
@@ -281,7 +273,7 @@ public class Main extends IterativeRobot {
 
         //System.out.println(driveIo);
     }
-    
+
     public void updateSmartDashboard() {
         SmartDashboard.putNumber("armOffset", robot.shooter.getOffsetFromBottom());
         SmartDashboard.putNumber("armPosition", robot.shooter.getPosition());
