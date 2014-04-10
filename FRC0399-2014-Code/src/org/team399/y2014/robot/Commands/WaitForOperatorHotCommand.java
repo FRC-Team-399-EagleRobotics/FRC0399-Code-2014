@@ -9,7 +9,8 @@ import edu.wpi.first.wpilibj.command.Command;
 import org.team399.y2014.Utilities.CheesyVisionServer;
 
 /**
- * Command to wait for the vision algorithm to process an image.
+ * Command to wait for the operator interface to get signal from the operator
+ * indicating a which goal is hot.
  *
  * @author jeremy.germita@gmail.com (Jeremy Germita)
  */
@@ -30,6 +31,11 @@ public class WaitForOperatorHotCommand extends Command {
     }
 
     protected void execute() {
+
+        // CheesyVision code indicates hot goal state using counters.
+        // It's best to determine hot goal state from the robot code using
+        // a comparison between the left and right counters to prevent
+        // accidental misfires. Edit the field 'delay' above to tune the timer.
         int left = CheesyVisionServer.getInstance().getLeftCount();
         int right = CheesyVisionServer.getInstance().getRightCount();
 
@@ -38,7 +44,7 @@ public class WaitForOperatorHotCommand extends Command {
         System.out.println("R: " + right);
 
         // target is found if operator
-        //indicates hot goal initially
+        // indicates hot goal initially
         found = (left - right > delay)
                 || (right - left > delay);
     }
