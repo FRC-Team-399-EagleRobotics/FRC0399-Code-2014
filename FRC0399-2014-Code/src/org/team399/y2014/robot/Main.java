@@ -32,10 +32,11 @@ public class Main extends IterativeRobot {
     GamePad gamePad = new GamePad(Ports.OPERATOR_GAMEPAD_USB);
     SendableChooser autonChooser = new SendableChooser();
     CommandGroup currAuton = null;
+    
 
     // Cheesy Vision server instance and port number for auton hot goal
     // indication.
-    CheesyVisionServer server = CheesyVisionServer.getInstance();
+    public static CheesyVisionServer server = CheesyVisionServer.getInstance();
     public final int listenPort = 1180;
 
     double intake = 0.0;
@@ -56,9 +57,10 @@ public class Main extends IterativeRobot {
         autonChooser.addObject("Feeder", new FeederAuton());
         autonChooser.addObject("Do Nothing Auton #Sweg ", new DoNothingAuton());
         autonChooser.addObject("TestShoot", new TestAutonShot());
-        autonChooser.addDefault("TwoBallEncoder", new TwoBallEncoder());
+        autonChooser.addObject("TwoBallEncoder", new TwoBallEncoder());
         autonChooser.addObject("HotGoalOneBall", new HotGoalOneBall());
         autonChooser.addObject("Tuning Vision", new VisionTestAuton());
+        autonChooser.addDefault(" Cheesy Vision ", new CheesyVisionTestAuton());
         SmartDashboard.putData("auton Chooser", autonChooser);
 
         // Cheesy Vision server initialization.
@@ -83,6 +85,7 @@ public class Main extends IterativeRobot {
     }
 
     public void autonomousInit() {
+        
         robot.comp.stop();
         robot.drivetrain.resetSensors();
         /*System.out.println("[AUTON] Starting: "
@@ -105,7 +108,8 @@ public class Main extends IterativeRobot {
     public void autonomousPeriodic() {
         Scheduler.getInstance().run();
         updateSmartDashboard();
-
+        System.out.println("Current left: " + server.getLeftStatus() + ", current right: " + server.getRightStatus());
+        System.out.println("Left count: " + server.getLeftCount() + ", right count: " + server.getRightCount() + ", total: " + server.getTotalCount() + "\n");
         //System.out.println("displacement " +
         //robot.drivetrain.getEncoderDisplacement(true));
     }

@@ -33,6 +33,7 @@ public class CheesyVisionServer implements Runnable {
   }
   
   public void start() {
+      System.out.println("Thread has Started");
       serverThread.start();
   }
   
@@ -117,8 +118,10 @@ public class CheesyVisionServer implements Runnable {
         double lastHeartbeat = Timer.getFPGATimestamp();
         CheesyVisionServer.this.lastHeartbeatTime_ = lastHeartbeat;
         while (Timer.getFPGATimestamp() < lastHeartbeat + timeout) {
+            System.out.println("Cheesy Vision Thread Running!");
           boolean gotData = false;
           while (is.available() > 0) {
+              System.out.println("CheesyVision reading data!");
             gotData = true;
             int read = is.read(b);
             for (int i = 0; i < read; ++i) {
@@ -152,6 +155,7 @@ public class CheesyVisionServer implements Runnable {
   // VisionServerConnectionHandlers to handle them
   public void run() {
     ServerSocketConnection s = null;
+    for(int i = 0; i < 5; i++) {
     try {
       s = (ServerSocketConnection) Connector.open("serversocket://:" + listenPort_);
       while (listening_) {
@@ -168,6 +172,7 @@ public class CheesyVisionServer implements Runnable {
     } catch (IOException e) {
       System.out.println("Socket failure.");
       e.printStackTrace();
+    }
     }
   }
 }

@@ -54,7 +54,7 @@ public class Vision {
     CriteriaCollection cc;      // the criteria for doing the particle filter operation
 
     private Vision() {
-        camera = AxisCamera.getInstance("10.3.99.11");          // the axis camera object (connected to the switch)
+        camera = AxisCamera.getInstance("10.93.99.11");          // the axis camera object (connected to the switch)
         cc = new CriteriaCollection();      // create the criteria for the particle filter
         cc.addCriteria(NIVision.MeasurementType.IMAQ_MT_AREA, AREA_MINIMUM, 65535, false);
 

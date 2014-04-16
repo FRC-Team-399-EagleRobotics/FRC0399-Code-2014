@@ -17,7 +17,7 @@ import org.team399.y2014.robot.Systems.Vision.Target;
 public class WaitForVisionCommand extends Command {
 
     private double timeout = 0.0;
-    private boolean found = false;
+    public boolean found = false;
     boolean timedOut;
     long startTime = 0;
 

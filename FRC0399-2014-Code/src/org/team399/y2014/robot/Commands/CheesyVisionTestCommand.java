@@ -7,6 +7,7 @@ package org.team399.y2014.robot.Commands;
 
 import edu.wpi.first.wpilibj.command.Command;
 import org.team399.y2014.Utilities.CheesyVisionServer;
+import org.team399.y2014.robot.Main;
 import org.team399.y2014.robot.Systems.Robot;
 import org.team399.y2014.robot.Systems.Vision.Target;
 
@@ -16,7 +17,8 @@ import org.team399.y2014.robot.Systems.Vision.Target;
  * @author jeremy.germita@gmail.com (Jeremy Germita)
  */
 public class CheesyVisionTestCommand extends Command {
-
+    
+    public final int listenPort = 1180;
     private double timeout = 0.0;
     private boolean found = false;
 
@@ -24,12 +26,18 @@ public class CheesyVisionTestCommand extends Command {
 
     public CheesyVisionTestCommand() {
         //this.timeout = timeout;
+        
     }
 
     protected void initialize() {
         //this.setTimeout(timeout);
-
+        //Main.server.setPort(listenPort);
+        //Main.server.start();
+        Main.server.reset();
+        Main.server.startSamplingCounts();
+        
     }
+    
 
     protected void execute() {
 
@@ -37,17 +45,16 @@ public class CheesyVisionTestCommand extends Command {
         // It's best to determine hot goal state from the robot code using
         // a comparison between the left and right counters to prevent
         // accidental misfires. Edit the field 'delay' above to tune the timer.
-        int left = CheesyVisionServer.getInstance().getLeftCount();
-        int right = CheesyVisionServer.getInstance().getRightCount();
 
         System.out.println("Vision: ");
-        System.out.println("L: " + left);
-        System.out.println("R: " + right);
+        System.out.println("Current left: " + Main.server.getLeftStatus() + ", current right: " + Main.server.getRightStatus());
+        System.out.println("Left count: " + Main.server.getLeftCount() + ", right count: " + Main.server.getRightCount() + ", total: " + Main.server.getTotalCount() + "\n");
+        
 
         // target is found if operator
         // indicates hot goal initially
-        found = (left - right > delay)
-                || (right - left > delay);
+//        found = (left - right > delay)
+//                || (right - left > delay);
     }
 
     protected boolean isFinished() {
@@ -55,10 +62,11 @@ public class CheesyVisionTestCommand extends Command {
     }
 
     protected void end() {
+        Main.server.stop();
 
     }
 
     protected void interrupted() {
-
+        Main.server.stop();
     }
 }
