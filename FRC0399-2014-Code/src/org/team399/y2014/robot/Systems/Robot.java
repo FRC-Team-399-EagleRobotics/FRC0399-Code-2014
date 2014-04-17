@@ -57,7 +57,7 @@ public class Robot {
         drivetrain.setSensors(Ports.GYRO, Ports.LEFT_ENC_A, Ports.LEFT_ENC_B,
                 Ports.RIGHT_ENC_A, Ports.RIGHT_ENC_B);
         drivetrain.resetSensors();
-        camera = Vision.getInstance();
+//        camera = Vision.getInstance();
         comp = new Compressor(Ports.COMP_SWITCH, Ports.COMP_RELAY);
         comp.start();
     }

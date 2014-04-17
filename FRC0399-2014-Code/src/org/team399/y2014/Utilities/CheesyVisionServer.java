@@ -155,7 +155,6 @@ public class CheesyVisionServer implements Runnable {
   // VisionServerConnectionHandlers to handle them
   public void run() {
     ServerSocketConnection s = null;
-    for(int i = 0; i < 5; i++) {
     try {
       s = (ServerSocketConnection) Connector.open("serversocket://:" + listenPort_);
       while (listening_) {
@@ -172,7 +171,6 @@ public class CheesyVisionServer implements Runnable {
     } catch (IOException e) {
       System.out.println("Socket failure.");
       e.printStackTrace();
-    }
     }
   }
 }

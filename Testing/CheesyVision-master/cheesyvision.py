@@ -188,6 +188,9 @@ def main():
     s = None
 
     while 1:
+        
+        if connected:
+            print "Connected to the robot!"
         # Get a new frame.
         _, img = capture.read()
 

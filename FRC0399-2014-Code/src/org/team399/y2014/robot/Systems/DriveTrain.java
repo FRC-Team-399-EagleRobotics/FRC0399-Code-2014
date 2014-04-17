@@ -222,16 +222,16 @@ public class DriveTrain {
      * @return
      */
     public double getEncoderDisplacement(boolean clear) {
-        double left =  -leftEnc.get();
-        double right = rightEnc.get();
+        double left  =  -leftEnc.get()-440.0;
+        double right = rightEnc.get()+440.0;
         leftE = left;
         rightE = right;
 
-        if (clear) {
-            leftEnc.reset();
-            rightEnc.reset();
-            
-        }
+//        if (clear) {
+//            leftEnc.reset();
+//            rightEnc.reset();
+//            
+//        }
 
         return (rightE + leftE) / 2;
     }
@@ -275,10 +275,12 @@ public class DriveTrain {
 
     public void run() {
         if (curr_state != prevState) {
+            
             //state change
             if (curr_state == States.PID_BRAKE) {
                 this.getEncoderDisplacement(true);
                 System.out.println("encoder reset");
+                System.out.println("left enc" + getEncoderDisplacement());
             }
         }
 
@@ -287,6 +289,8 @@ public class DriveTrain {
        // System.out.println("[DRIVE] State: " + curr_state);
 
         if (curr_state == States.TANK_DRIVE) {
+            leftEnc.reset();
+            
             outL = tank_left;
             outR = tank_right;
         } else if (curr_state == States.ARCADE_DRIVE) {
@@ -295,7 +299,8 @@ public class DriveTrain {
 
             outL = this.getEncoderDisplacement(false) * Constants.DriveTrain.DRIVE_P;
             outR = outL;
-            System.out.println("output" + outL);
+            System.out.println("Left output" + outL);
+            System.out.println("Right output" + -outL);
         }
 
         tankDrive(outL, outR);

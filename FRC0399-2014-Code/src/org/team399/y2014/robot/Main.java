@@ -70,6 +70,7 @@ public class Main extends IterativeRobot {
 
     public void testInit() {
         // shooter autocalibrate mode
+        
         robot.shooter.setState(Shooter.States.TEST);
         if (currAuton != null) {    // Cancel auton if it hasn't already ended.
             currAuton.cancel();
@@ -192,7 +193,8 @@ public class Main extends IterativeRobot {
         // Note: Remove this if it isn't being used. I have a feeling it might
         // be buggy if accidentally triggered. Just keep drive in tank
         // drive state.
-        if (driverLeft.getRawButton(2)) {
+        if (driverLeft.getRawButton(12)) {
+            System.out.println("PID_BRAKE");
             robot.drivetrain.setState(DriveTrain.States.PID_BRAKE);
             //robot.drivetrain.setState(driveState);
         } else {
