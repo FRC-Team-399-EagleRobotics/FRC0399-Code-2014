@@ -29,7 +29,9 @@ public class Constants {
         public static double DRIVE_I = .05;
         public static double STRAIGHT_P = .005;
         public static final double TICKS_TO_INCHES = 28.6624;
-        public static double BRAKE_P = .01;
+        public static double BRAKE_P = .0000;
+        public static double BRAKE_I = .0000;
+        public static double BRAKE_D = .0000;
 
     }
 

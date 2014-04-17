@@ -206,7 +206,8 @@ public class DriveTrain {
 
     /**
      * Get the encoder displacement from the last reset
-     *
+
+*
      * @return
      */
     public double getEncoderDisplacement() {
@@ -214,6 +215,8 @@ public class DriveTrain {
     }
     public double leftE = 0;
     public double rightE = 0;
+    public double variable = 0;
+    public double encoderVariable = 0;
 
     /**
      * Get the encoder displacement from the last reset
@@ -222,10 +225,16 @@ public class DriveTrain {
      * @return
      */
     public double getEncoderDisplacement(boolean clear) {
-        double left  =  -leftEnc.get()-440.0;
-        double right = rightEnc.get()+440.0;
+        double left  =  -(leftEnc.get());
+        double right = rightEnc.get();
         leftE = left;
         rightE = right;
+        double encoderValue = (rightE + leftE ) / 2;
+        if(encoderValue > 0){
+             variable = encoderValue + 440;
+        }else if(encoderValue < 0){
+             variable = encoderValue - 440;
+        }
 
 //        if (clear) {
 //            leftEnc.reset();
@@ -233,7 +242,7 @@ public class DriveTrain {
 //            
 //        }
 
-        return (rightE + leftE) / 2;
+        return variable;
     }
 
     /**
@@ -272,14 +281,20 @@ public class DriveTrain {
     private double turn_angle = 0;
     private double goal = 0.0;
     private int prevState = 0;
+    public double driveOutPut = 0.0;
 
     public void run() {
         if (curr_state != prevState) {
             
             //state change
             if (curr_state == States.PID_BRAKE) {
+             driveOutPut = pidControl(Constants.DriveTrain.BRAKE_P,
+                        Constants.DriveTrain.BRAKE_I,
+                        Constants.DriveTrain.BRAKE_D,
+                        0,1.0);
                 this.getEncoderDisplacement(true);
-                System.out.println("encoder reset");
+                System.out.println("encoder Value" + encoderVariable);
+                System.out.println("error" + error);
                 System.out.println("left enc" + getEncoderDisplacement());
             }
         }
@@ -290,6 +305,7 @@ public class DriveTrain {
 
         if (curr_state == States.TANK_DRIVE) {
             leftEnc.reset();
+            rightEnc.reset();
             
             outL = tank_left;
             outR = tank_right;
@@ -314,6 +330,7 @@ public class DriveTrain {
      * @param p Proportional gain
      * @param i Integral gain
      * @param d Derivative Gain
+     
      * @param f Feed Forward Gain
      * @param s Speed Limit
      * @return a calculated closed loop control output
@@ -329,6 +346,7 @@ public class DriveTrain {
             double s) {
         prevError = error;
         error = this.getEncoderDisplacement(false);
+        
 
         intError += error;
         if (Math.abs(intError) > 0.5) {
@@ -339,13 +357,14 @@ public class DriveTrain {
         double iOut = i * intError;
         double dOut = d * (error - prevError);
 
-        double output = pOut + iOut + dOut + f;
+         driveOutPut = pOut + iOut + dOut + f;
 
-        if (Math.abs(output) > Math.abs(s)) {
-            output = Math.abs(s) * EagleMath.signum(output);
+        if (Math.abs(driveOutPut) > Math.abs(s)) {
+            driveOutPut = Math.abs(s) * EagleMath.signum(driveOutPut);
 
+        
         }
-
-        return -output;
+        return -driveOutPut;
     }
 }
+

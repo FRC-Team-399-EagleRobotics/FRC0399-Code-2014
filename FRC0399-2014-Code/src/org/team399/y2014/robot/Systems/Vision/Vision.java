@@ -60,13 +60,13 @@ public class Vision {
 
     }
 
-    public static Vision getInstance() {
-        if (instance == null) {
-            instance = new Vision();
-        }
-
-        return instance;
-    }
+//    public static Vision getInstance() {
+//        if (instance == null) {
+//            instance = new Vision();
+//        }
+//
+//        return instance;
+//    }
 
     public void run(int numOfScans) {
 
