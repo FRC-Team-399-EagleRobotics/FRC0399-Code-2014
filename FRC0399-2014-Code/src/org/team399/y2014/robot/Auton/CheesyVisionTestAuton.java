@@ -7,6 +7,7 @@ package org.team399.y2014.robot.Auton;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import org.team399.y2014.robot.Commands.CheesyVisionTestCommand;
+import org.team399.y2014.robot.Commands.WaitForOperatorHotCommand;
 
 /**
  * Auton command group for testing and calibrating the hot goal image processing
@@ -17,6 +18,6 @@ import org.team399.y2014.robot.Commands.CheesyVisionTestCommand;
 public class CheesyVisionTestAuton extends CommandGroup {
 
     public CheesyVisionTestAuton() {
-        this.addSequential(new CheesyVisionTestCommand());
+        this.addSequential(new WaitForOperatorHotCommand(3.0));
     }
 }

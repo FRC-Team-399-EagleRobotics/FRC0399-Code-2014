@@ -98,7 +98,7 @@ public class Main extends IterativeRobot {
         currAuton = (CommandGroup) autonChooser.getSelected();
         Scheduler.getInstance().add(currAuton);
 
-        // CheesyVision server begin. Resets counter and starts it for auton.
+        // CheesyVision server begin.  Resets counter and starts it for auton.
         server.reset();
         server.startSamplingCounts();
     }

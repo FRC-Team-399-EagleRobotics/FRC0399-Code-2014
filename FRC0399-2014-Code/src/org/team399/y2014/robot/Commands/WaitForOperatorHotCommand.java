@@ -16,6 +16,8 @@ import org.team399.y2014.Utilities.CheesyVisionServer;
  */
 public class WaitForOperatorHotCommand extends Command {
 
+    
+    public final int listenPort = 1180;
     private double timeout = 0.0;
     private boolean found = false;
 
