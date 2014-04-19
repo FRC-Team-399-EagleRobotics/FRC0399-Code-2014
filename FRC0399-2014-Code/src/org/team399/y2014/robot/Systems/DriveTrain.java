@@ -191,7 +191,7 @@ public class DriveTrain {
      * @return
      */
     public double getEncoderTurn(boolean clear) {
-        double left =  -leftEnc.get(); // practivce bot, this value needs to be negated
+        double left = -leftEnc.get(); // practivce bot, this value needs to be negated
         double right = rightEnc.get();
         leftE = left;
         rightE = right;
@@ -206,8 +206,8 @@ public class DriveTrain {
 
     /**
      * Get the encoder displacement from the last reset
-
-*
+     *
+     *
      * @return
      */
     public double getEncoderDisplacement() {
@@ -225,23 +225,22 @@ public class DriveTrain {
      * @return
      */
     public double getEncoderDisplacement(boolean clear) {
-        double left  =  -(leftEnc.get());
+        double left = -(leftEnc.get());
         double right = rightEnc.get();
         leftE = left;
         rightE = right;
-        double encoderValue = (rightE + leftE ) / 2;
-        if(encoderValue > 0){
-             variable = encoderValue + 440;
-        }else if(encoderValue < 0){
-             variable = encoderValue - 440;
+        double encoderValue = (rightE + leftE) / 2;
+        if (encoderValue > 0) {
+            variable = encoderValue + 440;
+        } else if (encoderValue < 0) {
+            variable = encoderValue - 440;
         }
 
 //        if (clear) {
 //            leftEnc.reset();
 //            rightEnc.reset();
-//            
+//
 //        }
-
         return variable;
     }
 
@@ -285,13 +284,13 @@ public class DriveTrain {
 
     public void run() {
         if (curr_state != prevState) {
-            
+
             //state change
             if (curr_state == States.PID_BRAKE) {
-             driveOutPut = pidControl(Constants.DriveTrain.BRAKE_P,
+                driveOutPut = pidControl(Constants.DriveTrain.BRAKE_P,
                         Constants.DriveTrain.BRAKE_I,
                         Constants.DriveTrain.BRAKE_D,
-                        0,1.0);
+                        0, 1.0);
                 this.getEncoderDisplacement(true);
                 System.out.println("encoder Value" + encoderVariable);
                 System.out.println("error" + error);
@@ -302,18 +301,17 @@ public class DriveTrain {
         double outL = 0.0, outR = 0.0;
 
        // System.out.println("[DRIVE] State: " + curr_state);
-
         if (curr_state == States.TANK_DRIVE) {
             leftEnc.reset();
             rightEnc.reset();
-            
+
             outL = tank_left;
             outR = tank_right;
         } else if (curr_state == States.ARCADE_DRIVE) {
         } else if (curr_state == 2) {
-        } else if (curr_state == 4) {
+        } else if (curr_state == 4) {   //States.pidbrake
 
-            outL = this.getEncoderDisplacement(false) * Constants.DriveTrain.DRIVE_P;
+            outL = this.getEncoderDisplacement(false) * Constants.DriveTrain.BRAKE_P;
             outR = outL;
             System.out.println("Left output" + outL);
             System.out.println("Right output" + -outL);
@@ -330,7 +328,7 @@ public class DriveTrain {
      * @param p Proportional gain
      * @param i Integral gain
      * @param d Derivative Gain
-     
+     *
      * @param f Feed Forward Gain
      * @param s Speed Limit
      * @return a calculated closed loop control output
@@ -346,7 +344,6 @@ public class DriveTrain {
             double s) {
         prevError = error;
         error = this.getEncoderDisplacement(false);
-        
 
         intError += error;
         if (Math.abs(intError) > 0.5) {
@@ -357,14 +354,12 @@ public class DriveTrain {
         double iOut = i * intError;
         double dOut = d * (error - prevError);
 
-         driveOutPut = pOut + iOut + dOut + f;
+        driveOutPut = pOut + iOut + dOut + f;
 
         if (Math.abs(driveOutPut) > Math.abs(s)) {
             driveOutPut = Math.abs(s) * EagleMath.signum(driveOutPut);
 
-        
         }
         return -driveOutPut;
     }
 }
-
