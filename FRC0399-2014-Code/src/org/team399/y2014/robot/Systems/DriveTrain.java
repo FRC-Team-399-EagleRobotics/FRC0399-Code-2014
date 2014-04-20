@@ -8,8 +8,8 @@ package org.team399.y2014.robot.Systems;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Gyro;
 import edu.wpi.first.wpilibj.Talon;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.team399.y2014.Utilities.EagleMath;
+import org.team399.y2014.Utilities.MovingAverage;
 import org.team399.y2014.robot.Config.Constants;
 
 /**
@@ -215,7 +215,7 @@ public class DriveTrain {
     }
     public double leftE = 0;
     public double rightE = 0;
-    public double variable = 0;
+    public double encoderDisplacement = 0;
     public double encoderVariable = 0;
 
     /**
@@ -231,17 +231,18 @@ public class DriveTrain {
         rightE = right;
         double encoderValue = (rightE + leftE) / 2;
         if (encoderValue > 0) {
-            variable = encoderValue + 440;
+            encoderDisplacement = encoderValue + 440;
         } else if (encoderValue < 0) {
-            variable = encoderValue - 440;
-        }
-
+            encoderDisplacement = encoderValue - 440;
+        } else encoderDisplacement = 0.0;
+        
+        
 //        if (clear) {
 //            leftEnc.reset();
 //            rightEnc.reset();
 //
 //        }
-        return variable;
+        return encoderDisplacement;
     }
 
     /**
@@ -281,18 +282,17 @@ public class DriveTrain {
     private double goal = 0.0;
     private int prevState = 0;
     public double driveOutPut = 0.0;
+    
+    private MovingAverage brakeFilter = new MovingAverage(5);
 
     public void run() {
         if (curr_state != prevState) {
 
             //state change
             if (curr_state == States.PID_BRAKE) {
-                driveOutPut = pidControl(Constants.DriveTrain.BRAKE_P,
-                        Constants.DriveTrain.BRAKE_I,
-                        Constants.DriveTrain.BRAKE_D,
-                        0, 1.0);
-                this.getEncoderDisplacement(true);
-                System.out.println("encoder Value" + encoderVariable);
+                
+                this.getEncoderDisplacement(false);
+                
                 System.out.println("error" + error);
                 System.out.println("left enc" + getEncoderDisplacement());
             }
@@ -311,7 +311,10 @@ public class DriveTrain {
         } else if (curr_state == 2) {
         } else if (curr_state == 4) {   //States.pidbrake
 
-            outL = this.getEncoderDisplacement(false) * Constants.DriveTrain.BRAKE_P;
+            outL = pidControl(Constants.DriveTrain.BRAKE_P,
+                    Constants.DriveTrain.BRAKE_I,
+                    Constants.DriveTrain.BRAKE_D,
+                    0.0,1.0);
             outR = outL;
             System.out.println("Left output" + outL);
             System.out.println("Right output" + -outL);
@@ -343,7 +346,7 @@ public class DriveTrain {
             double f,
             double s) {
         prevError = error;
-        error = this.getEncoderDisplacement(false);
+        error = brakeFilter.calculate(this.getEncoderDisplacement(false));
 
         intError += error;
         if (Math.abs(intError) > 0.5) {
@@ -360,6 +363,6 @@ public class DriveTrain {
             driveOutPut = Math.abs(s) * EagleMath.signum(driveOutPut);
 
         }
-        return -driveOutPut;
+        return driveOutPut;
     }
 }

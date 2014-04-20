@@ -21,7 +21,7 @@ public class WaitForOperatorHotCommand extends Command {
     private double timeout = 0.0;
     private boolean found = false;
 
-    int delay = 50;
+    int delay = 5;
 
     public WaitForOperatorHotCommand(double timeout) {
         this.timeout = timeout;
