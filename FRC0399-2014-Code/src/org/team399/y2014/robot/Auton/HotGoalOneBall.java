@@ -26,12 +26,13 @@ public class HotGoalOneBall extends CommandGroup {
     
     public HotGoalOneBall(){
         this.addSequential(new CalibrateCommand(.500));
-        this.addSequential(new WaitCommand(.75));
-        this.addSequential(new StageCommand(.75));
+        this.addSequential(new WaitCommand(.25));
+        this.addSequential(new StageCommand(.25));
 
-        this.addSequential(new WaitForOperatorHotCommand(4.0));
+        
         //this.addSequential(new DummyCommand());
-        this.addSequential(new DriveDistanceIntakeCommand(1.0 ,-155.0 , -.05 , 0.0 , Constants.Intake.EXTENDED , 2.5));
+        this.addSequential(new DriveDistanceIntakeCommand(1.0 ,-178.0 , -.05 , 0.0 , Constants.Intake.EXTENDED , 2.5));
+        this.addSequential(new WaitForOperatorHotCommand(1.25));
         //this.addSequential(new WaitForVisionCommand(4.0));
         this.addSequential(new StageCommand(.25));
         //this.addSequential(new IntakeCommand(0.0, Constants.Intake.EXTENDED, 0.0));

@@ -508,7 +508,7 @@ public class Shooter {
      * @return true if the fsm has been in the shooter state for 800ms
      */
     public boolean getShootDone() {
-        return (curr_state == States.SHOOT || curr_state == States.SHORT_SHOT)
+        return (curr_state == States.SHOOT) || (curr_state == States.SHORT_SHOT)
                 && (System.currentTimeMillis() - timeStateChange > 1000);
     }
 
@@ -519,8 +519,7 @@ public class Shooter {
      * @return true if the fsm has been in a stage state for 800ms
      */
     public boolean wantLiveCal() {
-        return (curr_state == States.STAGE || curr_state == States.SHORT_STAGE)
-                && (System.currentTimeMillis() - timeStateChange > 100 && !isCalibrated);
+        return (curr_state == States.STOW) && (System.currentTimeMillis() - timeStateChange > 1000 && !isCalibrated);
     }
 
     private double error = 0, prevError = 0;

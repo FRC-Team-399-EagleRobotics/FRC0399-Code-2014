@@ -58,9 +58,10 @@ public class Main extends IterativeRobot {
         autonChooser.addObject("Do Nothing Auton #Sweg ", new DoNothingAuton());
         autonChooser.addObject("TestShoot", new TestAutonShot());
         autonChooser.addObject("TwoBallEncoder", new TwoBallEncoder());
-        autonChooser.addObject("HotGoalOneBall", new HotGoalOneBall());
+        autonChooser.addDefault("HotGoalOneBall", new HotGoalOneBall());
         autonChooser.addObject("Tuning Vision", new VisionTestAuton());
-        autonChooser.addDefault(" Cheesy Vision ", new CheesyVisionTestAuton());
+        autonChooser.addObject(" Cheesy Vision ", new CheesyVisionTestAuton());
+        autonChooser.addObject(" TwoBall Hot", new TwoBallHotGoal());
         SmartDashboard.putData("auton Chooser", autonChooser);
 
         // Cheesy Vision server initialization.
@@ -244,9 +245,9 @@ public class Main extends IterativeRobot {
                 && robot.shooter.getOffsetFromBottom() < .75) {
             state = Shooter.States.STOW;
         } else if (robot.shooter.getShootDone()) {
-            state = Shooter.States.SHORT_STAGE;
-        } else if (robot.shooter.wantLiveCal()) {
-            state = Shooter.States.LIVE_CAL;
+            state = Shooter.States.HOLD;
+        //} else if (robot.shooter.wantLiveCal()) {
+           // state = Shooter.States.LIVE_CAL;
         } else if (robot.intake.output < 0) {
             state = Shooter.States.HOLD;
             robot.shooter.setGoalOffset(
