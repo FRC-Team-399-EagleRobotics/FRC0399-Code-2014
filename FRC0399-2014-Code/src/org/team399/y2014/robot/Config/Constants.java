@@ -66,7 +66,7 @@ public class Constants {
 
         // values for intake stage
         public static final double HOLD_POS = .15;  // Pass position
-        public static final double HOLD_P = 4.0;    // Pass PID gains
+        public static final double HOLD_P = 3.0;    // Pass PID gains
         public static final double HOLD_I = 0.0;
         public static final double HOLD_D = 0.0;
         public static final double HOLD_F = 0.0;    // Pass Feed Forward Gain
@@ -117,7 +117,7 @@ public class Constants {
         public static final double AUTON_STAGE_S = 0.3;
         // values for Regular Auton Shot
 
-        public static final double AUTON_SHOT_POS = .9; //1.3186;  // Shot final position
+        public static final double AUTON_SHOT_POS = .9; //1.3186  // Shot final position
         public static final double AUTON_SHOT_START = 0.0;// Shot start threshold position
         public static final double AUTON_SHOT_INIT_SPEED = -1.0;// Shot start speed
         public static final double AUTON_SHOT_FINAL_SPEED = -1.0; // Shot Final speed.
@@ -128,7 +128,7 @@ public class Constants {
         public static final double AUTON_SHOT_S = 0.65;    // Pass Speed limit
 
         // values for the AUTON Short Shot Command
-        public static final double AUTON_SHORT_SHOT_POS = 1.1; //1.3186;  // Shot final position
+        public static final double AUTON_SHORT_SHOT_POS = 1.0; //1.3186;  // Shot final position
         public static final double AUTON_SHORT_SHOT_START = 0.0;// Shot start threshold position
         public static final double AUTON_SHORT_SHOT_INIT_SPEED = -1.0;// Shot start speed
         public static final double AUTON_SHORT_SHOT_FINAL_SPEED = -1.0; // Shot Final speed.

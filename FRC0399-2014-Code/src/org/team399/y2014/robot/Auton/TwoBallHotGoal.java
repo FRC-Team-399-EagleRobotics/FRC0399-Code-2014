@@ -37,7 +37,7 @@ public class TwoBallHotGoal extends CommandGroup {
        // this.addSequential(new DriveDistanceIntakeCommand(1.0 ,-155.0 , -.05 , 0.0 , Constants.Intake.EXTENDED , 2.5));
         this.addSequential(new WaitCommand(.25));
         this.addSequential(new StageCommand(.25));
-        this.addSequential(new DriveDistanceIntakeCommand(.85 , -178.0 , -.05 , 0.0 , Constants.Intake.EXTENDED , 2.0 ));
+        this.addSequential(new DriveDistanceIntakeCommand(.85 , -175.0 , -.05 , 0.0 , Constants.Intake.EXTENDED , 2.0 ));
         
         
         //this.addSequential(new StageCommand(.75));
