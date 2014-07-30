@@ -69,7 +69,7 @@ public class DriveDistanceIntakeCommand extends Command {
 
         isDriveAtTarget = atGoal.update(Math.abs(error) < Constants.DriveTrain.TICKS_TO_INCHES);
         if(error > -1200){
-            IntakeOutSpeed = 0.0;
+            IntakeOutSpeed =- 0.05;
         }
     }
     }

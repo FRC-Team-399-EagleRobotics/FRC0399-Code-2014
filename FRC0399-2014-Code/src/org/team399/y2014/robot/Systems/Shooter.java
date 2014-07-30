@@ -294,12 +294,12 @@ public class Shooter {
 //                    s);
 //            System.out.println("Shot! Output: " + output);
             
-               vel.run(this.getPosition());
-            System.out.println("Shooter Velocity: " + vel.getVelocity());
-            
-            SmartDashboard.putNumber("Shooter Velocity",vel.getVelocity());
-            double velGoal = -4.15;
-            double velocityOffset = (velGoal - vel.getVelocity()) * Constants.Shooter.TELEOP_VEL_P;
+//               vel.run(this.getPosition());
+//            System.out.println("Shooter Velocity: " + vel.getVelocity());
+//            
+//            SmartDashboard.putNumber("Shooter Velocity",vel.getVelocity());
+//            double velGoal = -4.15;
+//            double velocityOffset = (velGoal - vel.getVelocity()) * Constants.Shooter.TELEOP_VEL_P;
             goal = Constants.Shooter.SHORT_POS;
             output = pidControl(
                     Constants.Shooter.SHORT_P,
@@ -307,11 +307,11 @@ public class Shooter {
                     Constants.Shooter.SHORT_D,
                     Constants.Shooter.SHORT_F,
                     Constants.Shooter.SHORT_S);
-            
-            if(Math.abs(this.error) < .15 ) { // might want to change to .02 for comp bot
-                velocityOffset = 0;
-            }
-            output += velocityOffset;
+//            
+//            if(Math.abs(this.error) < .15 ) { // might want to change to .02 for comp bot
+//                velocityOffset = 0;
+//            }
+//            output += velocityOffset;
             
             
             
@@ -412,12 +412,12 @@ public class Shooter {
         } else if (curr_state == States.AUTON_SHOT) {
             // Pass do this
             
-            vel.run(this.getPosition());
-            System.out.println("Shooter Velocity: " + vel.getVelocity());
-            
-            SmartDashboard.putNumber("Shooter Velocity",vel.getVelocity());
-            double velGoal = -3.9;
-            double velocityOffset = (velGoal - vel.getVelocity()) * Constants.Shooter.VEL_P;
+//            vel.run(this.getPosition());
+//            System.out.println("Shooter Velocity: " + vel.getVelocity());
+//            
+//            SmartDashboard.putNumber("Shooter Velocity",vel.getVelocity());
+//            double velGoal = -3.9;
+//            double velocityOffset = (velGoal - vel.getVelocity()) * Constants.Shooter.VEL_P;
             goal = Constants.Shooter.AUTON_SHOT_POS;
             output = pidControl(
                     Constants.Shooter.AUTON_SHOT_P,
@@ -426,10 +426,10 @@ public class Shooter {
                     Constants.Shooter.AUTON_SHOT_F,
                     Constants.Shooter.AUTON_SHOT_S);
             
-            if(Math.abs(this.error) < .15 ) { // might want to change to .02 for comp bot
-                velocityOffset = 0;
-            }
-            output += velocityOffset;
+//            if(Math.abs(this.error) < .15 ) { // might want to change to .02 for comp bot
+//                velocityOffset = 0;
+//            }
+//            output += velocityOffset;
 
         } else if (curr_state == States.MANUAL) {
             // Else if manual control, do this

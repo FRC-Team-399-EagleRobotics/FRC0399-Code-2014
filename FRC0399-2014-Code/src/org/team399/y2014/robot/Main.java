@@ -29,6 +29,7 @@ public class Main extends IterativeRobot {
     Robot robot;
     Joystick driverLeft = new Joystick(Ports.DRIVER_LEFT_JOYSTICK_USB);
     Joystick driverRight = new Joystick(Ports.DRIVER_RIGHT_JOYSTICK_USB);
+    Joystick driverPad = new Joystick(1);
     GamePad gamePad = new GamePad(Ports.OPERATOR_GAMEPAD_USB);
     SendableChooser autonChooser = new SendableChooser();
     CommandGroup currAuton = null;
@@ -180,28 +181,54 @@ public class Main extends IterativeRobot {
      */
     public void teleopPeriodic() {
         //System.out.println("ARM_POT" + robot.shooter.getPosition());
-
-        double leftIn = driverLeft.getRawAxis(2);
-        double rightIn = driverRight.getRawAxis(2);
+        
         double scalar = .75;
+                  // code with joysticks
+//        double leftIn = driverLeft.getRawAxis(2);
+//        double rightIn = driverRight.getRawAxis(2);
+//        
+//         if (driverRight.getRawButton(12) || driverRight.getRawButton(1)) {
+//            scalar = 1.0;
+//        } else if (driverRight.getRawButton(1)) {
+//            scalar = 1.0;
+//        }
+          
+                   // code with gamepad
+          double leftIn = driverPad.getRawAxis(2);
+          double rightIn = driverPad.getRawAxis(4);
+          
+          if (driverPad.getRawButton(8)){
+              scalar = 1.0;
+          } else if (driverPad.getRawButton(7)){
+              scalar = 1.0;
+          }
+          
 
-        if (driverRight.getRawButton(12) || driverRight.getRawButton(1)) {
-            scalar = 1.0;
-        } else if (driverRight.getRawButton(1)) {
-            scalar = 1.0;
-        }
-
+//
         // Note: Remove this if it isn't being used. I have a feeling it might
         // be buggy if accidentally triggered. Just keep drive in tank
         // drive state.
-        if (driverLeft.getRawButton(12)) {
-            System.out.println("PID_BRAKE");
-            robot.drivetrain.setState(DriveTrain.States.PID_BRAKE);
-            //robot.drivetrain.setState(driveState);
-        } else {
-            robot.drivetrain.setState(DriveTrain.States.TANK_DRIVE);
-        }
+          
+                //code with joysticks
+//        if (driverLeft.getRawButton(12)) {
+//            System.out.println("PID_BRAKE");
+//            robot.drivetrain.setState(DriveTrain.States.PID_BRAKE);
+//            //robot.drivetrain.setState(driveState);
+//        } else {
+//            robot.drivetrain.setState(DriveTrain.States.TANK_DRIVE);
+//        }
+                 // code with gamepad
+          if(driverPad.getRawButton(7)){
+              System.out.println("PID_BRAKE");
+              robot.drivetrain.setState(DriveTrain.States.PID_BRAKE);
+              //robot.drivetrain.setState(driveState);
+          }else {
+              robot.drivetrain.setState(DriveTrain.States.TANK_DRIVE);
+          }
+          
 
+       
+        
         robot.drivetrain.setTankDrive(leftIn * scalar, rightIn * scalar);
         robot.drivetrain.run();
 
@@ -238,6 +265,7 @@ public class Main extends IterativeRobot {
             state = Shooter.States.SHOOT;
         } else if (gamePad.getButton(1)) {
             state = Shooter.States.SHORT_STAGE;
+        
         } else if (gamePad.getButton(7)
                 && robot.intake.state == Constants.Intake.EXTENDED) {
             state = Shooter.States.SHORT_SHOT;
@@ -258,7 +286,8 @@ public class Main extends IterativeRobot {
         // Stops compressor during any shot states or if the intake is running.
         if (robot.shooter.getState() == Shooter.States.SHOOT
                 || robot.shooter.getState() == Shooter.States.SHORT_SHOT
-                || intake == 1.0) {
+                || intake == 1.0
+                || gamePad.getButton(4)) {
             robot.comp.stop();
         } else {
             robot.comp.start();
